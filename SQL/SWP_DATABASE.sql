@@ -8,19 +8,14 @@ USE eJournal_DB
 CREATE TABLE Account(
 	AccountId INT PRIMARY KEY not null IDENTITY(1,1),
 	email VARCHAR (255) not null UNIQUE,
-	[password] CHAR(68) not null,
+	[password] CHAR(60) not null,
 	Phone Char(11) UNIQUE CHECK(Phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' OR Phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 	firstName NVARCHAR (150) not null,
 	lastName NVARCHAR(150) not null,
 	Organization NVARCHAR(150) not null,
 	DateOfBirth DATE,
 	profileImage char(100) UNIQUE,
-	roleId INT not null UNIQUE,
-)
-go
-CREATE TABLE [Role](
-	roleId INT PRIMARY KEY not null IDENTITY(1,1),
-	roleName NVARCHAR (100) not null UNIQUE
+	roleId INT not null,
 )
 go
 CREATE TABLE Reviewer(
@@ -148,8 +143,6 @@ CREATE TABLE JournalField(
 -- kết thúc bảng nối--
 -- Thêm Khóa Ngoại--
 
-ALTER TABLE Account
-ADD FOREIGN KEY (roleId) REFERENCES [Role](roleId);
 ALTER TABLE Reviewer
 ADD FOREIGN KEY (AccountId) REFERENCES Account(AccountId);
 ALTER TABLE ReviewerField
