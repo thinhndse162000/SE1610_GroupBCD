@@ -8,6 +8,8 @@ import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.entity.Account;
+import com.bcd.ejournal.domain.entity.Author;
+import com.bcd.ejournal.domain.entity.Reviewer;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.service.AccountService;
@@ -57,6 +59,14 @@ public class AccountServiceImpl implements AccountService {
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
         acc.setRoleId(0);
         acc.setStatus(true);
+        Author author = new Author();
+        author.setAuthorID(0);
+        author.setAccount(acc);
+        author.setIntroduction("");
+        author.setEducation("");
+        Reviewer reviewer = new Reviewer(0, true, acc);
+        acc.setAuthor(author);
+        acc.setReviewer(reviewer);
         try {
             acc = accountRepository.save(acc);
         } catch (DataIntegrityViolationException ex){

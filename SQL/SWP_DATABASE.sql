@@ -8,7 +8,7 @@ USE eJournal_DB
 CREATE TABLE Account(
 	AccountId int PRIMARY KEY not null IDENTITY(1,1),
 	email VARCHAR (255) not null UNIQUE,
-	[password] CHAR(68) not null,
+	[password] CHAR(60) not null,
 	Phone Char(11) UNIQUE CHECK(Phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' OR Phone LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
 	firstName NVARCHAR (150) not null,
 	lastName NVARCHAR(150) not null,

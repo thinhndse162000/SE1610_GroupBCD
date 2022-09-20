@@ -8,10 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +33,13 @@ public class Account implements UserDetails {
     private String profileImage;
     private Integer roleId;
     private boolean status;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "AuthorID", referencedColumnName = "AuthorID")
+    private Author author;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ReviewerID", referencedColumnName = "ReviewerID")
+    private Reviewer reviewer;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
