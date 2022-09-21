@@ -3,14 +3,13 @@ package com.bcd.ejournal.api;
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
-import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.service.JournalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,14 +30,14 @@ public class JournalApi {
     }
 
     @GetMapping("/{journalID}")
-    public ResponseEntity<JournalResponse> getJournal(@PathVariable Integer journalID) {
+    public ResponseEntity<JournalResponse> getJournal(@Valid @PathVariable Integer journalID) {
         JournalResponse response = journalService.getJournal(journalID);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // TODO: admin authorization
     @PutMapping("/{journalID}")
-    public ResponseEntity<JournalResponse> updateJournal(@PathVariable Integer journalID, @RequestBody JournalCreateRequest request) {
+    public ResponseEntity<JournalResponse> updateJournal(@PathVariable Integer journalID, @Valid @RequestBody JournalCreateRequest request) {
         JournalResponse response = journalService.updateJournal(journalID, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

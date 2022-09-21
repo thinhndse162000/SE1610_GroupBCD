@@ -10,14 +10,14 @@ public class AccountJWTPayload implements JWTPayload {
     private final String name;
     private final long iat;
 
-    public static AccountJWTPayload of(Account account, long epochSecondExpired) {
-        return new AccountJWTPayload(account.getAccountID(), account.getEmail(), epochSecondExpired);
-    }
-
     AccountJWTPayload(Integer sub, String name, long iat) {
         this.sub = sub;
         this.name = name;
         this.iat = iat;
+    }
+
+    public static AccountJWTPayload of(Account account, long epochSecondExpired) {
+        return new AccountJWTPayload(account.getAccountID(), account.getEmail(), epochSecondExpired);
     }
 
     @Override
