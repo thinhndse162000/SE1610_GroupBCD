@@ -21,8 +21,8 @@ public class PaperApi {
 	private PaperService paperService;
 	
 	@PostMapping(path = "/submit")
-	public ResponseEntity<?> submitPaper(@Valid @RequestBody PaperSubmitRequest model) throws Exception, PaperException {
-		paperService.submitPaper(model);
+	public ResponseEntity<?> submitPaper(@Valid @RequestBody PaperSubmitRequest models) throws Exception, PaperException {
+		paperService.submitPaper(models);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
