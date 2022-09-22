@@ -26,7 +26,4 @@ public class Author {
     @MapsId
     @JoinColumn(name = "AuthorID")
     private Account account;
-
-    @ManyToMany(mappedBy = "authors")
-    private List<Paper> papers;
 }
