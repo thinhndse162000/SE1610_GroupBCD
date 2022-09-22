@@ -13,16 +13,15 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountUpdateProfileRequest {
-    // TODO: Validation and
-    @NotBlank
+    @NotBlank(message = "Phone number must not be blank")
     private String phone;
-    @NotBlank
+    @NotBlank(message = "First name must not be blank")
     private String firstName;
-    @NotBlank
+    @NotBlank(message = "Last name must not be blank")
     private String lastName;
-    @NotBlank
+    @NotBlank(message = "Organization must not be blank")
     private String organization;
-    @NotNull
+    @NotNull(message = "Date of birth must not be blank")
     private Date dateOfBirth;
     private String profileImage;
 }
