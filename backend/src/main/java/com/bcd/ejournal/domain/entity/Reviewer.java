@@ -18,6 +18,8 @@ public class Reviewer {
     private Integer ReviewerID;
     private boolean invitable;
 
-    @OneToOne(mappedBy = "reviewer")
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "ReviewerID")
     private Account account;
 }

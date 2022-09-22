@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +22,11 @@ public class Author {
     private String address;
     private String profileImage;
 
-    @OneToOne(mappedBy = "author")
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "AuthorID")
     private Account account;
+
+    @ManyToMany(mappedBy = "authors")
+    private List<Paper> papers;
 }

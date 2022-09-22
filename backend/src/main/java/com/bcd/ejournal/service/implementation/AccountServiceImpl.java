@@ -60,7 +60,6 @@ public class AccountServiceImpl implements AccountService {
         acc.setRoleId(0);
         acc.setStatus(true);
         Author author = new Author();
-        author.setAuthorID(0);
         author.setAccount(acc);
         author.setIntroduction("");
         author.setEducation("");
