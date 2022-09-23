@@ -23,6 +23,7 @@ import lombok.Setter;
 public class Paper {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int paperId ;
 	private String title ;
 	@Column(name = "Abstract")
@@ -34,10 +35,7 @@ public class Paper {
 	private int journalId ;
 	public Paper(PaperSubmitRequest model) {
 		this.title = model.getTitle();
-		this.submitTime =model.getSubmitTime();
-		this.status = model.getStatus();
-		this.numberOfPage = model.getNumberOfPage();
-		this.linkPDF = model.getLinkPDF();
+		this.sumary = model.getSumary();
 		this.journalId = model.getJournalId();
 		
 	}

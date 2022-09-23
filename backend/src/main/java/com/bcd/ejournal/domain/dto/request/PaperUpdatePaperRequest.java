@@ -5,7 +5,14 @@ import java.sql.Timestamp;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PaperUpdatePaperRequest {
+	private int paperId;
+	
 	@NotBlank(message = "Title Cannot be Blank")
 	private String title;
 	@NotBlank(message = ("Sumary Cannot be blank"))
@@ -14,7 +21,5 @@ public class PaperUpdatePaperRequest {
 	private Timestamp submitTime;
 	@NotBlank(message = "Please attach file PDF")
 	private String linkPDF;
-	private int numberOfPage;
-	private int status;
 	private int journalId;
 }
