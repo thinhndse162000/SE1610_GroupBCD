@@ -10,12 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdatePaperRequest;
-import com.bcd.ejournal.domain.dto.response.PaperUpdatepaperRespone;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.exception.PaperException;
 import com.bcd.ejournal.message.MessageConstant;
+import com.bcd.ejournal.repository.PaperMapper;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.FileUtils;
@@ -28,7 +29,10 @@ public class PaperServiceImp implements PaperService {
 	
 	@Autowired // auto new instance
 	private PaperRepository paperRepository;
-
+	
+	@Autowired(required = true)
+	private PaperMapper paperMapper;
+	
 	@Override
 	public void submitPaper(PaperSubmitRequest submitRequest) throws PaperException {
 		// TODO Auto-generated method stub
@@ -40,31 +44,24 @@ public class PaperServiceImp implements PaperService {
 			String filePath = uploadDir + fileName;
 			paper.setLinkPDF(filePath);
 			paper.setSubmitTime(new Timestamp(System.currentTimeMillis()));
-			//paperRepository.save(paper);
+			paper.setJournalId(submitRequest.getJournalId());
+			paperRepository.save(paper);
 			FileUtils.saveFile(uploadDir, fileName, file);
-			
+	
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new PaperException(HttpStatus.BAD_REQUEST, MessageConstant.PAPER_ERROR_FORMAT, "E001");
 		}
 
 	}
 
 	@Override
-	public PaperUpdatepaperRespone updateSubmitPaper(PaperUpdatePaperRequest req) {
+	public void updatePaper(PaperUpdatePaperRequest req) {
 		Optional<Paper> paper = paperRepository.findById(req.getPaperId());
-		paperRepository.save(paper.get());
-		return null;
-
-	}
-
-	@Override
-	public List<Paper> listAll(String title) {
-		// TODO Auto-generated method stub
-		if (title != null) {
-			return paperRepository.search(title);
-		}
-		return (List<Paper>) paperRepository.findAll();
+		Paper newPaper = new Paper();
+		newPaper = paper.get();
+		newPaper.setTitle(req.getTitle());
+		newPaper.setSumary(req.getSumary());
+		paperRepository.save(newPaper);
 	}
 
 	@Override
@@ -75,9 +72,14 @@ public class PaperServiceImp implements PaperService {
 			return 1;
 		} else {
 			throw new Exception("Data not found");
-		}
-		
-		
+		}		
 	}
+
+	@Override
+	public List<Paper> searchByRequest(PaperSearchRequest paperSearchRequest) {
+		List<Paper> rs = paperMapper.search(paperSearchRequest);
+		return rs;
+	}
+
 	
 }

@@ -1,5 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -20,10 +21,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Paper {
+public class Paper implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "PaperId")
 	private int paperId ;
 	private String title ;
 	@Column(name = "Abstract")
@@ -35,8 +36,22 @@ public class Paper {
 	private int journalId ;
 	public Paper(PaperSubmitRequest model) {
 		this.title = model.getTitle();
-		this.sumary = model.getSumary();
-		this.journalId = model.getJournalId();
-		
+		this.sumary = model.getSumary();	
 	}
+	/*
+	 * @OneToOne
+	 * 
+	 * @JoinColumn(name = "authorID", nullable = false) private Author author;
+	 * 
+	 * @ManyToOne
+	 * 
+	 * @JoinColumn(name = "authorID", nullable = false) private Author author;
+	 * 
+	 * @ManyToMany
+	 * 
+	 * @JoinTable( name = "AuthorPaper", joinColumns = @JoinColumn(name = "paperID")
+	 * inverseJoinColumns = @JoinColumn(name = "authorID") ) private List<Author>
+	 * authors;
+	 */
+
 }

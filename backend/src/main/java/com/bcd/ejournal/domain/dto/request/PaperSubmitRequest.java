@@ -15,10 +15,8 @@ public class PaperSubmitRequest {
 	@NotBlank(message = ("Sumary Cannot be blank"))
 	private String sumary;
 	
-	private int journalId;
-	
 	private MultipartFile file;
 	
-	
+	private int journalId;
 
 }
