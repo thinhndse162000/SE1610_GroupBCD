@@ -34,11 +34,12 @@ public class Account implements UserDetails {
     private Integer roleId;
     private boolean status;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "AuthorID", referencedColumnName = "AuthorID")
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Author author;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ReviewerID", referencedColumnName = "ReviewerID")
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Reviewer reviewer;
 
     @Override

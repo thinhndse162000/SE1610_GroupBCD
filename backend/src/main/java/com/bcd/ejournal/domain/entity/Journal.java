@@ -6,20 +6,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Reviewer {
+public class Journal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ReviewerID;
-    private boolean invitable;
+    private Integer journalID;
+    private String name;
+    private String introduction;
+    private String organization;
+    private String issn;
+    private boolean status;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "ReviewerID")
-    private Account account;
+    @OneToMany(mappedBy = "journal")
+    private List<Issue> issues;
 }

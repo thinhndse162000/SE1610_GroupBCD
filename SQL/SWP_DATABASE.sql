@@ -16,18 +16,16 @@ CREATE TABLE Account(
 	DateOfBirth DATE,
 	profileImage char(100) UNIQUE,
 	roleId int not null,
-	ReviewerId int not null UNIQUE,
-	AuthorId int not null UNIQUE,
   [status] bit not null
 )
 go
 CREATE TABLE Reviewer(
-	ReviewerId int PRIMARY KEY not null IDENTITY(1,1),
+	ReviewerId int PRIMARY KEY not null,
 	Invitable BIT not null,
 )
 go
 CREATE TABLE Author(
-	AuthorId int not null PRIMARY KEY IDENTITY(1,1),
+	AuthorId int not null PRIMARY KEY,
 	Introduction text not null,
 	Education text not null,
 	[Address] text,
@@ -81,10 +79,10 @@ CREATE TABLE Issue(
 go 
 CREATE TABLE Journal(
 	JournalId int not null PRIMARY KEY IDENTITY(1,1),
-	[name] NVARCHAR (255) not null,
+	[name] NVARCHAR (255) not null UNIQUE,
 	Introduction text not null,
 	Organization NVARCHAR(255) not null,
-	ISSN char(8) not null,
+	ISSN char(8) not null UNIQUE,
 	[status] BIT not null
 )
 go 
@@ -145,10 +143,10 @@ CREATE TABLE JournalField(
 -- kết thúc bảng nối--
 -- Thêm Khóa Ngoại--
 
-ALTER TABLE Account
-ADD FOREIGN KEY (ReviewerId) REFERENCES Reviewer(ReviewerId);
-ALTER TABLE Account
-ADD FOREIGN KEY (AuthorId) REFERENCES Author(AuthorId);
+ALTER TABLE Reviewer
+ADD FOREIGN KEY (ReviewerId) REFERENCES Account(AccountId);
+ALTER TABLE Author
+ADD FOREIGN KEY (AuthorId) REFERENCES Account(AccountID);
 ALTER TABLE ReviewerField
 ADD FOREIGN KEY (ReviewerId) REFERENCES Reviewer(ReviewerId);
 ALTER TABLE ReviewerField

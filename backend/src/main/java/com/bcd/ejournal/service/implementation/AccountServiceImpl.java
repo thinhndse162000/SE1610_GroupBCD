@@ -60,7 +60,6 @@ public class AccountServiceImpl implements AccountService {
         acc.setRoleId(0);
         acc.setStatus(true);
         Author author = new Author();
-        author.setAuthorID(0);
         author.setAccount(acc);
         author.setIntroduction("");
         author.setEducation("");
@@ -69,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
         acc.setReviewer(reviewer);
         try {
             acc = accountRepository.save(acc);
-        } catch (DataIntegrityViolationException ex){
+        } catch (DataIntegrityViolationException ex) {
             throw new DataIntegrityViolationException("Email already exists", ex);
         }
         AccountTokenResponse response = new AccountTokenResponse();
@@ -83,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
             throw new DataIntegrityViolationException("Password mismatch");
         }
         Account acc = accountRepository.findById(id)
-                        .orElseThrow(() -> new NullPointerException("Account not found - " + id));
+                .orElseThrow(() -> new NullPointerException("Account not found - " + id));
         if (passwordEncoder.matches(req.getOldPassword(), acc.getPassword())) {
             acc.setPassword(passwordEncoder.encode(req.getNewPassword()));
             accountRepository.save(acc);
@@ -97,8 +96,8 @@ public class AccountServiceImpl implements AccountService {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
         modelMapper.map(req, acc);
-        accountRepository.save(acc);
-        return null;
+        acc = accountRepository.save(acc);
+        return modelMapper.map(acc, AccountProfileResponse.class);
     }
 
     @Override

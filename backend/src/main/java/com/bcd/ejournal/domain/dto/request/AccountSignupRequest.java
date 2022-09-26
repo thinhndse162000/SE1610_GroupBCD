@@ -13,23 +13,22 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountSignupRequest {
-    // TODO: Validation and messages
-    @Email
-    @NotBlank
+    @Email(message = "Email is not valid")
+    @NotBlank(message = "Email must not be blank")
     private String email;
-    @NotBlank
+    @NotBlank(message = "Password must not be blank")
     private String password;
-    @NotBlank
+    @NotBlank(message = "Retype password must not be blank")
     private String passwordRetype;
-    @NotBlank
+    @NotBlank(message = "Phone number must not be blank")
     private String phone;
-    @NotBlank
+    @NotBlank(message = "First name must not be blank")
     private String firstName;
-    @NotBlank
+    @NotBlank(message = "Last name must not be blank")
     private String lastName;
-    @NotBlank
+    @NotBlank(message = "Organization must not be blank")
     private String organization;
-    @NotNull
+    @NotNull(message = "Date of birth must not be blank")
     private Date dateOfBirth;
     private String profileImage;
 }

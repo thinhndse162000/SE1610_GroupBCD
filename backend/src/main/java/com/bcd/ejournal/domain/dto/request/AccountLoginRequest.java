@@ -11,8 +11,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountLoginRequest {
-    // TODO: Validation and messages
-    @Email
+    @Email(message = "Email is not valid")
     @NotBlank(message = "Email cannot be blank")
     private String email;
     @NotBlank(message = "Password cannot be blank")
