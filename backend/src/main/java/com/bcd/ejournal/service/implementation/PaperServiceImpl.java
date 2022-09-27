@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PaperServiceImpl implements PaperService {
@@ -112,8 +113,9 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest) {
-        List<Paper> papers = paperMapper.search(paperSearchRequest);
-        return papers.stream()
+        Iterable<Paper> papers = paperRepository.searchByTitle(paperSearchRequest.getTitle());
+
+        return StreamSupport.stream(papers.spliterator(), false)
                 .map(this::fromPaper)
                 .collect(Collectors.toList());
     }
@@ -145,9 +147,15 @@ public class PaperServiceImpl implements PaperService {
         PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
         paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
         List<AuthorResponse> authors = paper.getAuthors().stream()
-                .map((author) -> modelMapper.map(author, AuthorResponse.class))
+                .map(this::fromAuthor)
                 .collect(Collectors.toList());
         paperResponse.setAuthors(authors);
         return paperResponse;
+    }
+
+    private AuthorResponse fromAuthor(Author author) {
+        AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
+        authorResponse.setFullName(author.getAccount().getFullName());
+        return authorResponse;
     }
 }

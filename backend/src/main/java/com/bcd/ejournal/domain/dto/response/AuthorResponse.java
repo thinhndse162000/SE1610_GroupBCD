@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AuthorResponse {
     private Integer authorID;
+    private String fullName;
     private String introduction;
     private String education;
     private String address;
