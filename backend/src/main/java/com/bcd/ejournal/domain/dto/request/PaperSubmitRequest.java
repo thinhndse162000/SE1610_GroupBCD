@@ -13,7 +13,7 @@ public class PaperSubmitRequest {
 	private String title;
 	
 	@NotBlank(message = ("Sumary Cannot be blank"))
-	private String sumary;
+	private String _abtract;
 	
 	private MultipartFile file;
 	

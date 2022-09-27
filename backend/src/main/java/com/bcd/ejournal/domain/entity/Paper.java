@@ -28,7 +28,7 @@ public class Paper implements Serializable{
 	private int paperId ;
 	private String title ;
 	@Column(name = "Abstract")
-	private String sumary;
+	private String _abtract;
 	private Timestamp submitTime ;
 	private String linkPDF ;
 	private int numberOfPage ;
@@ -36,7 +36,7 @@ public class Paper implements Serializable{
 	private int journalId ;
 	public Paper(PaperSubmitRequest model) {
 		this.title = model.getTitle();
-		this.sumary = model.getSumary();	
+		this._abtract = model.get_abtract();	
 	}
 	/*
 	 * @OneToOne

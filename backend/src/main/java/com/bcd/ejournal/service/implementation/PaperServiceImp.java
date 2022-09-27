@@ -16,8 +16,8 @@ import com.bcd.ejournal.domain.dto.request.PaperUpdatePaperRequest;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.exception.PaperException;
 import com.bcd.ejournal.message.MessageConstant;
-import com.bcd.ejournal.repository.PaperMapper;
 import com.bcd.ejournal.repository.PaperRepository;
+import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.FileUtils;
 
@@ -31,7 +31,7 @@ public class PaperServiceImp implements PaperService {
 	private PaperRepository paperRepository;
 	
 	@Autowired(required = true)
-	private PaperMapper paperMapper;
+	private RequestMapper paperMapper;
 	
 	@Override
 	public void submitPaper(PaperSubmitRequest submitRequest) throws PaperException {
@@ -60,7 +60,7 @@ public class PaperServiceImp implements PaperService {
 		Paper newPaper = new Paper();
 		newPaper = paper.get();
 		newPaper.setTitle(req.getTitle());
-		newPaper.setSumary(req.getSumary());
+		newPaper.set_abtract(req.getSumary());;
 		paperRepository.save(newPaper);
 	}
 
