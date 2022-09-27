@@ -3,6 +3,7 @@ go
 CREATE DATABASE eJournal_DB
 go
 USE eJournal_DB
+SET QUOTED_IDENTIFIER ON
 
 --Tạo bảng Chính--
 CREATE TABLE Account(
@@ -14,10 +15,14 @@ CREATE TABLE Account(
 	lastName NVARCHAR(150) not null,
 	Organization NVARCHAR(150) not null,
 	DateOfBirth DATE,
-	profileImage char(100) UNIQUE,
+	profileImage char(100),
 	roleId int not null,
   [status] bit not null
 )
+
+CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
+ON Account(profileImage)
+WHERE profileImage IS NOT NULL;
 go
 CREATE TABLE Reviewer(
 	ReviewerId int PRIMARY KEY not null,
@@ -29,8 +34,12 @@ CREATE TABLE Author(
 	Introduction text not null,
 	Education text not null,
 	[Address] text,
-	profileImage char(100) UNIQUE,
+	profileImage char(100),
 )
+
+CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
+ON Author(profileImage)
+WHERE profileImage IS NOT NULL;
 go
 CREATE TABLE Field(
 	FieldId int not null PRIMARY KEY IDENTITY(1,1),
@@ -45,7 +54,7 @@ CREATE TABLE Paper(
 	LinkPDF char(100) not null,
 	NumberOfPage int not null,
 	[status] int not null,
-	JournalId int not null UNIQUE,
+	JournalId int not null,
 )
 go
 CREATE TABLE Invitation(

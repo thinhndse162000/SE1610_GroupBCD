@@ -48,7 +48,7 @@ public class JournalServiceImpl implements JournalService {
     public List<IssueResponse> listAllIssues(Integer journalID) {
         Iterable<Issue> issues = issueRepository.findAllByJournalID(journalID);
         return StreamSupport.stream(issues.spliterator(), false)
-                .map((issue) -> modelMapper.map(issue, IssueResponse.class))
+                .map(this::fromIssue)
                 .collect(Collectors.toList());
     }
 
@@ -67,5 +67,11 @@ public class JournalServiceImpl implements JournalService {
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
         journal.setStatus(false);
         journalRepository.save(journal);
+    }
+
+    private IssueResponse fromIssue(Issue issue) {
+        IssueResponse issueResponse = modelMapper.map(issue, IssueResponse.class);
+        issueResponse.setJournal(modelMapper.map(issue.getJournal(), JournalResponse.class));
+        return issueResponse;
     }
 }

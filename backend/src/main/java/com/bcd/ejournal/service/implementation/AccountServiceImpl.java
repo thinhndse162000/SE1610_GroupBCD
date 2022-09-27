@@ -43,6 +43,7 @@ public class AccountServiceImpl implements AccountService {
         if (passwordEncoder.matches(password, acc.getPassword())) {
             AccountTokenResponse response = new AccountTokenResponse();
             response.setToken(jwtService.jwtFromAccount(acc));
+            response.setFullName(acc.getFullName());
             return response;
         } else {
             throw new UnauthorizedException("Account not found");
@@ -73,6 +74,7 @@ public class AccountServiceImpl implements AccountService {
         }
         AccountTokenResponse response = new AccountTokenResponse();
         response.setToken(jwtService.jwtFromAccount(acc));
+        response.setFullName(acc.getFullName());
         return response;
     }
 

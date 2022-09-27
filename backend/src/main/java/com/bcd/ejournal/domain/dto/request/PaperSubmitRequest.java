@@ -1,24 +1,24 @@
 package com.bcd.ejournal.domain.dto.request;
 
-import java.sql.Timestamp;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
 @Getter
 @Setter
 public class PaperSubmitRequest {
-		@NotBlank(message = "Title Cannot be Blank")
-		private String title;
-		@NotBlank(message = ("Sumary Cannot be blank"))
-		private String sumary;
-		@NotNull
-		private Timestamp submitTime;
-		@NotBlank(message = "Please attach file PDF")
-		private String linkPDF;
-		private int numberOfPage;
-		private int status;
-		private int journalId;
+    @NotBlank(message = "Title cannot be blank")
+    private String title;
+    @NotBlank(message = ("Summary cannot be blank"))
+    private String summary;
+    @NotNull(message = "PDF file cannot be blank")
+    private MultipartFile file;
+    @NotNull(message = "Journal cannot be blank")
+    private Integer journalId;
+    // TODO: exclude user email
+    private List<String> authorEmails;
 }

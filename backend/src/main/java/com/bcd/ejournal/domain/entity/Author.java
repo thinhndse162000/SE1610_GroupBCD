@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,4 +27,7 @@ public class Author {
     @MapsId
     @JoinColumn(name = "AuthorID")
     private Account account;
+
+    @ManyToMany(mappedBy = "authors")
+    private List<Paper> papers = new ArrayList<>();
 }
