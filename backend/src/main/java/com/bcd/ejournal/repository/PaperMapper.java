@@ -17,7 +17,7 @@ public interface PaperMapper {
             "AND PaperId = #{paperId} ",
             "</if>",
             "<if test='title != null and title != \"\" '> ",
-            "AND Title = #{title} ",
+            "AND Title LIKE '%${title}%' ",
             "</if>",
             "</script>"})
     List<Paper> search(PaperSearchRequest paper);

@@ -1,17 +1,12 @@
 package com.bcd.ejournal.domain.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -32,12 +27,7 @@ public class Author {
     @MapsId
     @JoinColumn(name = "AuthorID")
     private Account account;
-    
-	/*
-	 * @OneToOne(mappedBy = "author") private Paper paper;
-	 * 
-	 * @OneToMany(mappedBy = "author") private List<Paper> papers;
-	 * 
-	 * @ManyToMany(mappedBy = "authors") private List<Paper> papers;
-	 */
+
+    @ManyToMany(mappedBy = "authors")
+    private List<Paper> papers = new ArrayList<>();
 }

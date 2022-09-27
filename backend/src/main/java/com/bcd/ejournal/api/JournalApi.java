@@ -3,7 +3,9 @@ package com.bcd.ejournal.api;
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
+import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.service.JournalService;
+import com.bcd.ejournal.service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,12 @@ import java.util.List;
 @RequestMapping("/journal")
 public class JournalApi {
     private final JournalService journalService;
+    private final PaperService paperService;
 
     @Autowired
-    public JournalApi(JournalService journalService) {
+    public JournalApi(JournalService journalService, PaperService paperService) {
         this.journalService = journalService;
+        this.paperService = paperService;
     }
 
     // TODO: admin authorization
@@ -53,5 +57,12 @@ public class JournalApi {
     public ResponseEntity<Void> archiveJournal(@PathVariable Integer journalID) {
         journalService.archiveJournal(journalID);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // TODO: remove journalID, change it to something else
+    @GetMapping("/{journalID}/paper")
+    public ResponseEntity<List<PaperResponse>> getAllPaper(@PathVariable Integer journalID) {
+        List<PaperResponse> papers = paperService.getAllPaperFromJournal(journalID);
+        return new ResponseEntity<>(papers, HttpStatus.OK);
     }
 }

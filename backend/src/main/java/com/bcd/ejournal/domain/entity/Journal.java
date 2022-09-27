@@ -23,6 +23,9 @@ public class Journal {
     private String issn;
     private boolean status;
 
-    @OneToMany(mappedBy = "journal")
+    @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
     private List<Issue> issues;
+
+    @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
+    private List<Paper> papers;
 }
