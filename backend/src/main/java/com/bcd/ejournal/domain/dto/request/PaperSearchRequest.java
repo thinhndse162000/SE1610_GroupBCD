@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaperSearchRequest {
-	
-	private int paperId;
-	private String title ;
+    private int paperId;
+    private String title;
 }
