@@ -60,7 +60,8 @@ public class PaperServiceImp implements PaperService {
 		Paper newPaper = new Paper();
 		newPaper = paper.get();
 		newPaper.setTitle(req.getTitle());
-		newPaper.set_abtract(req.getSumary());;
+		newPaper.setSummary(req.getSumary());
+		
 		paperRepository.save(newPaper);
 	}
 
