@@ -10,11 +10,10 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountChangePasswordRequest {
-    // TODO: validation and messages
-    @NotBlank
+    @NotBlank(message = "Old password must not be empty")
     private String oldPassword;
-    @NotBlank
+    @NotBlank(message = "New password must not be empty")
     private String newPassword;
-    @NotBlank
+    @NotBlank(message = "Retype password must not be empty")
     private String newPasswordRetype;
 }
