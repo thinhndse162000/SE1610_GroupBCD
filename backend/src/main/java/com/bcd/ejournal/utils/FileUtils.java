@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUtils {
@@ -25,4 +27,17 @@ public class FileUtils {
             throw new IOException("Could not save image file: " + fileName, ioe);
         }      
     }
+	public static Resource load (String downloadDir, String fileName ) throws IOException {
+		Path root = Paths.get(downloadDir);
+		if(!Files.exists(root)) {
+			throw new IOException("Cann not found folder " + root);
+		}
+		Path file = root.resolve(fileName);
+		Resource resource = new UrlResource(file.toUri());
+		if(resource.exists() || resource.isReadable()) {
+			return resource;
+		} else {
+			throw new RuntimeException("Could not read the file!");
+		}	
+	}
 }

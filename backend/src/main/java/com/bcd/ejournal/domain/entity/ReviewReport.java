@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,4 +30,10 @@ public class ReviewReport {
 	private int condentiality;
 	private String text;
 	private int status;
+	
+	public ReviewReport(ReviewReportSubmitRequest req) {
+		this.grade = req.getGrade();
+		this.text = req.getText();
+		this.condentiality = req.getCondentiality();
+	}
 }

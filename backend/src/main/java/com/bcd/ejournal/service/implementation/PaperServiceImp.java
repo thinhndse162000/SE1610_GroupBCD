@@ -82,5 +82,12 @@ public class PaperServiceImp implements PaperService {
 		return rs;
 	}
 
+	@Override
+	public Optional<Paper> findById(int id) {
+		return paperRepository.findById(id);
+	}
+
+
+
 	
 }
