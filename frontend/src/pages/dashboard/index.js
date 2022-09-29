@@ -5,4 +5,5 @@ import SharedLayout from './SharedLayout'
 import Stats from './Stats'
 import AuthorPaper from './AuthorPaper'
 import AddPaper from './AddPaper'
-export { AllJobs, Profile, SharedLayout, Stats, AddJob, AuthorPaper, AddPaper }
+import Journal from './Journal'
+export { AllJobs, Profile, SharedLayout, Stats, AddJob, AuthorPaper, AddPaper, Journal }

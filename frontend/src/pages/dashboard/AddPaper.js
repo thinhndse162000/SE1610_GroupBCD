@@ -30,7 +30,6 @@ const AddPaper = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!paperTitle || !paperSummary || !paperJournal || !paperPdfFile) {
-      console.log(paperTitle, paperSummary, paperJournal, paperPdfFile)
       displayAlert()
       return
     }

@@ -8,25 +8,23 @@ import {
   AddJob,
   AuthorPaper,
   AddPaper,
+  Journal,
 } from './pages/dashboard'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route
+        <Route
           path='/'
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <SharedLayout />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           }
         >
-          <Route index element={<Stats />} />
-          <Route path='all-jobs' element={<AllJobs />} />
-          <Route path='add-job' element={<AddJob />} />
-          <Route path='profile' element={<Profile />} />
-        </Route> */}
+          <Route index element={<Journal />} />
+        </Route>
         <Route
           path="/author"
           element={

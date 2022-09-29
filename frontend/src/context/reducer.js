@@ -31,6 +31,7 @@ import {
   CREATE_BEGIN,
 } from './actions'
 import paperDispatch from './paperDispatch'
+import journalDispatch from './journalDispatch'
 import { initialState } from './appContext'
 
 const reducer = (state, action) => {
@@ -180,6 +181,7 @@ const reducer = (state, action) => {
       numOfPages: action.payload.numOfPages,
     }
   }
+
   if (action.type === SET_EDIT_JOB) {
     const job = state.jobs.find((job) => job._id === action.payload.id)
     const { _id, position, company, jobLocation, jobType, status } = job
@@ -253,6 +255,10 @@ const reducer = (state, action) => {
   }
   try {
     return paperDispatch(state, action)
+  } catch (error) {
+  }
+  try {
+    return journalDispatch(state, action)
   } catch (error) {
     throw new Error(`no such action : ${action.type}`)
   }

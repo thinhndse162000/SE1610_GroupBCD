@@ -39,6 +39,10 @@ import {
   CREATE_PAPER_SUCCESS,
   EDIT_PAPER_SUCCESS,
   EDIT_PAPER_ERROR,
+  GET_JOURNAL_SUCCESS,
+  GET_JOURNAL_ERROR,
+  GET_PAPER_SUCCESS,
+  GET_PAPER_ERROR,
 } from './actions'
 
 const user = ""
@@ -57,10 +61,17 @@ const paperState = {
 
 const reviewState = {}
 
-const journalState = {}
+const journalState = {
+  searchKeyword: '',
+  searchJournalType: 'Journal',
+  journalSearchOptions: ["Journal", "Paper"],
+  searchResult: [],
+  journalDetailId: '',
+}
 
 const initialState = {
   ...paperState,
+  ...journalState,
   isLoading: false,
   showAlert: false,
   alertText: '',
@@ -68,7 +79,7 @@ const initialState = {
   user: user ? JSON.parse(user) : null,
   token: token,
   showSidebar: false,
-  viewType: 'author',
+  viewType: 'member',
   fields: [],
   isEditing: false,
   editJobId: '',
@@ -421,6 +432,46 @@ const AppProvider = ({ children }) => {
   const changeView = (viewType) => {
     dispatch({ type: CHANGE_VIEW, payload: { viewType } })
   }
+
+  const journalSearch = async () => {
+    dispatch({ type: SHOW_BEGIN })
+    try {
+      // search
+      const { data } = await authFetch.get('/journal/search', { params: { name: state.searchKeyword }})
+      dispatch({ 
+        type: GET_JOURNAL_SUCCESS, 
+        payload: {
+          journals: data,
+        },
+      })
+    } catch (error) {
+      dispatch({ 
+        type: GET_JOURNAL_ERROR,
+        msg: error.response.data.message,
+      })
+    }
+    clearAlert()
+  }
+
+  const paperSearch = () => {
+    console.log("In progress")
+    // dispatch({ type: SHOW_BEGIN })
+    // try {
+    //   // search
+    //   const { data } = authFetch.get('/paper/search', { params: { name: state.searchKeyword }})
+    //   dispatch({ 
+    //     type: GET_JOURNAL_SUCCESS, 
+    //     journals: data,
+    //   })
+    // } catch (error) {
+    //   dispatch({ 
+    //     type: GET_JOURNAL_ERROR,
+    //     msg: error.response.data.message,
+    //   })
+    // }
+    // clearAlert()
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -446,7 +497,9 @@ const AppProvider = ({ children }) => {
         showAuthorPaper,
         clearPaperValues,
         createPaper,
-        editPaper
+        editPaper,
+        journalSearch,
+        paperSearch,
       }}
     >
       {children}

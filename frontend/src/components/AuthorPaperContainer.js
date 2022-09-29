@@ -7,7 +7,7 @@ const AuthorPaperContainer = () => {
     return (
       <Wrapper>
         <div className="papers">
-          {/* TODO: add list of action }*/}
+          {/* TODO: add list of action */}
           {papers.map((paper, index) => {
             return <Paper key={index} paper={paper}></Paper>;
           })}

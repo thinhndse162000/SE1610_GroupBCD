@@ -13,6 +13,8 @@ import SearchContainer from './SearchContainer'
 import SmallSidebar from './SmallSidebar'
 import StatsContainer from './StatsContainer'
 import AuthorPaperContainer from './AuthorPaperContainer'
+import Journal from './Journal'
+import JournalContainer from './JournalContainer'
 export {
   Logo,
   FormRow,
@@ -29,4 +31,6 @@ export {
   Loading,
   AuthorPaperContainer,
   FormDropdown,
+  Journal,
+  JournalContainer,
 }

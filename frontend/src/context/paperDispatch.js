@@ -9,43 +9,43 @@ import {
     EDIT_PAPER_ERROR,
   } from './actions'
 
-  const paperDispatch = (state, action) => {
-    if (action.type === CREATE_PAPER_SUCCESS) {
-        return {
-          ...state,
-          isLoading: false,
-          showAlert: true,
-          alertType: "success",
-          alertText: "New Paper Created!",
-        };
-      }
-    if (action.type === CREATE_PAPER_ERROR) {
-        return {
-          ...state,
-          isLoading: false,
-          showAlert: true,
-          alertType: 'danger',
-          alertText: action.payload.msg,
-        }
-      }
-    if (action.type === EDIT_PAPER_SUCCESS) {
-        return {
-          ...state,
-          isLoading: false,
-          showAlert: true,
-          alertType: "success",
-          alertText: "Update Paper Success!",
-        };
-      }
-      if (action.type === EDIT_PAPER_ERROR) {
-        return {
-          ...state,
-          isLoading: false,
-          showAlert: true,
-          alertType: "danger",
-          alertText: action.payload.msg,
-        };
-      }
+const paperDispatch = (state, action) => {
+  if (action.type === CREATE_PAPER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "New Paper Created!",
+    };
+  }
+  if (action.type === CREATE_PAPER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
+  if (action.type === EDIT_PAPER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Update Paper Success!",
+    };
+  }
+  if (action.type === EDIT_PAPER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
+  }
   if (action.type === CLEAR_PAPER_VALUES) {
     const initialState = {
       isEditingPaper: false,
@@ -86,16 +86,16 @@ import {
       ...state,
       isLoading: false,
       authorPapers: action.payload.authorPapers,
-    }
+    };
   }
   if (action.type === GET_AUTHORPAPER_BEGIN) {
     return {
       ...state,
       isLoading: true,
-      showAlert: false
-    }
+      showAlert: false,
+    };
   }
-  throw new Error(`no such action : ${action.type}`)
-}
+  throw new Error(`no such action : ${action.type}`);
+};
 
 export default paperDispatch

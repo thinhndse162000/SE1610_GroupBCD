@@ -16,10 +16,7 @@ const links = {
     { id: 3, text: 'submit paper', path: 'submit-paper', icon: <FaWpforms /> },
   ],
   member: [
-    { id: 1, text: 'member', path: '/author', icon: <IoBarChartSharp /> },
-    { id: 2, text: 'all jobs', path: 'all-jobs', icon: <MdQueryStats /> },
-    { id: 3, text: 'add job', path: 'add-job', icon: <FaWpforms /> },
-    { id: 4, text: 'profile', path: 'profile', icon: <ImProfile /> },
+    { id: 1, text: 'journal', path: '/', icon: <IoBarChartSharp /> },
   ]
 }
 
