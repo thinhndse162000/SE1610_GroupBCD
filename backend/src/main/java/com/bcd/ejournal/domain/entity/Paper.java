@@ -1,6 +1,7 @@
 package com.bcd.ejournal.domain.entity;
 
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
+import com.bcd.ejournal.domain.enumstatus.PaperStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,13 +29,11 @@ public class Paper implements Serializable {
     private Timestamp submitTime;
     private String linkPDF;
     private int numberOfPage;
-    private int status;
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "AuthorPaper",
-            joinColumns = @JoinColumn(name = "paperID"),
-            inverseJoinColumns = @JoinColumn(name = "authorID")
-    )
-    private List<Author> authors = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private PaperStatus status;
+    @ManyToOne
+    @JoinColumn(name = "AuthorID", nullable = false)
+    private Author author;
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "JournalID", nullable = false)
     private Journal journal;

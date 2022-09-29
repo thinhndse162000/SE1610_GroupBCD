@@ -9,6 +9,7 @@ import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
+import com.bcd.ejournal.domain.enumstatus.PaperStatus;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PaperMapper;
@@ -70,21 +71,16 @@ public class PaperServiceImpl implements PaperService {
         paper.setSubmitTime(new Timestamp(System.currentTimeMillis()));
         // TODO: read number of page from pdf
         paper.setNumberOfPage(10);
+        paper.setStatus(PaperStatus.PENDING);
 
         Journal journal = journalRepository.findById(submitRequest.getJournalId())
                 .orElseThrow(() -> new NullPointerException("Journal not found. ID: " + submitRequest.getJournalId()));
         Author author = accountRepository.findById(authorID)
                 .orElseThrow(() -> new NullPointerException("Author not found. ID: " + authorID))
                 .getAuthor();
-        paper.getAuthors().add(author);
+        paper.setAuthor(author);
         author.getPapers().add(paper);
-        for (String email : submitRequest.getAuthorEmails()) {
-            author = accountRepository.findByEmail(email)
-                    .orElseThrow(() -> new NullPointerException("Author not found. Email: " + email))
-                    .getAuthor();
-            paper.getAuthors().add(author);
-            author.getPapers().add(paper);
-        }
+
         paper.setJournal(journal);
         journal.getPapers().add(paper);
 
@@ -146,10 +142,7 @@ public class PaperServiceImpl implements PaperService {
     private PaperResponse fromPaper(Paper paper) {
         PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
         paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
-        List<AuthorResponse> authors = paper.getAuthors().stream()
-                .map(this::fromAuthor)
-                .collect(Collectors.toList());
-        paperResponse.setAuthors(authors);
+        paperResponse.setAuthors(fromAuthor(paper.getAuthor()));
         return paperResponse;
     }
 

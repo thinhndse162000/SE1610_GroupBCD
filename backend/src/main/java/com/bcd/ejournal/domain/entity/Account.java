@@ -1,5 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
+import com.bcd.ejournal.domain.enumstatus.AccountStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,8 @@ public class Account implements UserDetails {
     private Date dateOfBirth;
     private String profileImage;
     private Integer roleId;
-    private boolean status;
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -84,7 +86,7 @@ public class Account implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return status;
+        return status == AccountStatus.OPEN;
     }
 
 }

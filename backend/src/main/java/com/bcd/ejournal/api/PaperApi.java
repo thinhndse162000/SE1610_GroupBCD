@@ -26,13 +26,13 @@ public class PaperApi {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> submitPaper(@AuthenticationPrincipal AccountJWTPayload payload, PaperSubmitRequest request) {
+    public ResponseEntity<Void> submitPaper(@AuthenticationPrincipal AccountJWTPayload payload, @ModelAttribute PaperSubmitRequest request) {
         paperService.submitPaper(payload.getAccountID(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperID, @RequestBody PaperUpdateRequest request) {
+    @PostMapping(value="/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperID, @ModelAttribute PaperUpdateRequest request) {
         paperService.updatePaper(paperID, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }

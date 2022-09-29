@@ -1,5 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
+import com.bcd.ejournal.domain.enumstatus.JournalStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class Journal {
     private String introduction;
     private String organization;
     private String issn;
-    private boolean status;
+    @Enumerated(EnumType.STRING)
+    private JournalStatus status;
 
     @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
     private List<Issue> issues;

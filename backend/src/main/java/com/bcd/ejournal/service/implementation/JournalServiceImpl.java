@@ -5,6 +5,7 @@ import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.entity.Issue;
 import com.bcd.ejournal.domain.entity.Journal;
+import com.bcd.ejournal.domain.enumstatus.JournalStatus;
 import com.bcd.ejournal.repository.IssueRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.service.JournalService;
@@ -33,6 +34,7 @@ public class JournalServiceImpl implements JournalService {
     public JournalResponse createJournal(JournalCreateRequest request) {
         Journal journal = modelMapper.map(request, Journal.class);
         journal.setJournalID(0);
+        journal.setStatus(JournalStatus.OPEN);
         journal = journalRepository.save(journal);
         return modelMapper.map(journal, JournalResponse.class);
     }
@@ -42,6 +44,13 @@ public class JournalServiceImpl implements JournalService {
         Journal journal = journalRepository.findById(journalID)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
         return modelMapper.map(journal, JournalResponse.class);
+    }
+
+    @Override
+    public List<JournalResponse> search(String name) {
+        return StreamSupport.stream(journalRepository.findByNameContains(name).spliterator(), false)
+                        .map((journal) -> modelMapper.map(journal, JournalResponse.class))
+                        .collect(Collectors.toList());
     }
 
     @Override
@@ -65,7 +74,7 @@ public class JournalServiceImpl implements JournalService {
     public void archiveJournal(Integer journalID) {
         Journal journal = journalRepository.findById(journalID)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
-        journal.setStatus(false);
+        journal.setStatus(JournalStatus.ARCHIVED);
         journalRepository.save(journal);
     }
 

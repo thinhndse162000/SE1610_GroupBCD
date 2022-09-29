@@ -39,6 +39,12 @@ public class JournalApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<JournalResponse>> searchJournal(@RequestParam String name) {
+        List<JournalResponse> responses = journalService.search(name);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
     // TODO: admin authorization
     @PutMapping("/{journalID}")
     public ResponseEntity<JournalResponse> updateJournal(@PathVariable Integer journalID, @Valid @RequestBody JournalCreateRequest request) {

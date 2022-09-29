@@ -19,6 +19,4 @@ public class PaperSubmitRequest {
     private MultipartFile file;
     @NotNull(message = "Journal cannot be blank")
     private Integer journalId;
-    // TODO: exclude user email
-    private List<String> authorEmails;
 }

@@ -28,6 +28,6 @@ public class Author {
     @JoinColumn(name = "AuthorID")
     private Account account;
 
-    @ManyToMany(mappedBy = "authors")
+    @OneToMany(mappedBy = "author")
     private List<Paper> papers = new ArrayList<>();
 }

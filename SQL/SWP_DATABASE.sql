@@ -17,7 +17,7 @@ CREATE TABLE Account(
 	DateOfBirth DATE,
 	profileImage char(100),
 	roleId int not null,
-  [status] bit not null
+  [status] varchar(10) not null
 )
 
 CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
@@ -53,8 +53,9 @@ CREATE TABLE Paper(
 	SubmitTime DATETIME not null,
 	LinkPDF char(100) not null,
 	NumberOfPage int not null,
-	[status] int not null,
+	[status] varchar(10) not null,
 	JournalId int not null,
+  authorID int not null,
 )
 go
 CREATE TABLE Invitation(
@@ -62,7 +63,7 @@ CREATE TABLE Invitation(
 	ReviewerId int not null,
 	PaperId int not null,
 	InviteDate DATE not null,
-	[status] bit 
+	[status] varchar(10) not null,
 	CONSTRAINT UQ_Invitation UNIQUE(ReviewerId,PaperId)
 )
 go
@@ -92,7 +93,7 @@ CREATE TABLE Journal(
 	Introduction text not null,
 	Organization NVARCHAR(255) not null,
 	ISSN char(8) not null UNIQUE,
-	[status] BIT not null
+	[status] varchar(10) not null
 )
 go 
 CREATE TABLE Invoice(
@@ -113,12 +114,6 @@ CREATE TABLE ReviewerField(
 	PRIMARY KEY (ReviewerId , FieldId)
 )
 go
-CREATE TABLE AuthorPaper(
-	AuthorId int not null ,
-	PaperId int not null,
-	PRIMARY KEY(AuthorId,PaperId) 
-)
-go
 CREATE TABLE ReviewReport(
 	ReviewReportID int not null PRIMARY KEY IDENTITY(1,1),
 	PaperId int not null,
@@ -127,7 +122,7 @@ CREATE TABLE ReviewReport(
 	grade int CHECK(grade>=0 AND grade<=10),
 	Confidentiality INT,
 	Note text,
-	[status] int not null
+	[status] varchar(10) not null
 	CONSTRAINT UQ_ReviewReport UNIQUE(PaperId,ReviewerId)
 )
 go
@@ -168,8 +163,6 @@ ALTER TABLE ReviewReport
 ADD FOREIGN KEY (PaperId) REFERENCES Paper(PaperId);
 ALTER TABLE ReviewReport
 ADD FOREIGN KEY (ReviewerId) REFERENCES Reviewer(ReviewerId);
-ALTER TABLE AuthorPaper
-ADD FOREIGN KEY (AuthorId) REFERENCES Author(AuthorId);
 ALTER TABLE PaperField
 ADD FOREIGN KEY (PaperId) REFERENCES Paper(PaperId);
 ALTER TABLE PaperField
@@ -190,10 +183,10 @@ ALTER TABLE Manager
 ADD FOREIGN KEY (JournalId) REFERENCES Journal(JournalId);
 ALTER TABLE Paper
 ADD FOREIGN KEY (JournalId) REFERENCES Journal(JournalId);
+ALTER TABLE Paper
+ADD FOREIGN KEY (AuthorID) REFERENCES Author(AuthorID);
 ALTER TABLE JournalField
 ADD FOREIGN KEY (JournalId) REFERENCES Journal(JournalId);
 ALTER TABLE JournalField
 ADD FOREIGN KEY (FieldId) REFERENCES Field(FieldId);
-ALTER TABLE AuthorPaper
-ADD FOREIGN KEY (PaperId) REFERENCES Paper(PaperId);
 
