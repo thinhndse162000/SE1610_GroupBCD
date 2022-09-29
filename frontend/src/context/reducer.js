@@ -1,3 +1,4 @@
+import { MdPendingActions } from 'react-icons/md'
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
@@ -25,11 +26,21 @@ import {
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
+  CHANGE_VIEW,
+  SHOW_BEGIN,
+  CREATE_BEGIN,
 } from './actions'
-
+import paperDispatch from './paperDispatch'
 import { initialState } from './appContext'
 
 const reducer = (state, action) => {
+  if (action.type === SHOW_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false }
+  }
+  if (action.type === CREATE_BEGIN) {
+    return {...state, isLoading: true }
+  }
+
   if (action.type === DISPLAY_ALERT) {
     return {
       ...state,
@@ -237,7 +248,14 @@ const reducer = (state, action) => {
   if (action.type === CHANGE_PAGE) {
     return { ...state, page: action.payload.page }
   }
-  throw new Error(`no such action : ${action.type}`)
+  if (action.type === CHANGE_VIEW) {
+    return { ...state, viewType: action.payload.viewType }
+  }
+  try {
+    return paperDispatch(state, action)
+  } catch (error) {
+    throw new Error(`no such action : ${action.type}`)
+  }
 }
 
 export default reducer

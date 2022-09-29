@@ -47,7 +47,7 @@ const Wrapper = styled.section`
   }
   @media (min-width: 992px) {
     .form-center {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       align-items: center;
       column-gap: 1rem;
     }
@@ -57,7 +57,7 @@ const Wrapper = styled.section`
   }
   @media (min-width: 1120px) {
     .form-center {
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr;
     }
     .form-center button {
       margin-top: 0;

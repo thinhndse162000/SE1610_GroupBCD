@@ -29,12 +29,38 @@ import {
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
+  CHANGE_VIEW,
+  GET_AUTHORPAPER_BEGIN,
+  GET_AUTHORPAPER_SUCCESS,
+  CLEAR_PAPER_VALUES,
+  SET_EDIT_PAPER,
+  CREATE_BEGIN,
+  SHOW_BEGIN,
+  CREATE_PAPER_SUCCESS,
+  EDIT_PAPER_SUCCESS,
+  EDIT_PAPER_ERROR,
 } from './actions'
 
 const user = ""
 const token = localStorage.getItem('token')
+const paperState = {
+  authorPapers: [],
+  isEditingPaper: false,
+  editPaperId: '',
+  paperTitle: '',
+  paperSummary: '',
+  paperJournal: { journalName: '', journalId: null },
+  paperPdfFile: { fileName: '', file: null },
+  paperFields: [],
+  paperStatusOptions: ['pending', 'accepted', 'rejected']
+}
+
+const reviewState = {}
+
+const journalState = {}
 
 const initialState = {
+  ...paperState,
   isLoading: false,
   showAlert: false,
   alertText: '',
@@ -42,6 +68,8 @@ const initialState = {
   user: user ? JSON.parse(user) : null,
   token: token,
   showSidebar: false,
+  viewType: 'author',
+  fields: [],
   isEditing: false,
   editJobId: '',
   position: '',
@@ -98,7 +126,7 @@ const AppProvider = ({ children }) => {
       return Promise.reject(error)
     }
   )
-
+  
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT })
     clearAlert()
@@ -125,10 +153,10 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch.post(`auth`, currentUser)
 
-      const { user, token } = data
+      const { fullName, token } = data
       dispatch({
         type: SETUP_USER_SUCCESS,
-        payload: { user, token, alertText: "Login Successfully! Redirecting" },
+        payload: { user: fullName, token, alertText: "Login Successfully! Redirecting" },
       })
       addUserToLocalStorage({ user, token })
     } catch (error) {
@@ -146,20 +174,39 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch.post(`/auth/signup`, currentUser)
 
-      const { user, token } = data
+      const { fullName, token } = data
       dispatch({
         type: SETUP_USER_SUCCESS,
-        payload: { user, token, alertText: "Account created successfully" },
+        payload: { user: fullName , token, alertText: "Account created successfully" },
       })
       addUserToLocalStorage({ user, token })
     } catch (error) {
-      let msg = "Email has been used"
       dispatch({
         type: SETUP_USER_ERROR,
-        payload: { msg },
+        payload: { msg: error.response.data.message },
       })
     }
     clearAlert()
+  }
+
+  const showAuthorPaper = async () => {
+    dispatch({ type: GET_AUTHORPAPER_BEGIN })
+    try {
+      const { data } = await authFetch.get('/author/paper')
+      dispatch({
+        type: GET_AUTHORPAPER_SUCCESS,
+        payload: {
+          authorPapers: data,
+        },
+      })
+    } catch (error) {
+      console.log("error getting paper")
+    }
+    clearAlert()
+  }
+
+  const clearPaperValues = () => {
+    dispatch({ type: CLEAR_PAPER_VALUES })
   }
 
   const toggleSidebar = () => {
@@ -195,6 +242,69 @@ const AppProvider = ({ children }) => {
 
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
+  }
+  const createPaper = async () => {
+    dispatch({ type: CREATE_BEGIN })
+    try {
+      const { paperTitle, paperSummary, paperJournal, paperPdfFile } = state
+      let formData = new FormData()
+
+      formData.append('file', paperPdfFile.file)
+      formData.append('title', paperTitle)
+      formData.append('summary', paperSummary)
+      formData.append('journalId', paperJournal.journalId)
+
+      await authFetch.post(
+        "/paper",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      dispatch({ type: CREATE_PAPER_SUCCESS })
+      dispatch({ type: CLEAR_PAPER_VALUES })
+    } catch (error) {
+      if (error.response.status === 401) return
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: { msg: error.response.data.message },
+      })
+    }
+    clearAlert()
+  }
+
+  const editPaper = async () => {
+    dispatch({ type: CREATE_BEGIN })
+    try {
+      const { paperTitle, paperSummary, paperPdfFile } = state
+      let formData = new FormData()
+
+      formData.append('file', paperPdfFile.file)
+      formData.append('title', paperTitle)
+      formData.append('summary', paperSummary)
+
+      await authFetch.post(
+        `/paper/${state.editPaperId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      dispatch({ type: EDIT_PAPER_SUCCESS })
+      dispatch({ type: CLEAR_PAPER_VALUES })
+    } catch (error) {
+      if (error.response.status === 401) return
+      dispatch({
+        type: EDIT_PAPER_ERROR,
+        payload: { msg: error.response.data.message },
+      })
+    }
+    clearAlert()
   }
   const clearValues = () => {
     dispatch({ type: CLEAR_VALUES })
@@ -250,6 +360,10 @@ const AppProvider = ({ children }) => {
   const setEditJob = (id) => {
     dispatch({ type: SET_EDIT_JOB, payload: { id } })
   }
+
+  const setEditPaper = (id) => {
+    dispatch({ type: SET_EDIT_PAPER, payload: { id } })
+  }
   const editJob = async () => {
     dispatch({ type: EDIT_JOB_BEGIN })
 
@@ -304,6 +418,9 @@ const AppProvider = ({ children }) => {
   const changePage = (page) => {
     dispatch({ type: CHANGE_PAGE, payload: { page } })
   }
+  const changeView = (viewType) => {
+    dispatch({ type: CHANGE_VIEW, payload: { viewType } })
+  }
   return (
     <AppContext.Provider
       value={{
@@ -319,11 +436,17 @@ const AppProvider = ({ children }) => {
         createJob,
         getJobs,
         setEditJob,
+        setEditPaper,
         deleteJob,
         editJob,
         showStats,
         clearFilters,
         changePage,
+        changeView,
+        showAuthorPaper,
+        clearPaperValues,
+        createPaper,
+        editPaper
       }}
     >
       {children}

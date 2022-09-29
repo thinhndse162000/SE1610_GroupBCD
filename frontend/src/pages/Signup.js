@@ -12,7 +12,7 @@ const initialState = {
   profileImage: '',
   email: '',
   password: '',
-  retypePassword: '',
+  passwordRetype: '',
 }
 
 const Signup = () => {
@@ -30,12 +30,12 @@ const Signup = () => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const { firstName, lastName, phone, organization, dateOfBirth, profileImage, email, password, retypePassword } = values
-    if (!(email && password)) {
+    const { firstName, lastName, phone, organization, dateOfBirth, profileImage, email, password, passwordRetype } = values
+    if (!(email && password && firstName && lastName && phone && organization && dateOfBirth && passwordRetype)) {
       displayAlert()
       return
     }
-    const currentUser = { firstName, lastName, phone, organization, dateOfBirth, profileImage, email, password, retypePassword }
+    const currentUser = { firstName, lastName, phone, organization, dateOfBirth, profileImage, email, password, passwordRetype }
 
     signup({ currentUser })
   }
@@ -43,7 +43,7 @@ const Signup = () => {
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate('/')
+        navigate('/author')
       }, 1000)
     }
   }, [user, navigate])
@@ -74,7 +74,7 @@ const Signup = () => {
         {/* retype password input */}
         <FormRow
           type="password"
-          name="retypePassword"
+          name="passwordRetype"
           labelText="Retype password"
           value={values.retypePassword}
           handleChange={handleChange}
@@ -114,6 +114,13 @@ const Signup = () => {
           value={values.organization}
           handleChange={handleChange}
         />
+        
+        <FormRow
+          type="text"
+          name="phone"
+          value={values.phone}
+          handleChange={handleChange}
+        />
 
         {/* profile image input */}
         <FormRow
@@ -122,7 +129,7 @@ const Signup = () => {
           labelText="Profile image"
           accept="image/*"
           handleChange={handleFileInput}
-          require="false"
+          require={false}
         />
         {values.profileImage && <img width='100%' src={values.profileImage} alt="Profile" />}
 

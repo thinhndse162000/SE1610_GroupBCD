@@ -236,15 +236,18 @@ ul {
 }
 .form-input,
 .form-select,
+.form-dropdown,
 .btn-block {
   height: 35px;
 }
+
 .form-row {
   margin-bottom: 1rem;
 }
 
 .form-textarea {
-  height: 7rem;
+  resize: none;
+  height: 10rem;
 }
 ::placeholder {
   font-family: inherit;

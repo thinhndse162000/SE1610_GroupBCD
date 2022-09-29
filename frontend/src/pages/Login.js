@@ -32,7 +32,7 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate("/");
+        navigate("/author");
       }, 1000);
     }
   }, [user, navigate]);
