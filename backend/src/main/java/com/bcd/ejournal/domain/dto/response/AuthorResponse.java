@@ -9,7 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountTokenResponse {
+public class AuthorResponse {
+    private Integer authorID;
     private String fullName;
-    private String token;
+    private String introduction;
+    private String education;
+    private String address;
+    private String profileImage;
 }

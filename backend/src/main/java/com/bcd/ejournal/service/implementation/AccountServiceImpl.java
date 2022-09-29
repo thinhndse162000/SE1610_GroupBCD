@@ -10,6 +10,7 @@ import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Reviewer;
+import com.bcd.ejournal.domain.enumstatus.AccountStatus;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.service.AccountService;
@@ -38,11 +39,12 @@ public class AccountServiceImpl implements AccountService {
     public AccountTokenResponse login(AccountLoginRequest req) {
         String email = req.getEmail();
         String password = req.getPassword();
-        Account acc = accountRepository.findByEmailAndStatusTrue(email)
+        Account acc = accountRepository.findByEmailAndStatusEqualsOpen(email)
                 .orElseThrow(() -> new UnauthorizedException("Account not found"));
         if (passwordEncoder.matches(password, acc.getPassword())) {
             AccountTokenResponse response = new AccountTokenResponse();
             response.setToken(jwtService.jwtFromAccount(acc));
+            response.setFullName(acc.getFullName());
             return response;
         } else {
             throw new UnauthorizedException("Account not found");
@@ -58,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         acc.setAccountID(0);
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
         acc.setRoleId(0);
-        acc.setStatus(true);
+        acc.setStatus(AccountStatus.OPEN);
         Author author = new Author();
         author.setAccount(acc);
         author.setIntroduction("");
@@ -73,6 +75,7 @@ public class AccountServiceImpl implements AccountService {
         }
         AccountTokenResponse response = new AccountTokenResponse();
         response.setToken(jwtService.jwtFromAccount(acc));
+        response.setFullName(acc.getFullName());
         return response;
     }
 
@@ -111,7 +114,7 @@ public class AccountServiceImpl implements AccountService {
     public void archiveAccount(Integer id) {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
-        acc.setStatus(false);
+        acc.setStatus(AccountStatus.ARCHIVED);
         accountRepository.save(acc);
     }
 
