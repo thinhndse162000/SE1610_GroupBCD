@@ -1,6 +1,7 @@
 package com.bcd.ejournal.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
@@ -17,6 +18,6 @@ public interface PaperService {
 	int deleteById(int Id) throws Exception;
 	
 	List<Paper> searchByRequest(PaperSearchRequest paperSearchRequest);
-	
+	Optional<Paper> findById (int id);
 	
 }
