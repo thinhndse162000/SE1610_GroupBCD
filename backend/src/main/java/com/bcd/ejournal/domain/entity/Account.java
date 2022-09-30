@@ -47,6 +47,7 @@ public class Account implements UserDetails {
     public String getFullName() {
         return lastName + " " + firstName;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<>();

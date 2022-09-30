@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping(path = "/paper")
 public class PaperApi {
@@ -31,7 +32,7 @@ public class PaperApi {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping(value="/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperID, @ModelAttribute PaperUpdateRequest request) {
         paperService.updatePaper(paperID, request);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -47,5 +48,12 @@ public class PaperApi {
     public ResponseEntity<Void> deletePaperById(@PathVariable(name = "id") Integer paperID) {
         paperService.deleteById(paperID);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PaperResponse> getPaper(@PathVariable(name = "id") Integer paperID) {
+        // TODO: author or reviewer or journal
+        PaperResponse response = paperService.getPaper(paperID);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

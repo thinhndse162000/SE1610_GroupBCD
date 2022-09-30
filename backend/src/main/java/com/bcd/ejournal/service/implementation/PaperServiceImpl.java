@@ -12,8 +12,8 @@ import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.enumstatus.PaperStatus;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.JournalRepository;
-import com.bcd.ejournal.repository.PaperMapper;
 import com.bcd.ejournal.repository.PaperRepository;
+import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.FileUtils;
 import org.modelmapper.ModelMapper;
@@ -35,13 +35,13 @@ public class PaperServiceImpl implements PaperService {
     private final PaperRepository paperRepository;
     private final AccountRepository accountRepository;
     private final JournalRepository journalRepository;
-    private final PaperMapper paperMapper;
+    private final RequestMapper paperMapper;
     private final ModelMapper modelMapper;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
-    public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository, JournalRepository journalRepository, PaperMapper paperMapper, ModelMapper modelMapper) {
+    public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository, JournalRepository journalRepository, RequestMapper paperMapper, ModelMapper modelMapper) {
         this.paperRepository = paperRepository;
         this.accountRepository = accountRepository;
         this.journalRepository = journalRepository;
@@ -137,6 +137,14 @@ public class PaperServiceImpl implements PaperService {
         return papers.stream()
                 .map(this::fromPaper)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PaperResponse getPaper(Integer paperID) {
+        Paper paper = paperRepository.findById(paperID)
+                .orElseThrow(() -> new NullPointerException("No paper found. ID: " + paperID));
+        // TODO: author or reviewer or journal
+        return modelMapper.map(paper, PaperResponse.class);
     }
 
     private PaperResponse fromPaper(Paper paper) {
