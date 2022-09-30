@@ -15,6 +15,7 @@ import StatsContainer from './StatsContainer'
 import AuthorPaperContainer from './AuthorPaperContainer'
 import Journal from './Journal'
 import JournalContainer from './JournalContainer'
+import PaperContainer from './PaperContainer'
 export {
   Logo,
   FormRow,
@@ -33,4 +34,5 @@ export {
   FormDropdown,
   Journal,
   JournalContainer,
+  PaperContainer,
 }

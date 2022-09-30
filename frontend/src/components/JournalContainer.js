@@ -3,7 +3,6 @@ import Wrapper from '../assets/wrappers/AuthorPaperContainer'
 import Journal from "./Journal";
 const JournalContainer = () => {
     const {
-        isLoading,
         searchResult,
     } = useAppContext()
     return (

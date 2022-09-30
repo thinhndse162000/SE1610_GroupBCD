@@ -3,9 +3,10 @@ import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa'
 import { useAppContext } from '../context/appContext'
 import Logo from './Logo'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false)
-  const { toggleSidebar, logoutUser, user } = useAppContext()
+  const { toggleSidebar, logoutUser, user, changeView } = useAppContext()
   return (
     <Wrapper>
       <div className='nav-center'>
@@ -15,6 +16,10 @@ const Navbar = () => {
         <div>
           <Logo />
           <h3 className='logo-text'>dashboard</h3>
+        </div>
+        <div>
+          <Link to='/' onClick={e => changeView('member')}>Home</Link>
+          <Link to='/author' onClick={e => changeView('author')}>Author</Link>
         </div>
         <div className='btn-container'>
           <button

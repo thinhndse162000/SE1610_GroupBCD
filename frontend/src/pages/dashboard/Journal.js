@@ -1,5 +1,4 @@
-import { useState } from "react"
-import { FormRow, FormRowSelect, JournalContainer } from "../../components"
+import { FormRow, FormRowSelect, JournalContainer, PaperContainer } from "../../components"
 import { useAppContext } from '../../context/appContext'
 import { default as SearchWrapper} from '../../assets/wrappers/SearchContainer'
 
@@ -11,6 +10,7 @@ const Journal = () => {
         journalSearchOptions,
         handleChange,
         journalSearch,
+        paperSearch,
       } = useAppContext()
 
     const handleInputChange = (e) => {
@@ -20,7 +20,7 @@ const Journal = () => {
 
     const handleSearch = (e) => {
         e.preventDefault()
-        journalSearch();
+        searchJournalType === 'Journal' ? journalSearch() : paperSearch()
     }
 
     return (
@@ -46,8 +46,7 @@ const Journal = () => {
             </button>
           </form>
         </SearchWrapper>
-        <JournalContainer />
-        {/* {searchJournalType === "Journal" ? <JournalContainer /> : <PaperContainer />} */}
+        {searchJournalType === "Journal" ? <JournalContainer /> : <PaperContainer />}
       </div>
     );
     }

@@ -6,6 +6,7 @@ const AuthorPaper = () => {
   const { showAuthorPaper, isLoading, authorPapers } = useAppContext();
 
   useEffect(() => {
+    // FIXME: Performance issue when enter this component
     showAuthorPaper()
   }, [])
 

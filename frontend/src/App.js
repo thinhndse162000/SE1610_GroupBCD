@@ -18,9 +18,9 @@ function App() {
         <Route
           path='/'
           element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <SharedLayout />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         >
           <Route index element={<Journal />} />
@@ -28,9 +28,9 @@ function App() {
         <Route
           path="/author"
           element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <SharedLayout />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         >
           <Route index element={<AuthorPaper />} />

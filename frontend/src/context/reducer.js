@@ -260,8 +260,8 @@ const reducer = (state, action) => {
   try {
     return journalDispatch(state, action)
   } catch (error) {
-    throw new Error(`no such action : ${action.type}`)
-  }
+    console.log(error)
+    }
 }
 
 export default reducer

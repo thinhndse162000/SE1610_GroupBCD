@@ -45,7 +45,7 @@ import {
   GET_PAPER_ERROR,
 } from './actions'
 
-const user = ""
+const user = localStorage.getItem('user')
 const token = localStorage.getItem('token')
 const paperState = {
   authorPapers: [],
@@ -76,10 +76,10 @@ const initialState = {
   showAlert: false,
   alertText: '',
   alertType: '',
-  user: user ? JSON.parse(user) : null,
+  user: user,
   token: token,
   showSidebar: false,
-  viewType: 'member',
+  viewType: 'author',
   fields: [],
   isEditing: false,
   editJobId: '',
@@ -169,7 +169,7 @@ const AppProvider = ({ children }) => {
         type: SETUP_USER_SUCCESS,
         payload: { user: fullName, token, alertText: "Login Successfully! Redirecting" },
       })
-      addUserToLocalStorage({ user, token })
+      addUserToLocalStorage({ fullName, token })
     } catch (error) {
       let msg = "Wrong email or password";
       dispatch({
@@ -190,7 +190,7 @@ const AppProvider = ({ children }) => {
         type: SETUP_USER_SUCCESS,
         payload: { user: fullName , token, alertText: "Account created successfully" },
       })
-      addUserToLocalStorage({ user, token })
+      addUserToLocalStorage({ fullName, token })
     } catch (error) {
       dispatch({
         type: SETUP_USER_ERROR,
@@ -233,13 +233,13 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch.patch('/auth/updateUser', currentUser)
 
-      const { token } = data
+      const { fullName, token } = data
 
       dispatch({
         type: UPDATE_USER_SUCCESS,
-        payload: { user, token },
+        payload: { fullName, token },
       })
-      addUserToLocalStorage({ token })
+      addUserToLocalStorage({ fullName, token })
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -453,23 +453,24 @@ const AppProvider = ({ children }) => {
     clearAlert()
   }
 
-  const paperSearch = () => {
-    console.log("In progress")
-    // dispatch({ type: SHOW_BEGIN })
-    // try {
-    //   // search
-    //   const { data } = authFetch.get('/paper/search', { params: { name: state.searchKeyword }})
-    //   dispatch({ 
-    //     type: GET_JOURNAL_SUCCESS, 
-    //     journals: data,
-    //   })
-    // } catch (error) {
-    //   dispatch({ 
-    //     type: GET_JOURNAL_ERROR,
-    //     msg: error.response.data.message,
-    //   })
-    // }
-    // clearAlert()
+  const paperSearch = async () => {
+    dispatch({ type: SHOW_BEGIN })
+    try {
+      // search
+      const { data } = await authFetch.post('/paper/search', { title: state.searchKeyword })
+      dispatch({ 
+        type: GET_PAPER_SUCCESS, 
+        payload: {
+          papers: data
+        },
+      })
+    } catch (error) {
+      dispatch({ 
+        type: GET_PAPER_ERROR,
+        msg: error.response.data.message,
+      })
+    }
+    clearAlert()
   }
 
   return (

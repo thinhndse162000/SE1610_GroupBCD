@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import Wrapper from '../assets/wrappers/Paper'
 import { useAppContext } from '../context/appContext'
 
-const Paper = ({ paper }) => {
-    const { setEditPaper, deletePaper } = useAppContext()
+const Paper = ({ paper, action=[] }) => {
     let date = moment(paper.submitTime).format('DD/MM/YYYY')
     return (
       <Wrapper>
@@ -14,7 +13,7 @@ const Paper = ({ paper }) => {
             <p>
               {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} - Submit date: {date}
             </p>
-            <p>Grade: 10 - <span className={`status ${paper.status}`}>{paper.status}</span></p>
+            <p>Grade: 10 - <span className={`status ${paper.status.toLowerCase()}`}>{paper.status}</span></p>
           </div>
         </header>
         <div className="content">
@@ -24,20 +23,27 @@ const Paper = ({ paper }) => {
           </div>
           <footer>
             <div className="actions">
-              <Link
-                to="submit-paper"
-                className="btn edit-btn"
-                onClick={() => setEditPaper(paper.paperId)}
-              >
-                Edit
-              </Link>
-              <button
-                type="button"
-                className="btn delete-btn"
-                onClick={() => deletePaper(paper.paperId)}
-              >
-                Delete
-              </button>
+              {action.map((act, index) => {
+                return act.type === "link" ? (
+                  <Link
+                    key={index}
+                    to={act.to}
+                    className={act.className}
+                    onClick={act.onClick}
+                  >
+                    {act.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={index}
+                    type="button"
+                    className={act.className}
+                    onClick={act.onClick}
+                  >
+                    {act.label}
+                  </button>
+                );
+              })}
             </div>
           </footer>
         </div>
