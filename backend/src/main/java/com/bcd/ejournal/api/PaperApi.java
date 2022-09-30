@@ -1,60 +1,59 @@
 package com.bcd.ejournal.api;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
+import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
+import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
+import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
+import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
-import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
-import com.bcd.ejournal.domain.dto.request.PaperUpdatePaperRequest;
-import com.bcd.ejournal.domain.entity.Paper;
-import com.bcd.ejournal.domain.exception.PaperException;
-import com.bcd.ejournal.service.PaperService;
+import java.util.List;
+
 
 @RestController
 @RequestMapping(path = "/paper")
 public class PaperApi {
-	@Autowired
-	private PaperService paperService;
+    private final PaperService paperService;
 
-	@PostMapping(path = "/submit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<?> submitPaper(PaperSubmitRequest model) throws Exception, PaperException {
-		paperService.submitPaper(model);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+    @Autowired
+    public PaperApi(PaperService paperService) {
+        this.paperService = paperService;
+    }
 
-	@PutMapping(value = "/update")
-	public ResponseEntity<?> updatePaper(@RequestBody PaperUpdatePaperRequest req) {
-		paperService.updatePaper(req);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-	
-	@PostMapping(path = "/search")
-	public ResponseEntity<?> search(@RequestBody PaperSearchRequest request ){
-		List<Paper> rs = paperService.searchByRequest(request);
-		return ResponseEntity.ok(rs);
-	}
-	
-	@DeleteMapping(path = "/delete/{id}")
-	public int deletePaperById(@PathVariable int id) throws Exception {
-		return paperService.deleteById(id);
-	}
-	@GetMapping(path = "/{id}")
-	public ResponseEntity<?> searchById(@PathVariable int id){
-		Optional<Paper> paper = paperService.findById(id);
-		return ResponseEntity.ok(paper);
-	}
-	
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> submitPaper(@AuthenticationPrincipal AccountJWTPayload payload, @ModelAttribute PaperSubmitRequest request) {
+        paperService.submitPaper(payload.getAccountID(), request);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperID, @ModelAttribute PaperUpdateRequest request) {
+        paperService.updatePaper(paperID, request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<PaperResponse>> search(@RequestBody PaperSearchRequest request) {
+        List<PaperResponse> rs = paperService.searchByRequest(request);
+        return ResponseEntity.ok(rs);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePaperById(@PathVariable(name = "id") Integer paperID) {
+        paperService.deleteById(paperID);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PaperResponse> getPaper(@PathVariable(name = "id") Integer paperID) {
+        // TODO: author or reviewer or journal
+        PaperResponse response = paperService.getPaper(paperID);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

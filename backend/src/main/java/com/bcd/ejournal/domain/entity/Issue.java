@@ -21,7 +21,7 @@ public class Issue {
     private String issue;
     private Date startDate;
     private Date endDate;
-    private int numberOfPages;
+    private int numberOfPage;
 
     @ManyToOne
     @JoinColumn(name = "journalID", nullable = false)

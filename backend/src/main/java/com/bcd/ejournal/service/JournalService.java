@@ -11,6 +11,8 @@ public interface JournalService {
 
     JournalResponse getJournal(Integer journalID);
 
+    List<JournalResponse> search(String name);
+
     List<IssueResponse> listAllIssues(Integer journalID);
 
     JournalResponse updateJournal(Integer journalID, JournalCreateRequest request);
