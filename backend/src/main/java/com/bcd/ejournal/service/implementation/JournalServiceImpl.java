@@ -49,8 +49,8 @@ public class JournalServiceImpl implements JournalService {
     @Override
     public List<JournalResponse> search(String name) {
         return StreamSupport.stream(journalRepository.findByNameContains(name).spliterator(), false)
-                        .map((journal) -> modelMapper.map(journal, JournalResponse.class))
-                        .collect(Collectors.toList());
+                .map((journal) -> modelMapper.map(journal, JournalResponse.class))
+                .collect(Collectors.toList());
     }
 
     @Override

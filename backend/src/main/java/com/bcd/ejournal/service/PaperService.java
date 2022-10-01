@@ -20,4 +20,6 @@ public interface PaperService {
     List<PaperResponse> getAllPaperFromAuthor(Integer authorID);
 
     List<PaperResponse> getAllPaperFromJournal(Integer journalID);
+
+    PaperResponse getPaper(Integer paperID);
 }

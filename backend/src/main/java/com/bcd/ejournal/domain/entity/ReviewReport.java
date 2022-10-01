@@ -1,5 +1,7 @@
 package com.bcd.ejournal.domain.entity;
 
+import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
+
 import com.bcd.ejournal.domain.enumstatus.ReviewReportStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +10,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -20,7 +22,7 @@ public class ReviewReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reviewReportID;
     @CreatedDate
-    private Date reviewDate;
+    private Timestamp reviewDate;
     private int grade;
     private int confidentiality;
     private String note;
@@ -34,4 +36,10 @@ public class ReviewReport {
     @ManyToOne
     @JoinColumn(name = "PaperID", nullable = false)
     private Paper paper;
+
+    public ReviewReport(ReviewReportSubmitRequest req) {
+        this.grade = req.getGrade();
+        this.note = req.getText();
+        this.confidentiality = req.getCondentiality();
+    }
 }
