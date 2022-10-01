@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 public class ReviewReportSubmitRequest {
     private int grade;
-    private int condentiality;
-    private String text;
+    private int confidentiality;
+    private String note;
 }
