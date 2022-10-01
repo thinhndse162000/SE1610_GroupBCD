@@ -1,6 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
-import com.bcd.ejournal.domain.enumstatus.AccountStatus;
+import com.bcd.ejournal.domain.enums.AccountStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +32,7 @@ public class Account implements UserDetails {
     private String organization;
     private Date dateOfBirth;
     private String profileImage;
+    // TODO: change role to enum
     private Integer roleId;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;

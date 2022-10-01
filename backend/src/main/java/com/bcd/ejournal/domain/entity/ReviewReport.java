@@ -2,7 +2,7 @@ package com.bcd.ejournal.domain.entity;
 
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
 
-import com.bcd.ejournal.domain.enumstatus.ReviewReportStatus;
+import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +39,7 @@ public class ReviewReport {
 
     public ReviewReport(ReviewReportSubmitRequest req) {
         this.grade = req.getGrade();
-        this.note = req.getText();
-        this.confidentiality = req.getCondentiality();
+        this.note = req.getNote();
+        this.confidentiality = req.getConfidentiality();
     }
 }

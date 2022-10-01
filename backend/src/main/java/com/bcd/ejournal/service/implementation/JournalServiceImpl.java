@@ -5,7 +5,7 @@ import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.entity.Issue;
 import com.bcd.ejournal.domain.entity.Journal;
-import com.bcd.ejournal.domain.enumstatus.JournalStatus;
+import com.bcd.ejournal.domain.enums.JournalStatus;
 import com.bcd.ejournal.repository.IssueRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.service.JournalService;

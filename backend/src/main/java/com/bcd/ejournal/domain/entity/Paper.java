@@ -1,7 +1,7 @@
 package com.bcd.ejournal.domain.entity;
 
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
-import com.bcd.ejournal.domain.enumstatus.PaperStatus;
+import com.bcd.ejournal.domain.enums.PaperStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table

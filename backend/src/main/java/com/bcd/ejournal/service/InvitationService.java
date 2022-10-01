@@ -3,7 +3,7 @@ package com.bcd.ejournal.service;
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
-import com.bcd.ejournal.domain.enumstatus.InvitationStatus;
+import com.bcd.ejournal.domain.enums.InvitationStatus;
 
 import java.util.List;
 

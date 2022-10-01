@@ -1,6 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
-import com.bcd.ejournal.domain.enumstatus.InvitationStatus;
+import com.bcd.ejournal.domain.enums.InvitationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

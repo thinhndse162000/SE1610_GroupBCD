@@ -9,7 +9,7 @@ import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
-import com.bcd.ejournal.domain.enumstatus.PaperStatus;
+import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PaperRepository;

@@ -1,4 +1,4 @@
-package com.bcd.ejournal.domain.enumstatus;
+package com.bcd.ejournal.domain.enums;
 
 public enum AccountStatus {
     ARCHIVED,

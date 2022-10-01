@@ -6,7 +6,7 @@ import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.entity.Invitation;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.Reviewer;
-import com.bcd.ejournal.domain.enumstatus.InvitationStatus;
+import com.bcd.ejournal.domain.enums.InvitationStatus;
 import com.bcd.ejournal.repository.InvitationRepository;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
@@ -14,6 +14,7 @@ import com.bcd.ejournal.service.InvitationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,11 +71,15 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
+    @Transactional
     public void updateStatus(Integer reviewerID, Integer invitationID, InvitationStatus status) {
         Invitation invitation = invitationRepository.findByIdAndReviewerId(invitationID, reviewerID)
                 .orElseThrow(() -> new NullPointerException("Invitation not found. ID: " + invitationID));
+        // TODO: only change invitation if status is pending
         invitation.setStatus(status);
-        // TODO: if 3 accept then begin review process
         invitationRepository.save(invitation);
+        // TODO: if 3 accept then begin review process
+        // TODO: change status of other invitation to cancel
+        List<Invitation> invitations = invitation.getPaper().getInvitations();
     }
 }

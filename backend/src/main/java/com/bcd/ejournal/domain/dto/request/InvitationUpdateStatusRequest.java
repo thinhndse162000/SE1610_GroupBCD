@@ -1,6 +1,6 @@
 package com.bcd.ejournal.domain.dto.request;
 
-import com.bcd.ejournal.domain.enumstatus.InvitationStatus;
+import com.bcd.ejournal.domain.enums.InvitationStatus;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
