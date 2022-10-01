@@ -10,6 +10,7 @@ import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Reviewer;
+import com.bcd.ejournal.domain.enums.AccountRole;
 import com.bcd.ejournal.domain.enums.AccountStatus;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
 import com.bcd.ejournal.repository.AccountRepository;
@@ -59,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         Account acc = modelMapper.map(req, Account.class);
         acc.setAccountID(0);
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
-        acc.setRoleId(0);
+        acc.setRole(AccountRole.MEMBER);
         acc.setStatus(AccountStatus.OPEN);
 
         Author author = new Author();

@@ -1,5 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
+import com.bcd.ejournal.domain.enums.AccountRole;
 import com.bcd.ejournal.domain.enums.AccountStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,8 +33,8 @@ public class Account implements UserDetails {
     private String organization;
     private Date dateOfBirth;
     private String profileImage;
-    // TODO: change role to enum
-    private Integer roleId;
+    @Enumerated(EnumType.STRING)
+    private AccountRole role;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
@@ -52,11 +53,9 @@ public class Account implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<>();
-
-        if (roleId == 1) {
-            list.add(new SimpleGrantedAuthority("ADMIN"));
-        } else {
-            list.add(new SimpleGrantedAuthority("MEMBER"));
+        list.add(new SimpleGrantedAuthority(role.name()));
+        if (role == AccountRole.MANAGER) {
+            list.add(new SimpleGrantedAuthority(AccountRole.MEMBER.name()));
         }
         return list;
     }

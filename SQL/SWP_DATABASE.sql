@@ -16,7 +16,7 @@ CREATE TABLE Account(
 	Organization NVARCHAR(150) not null,
 	DateOfBirth DATE,
 	profileImage char(100),
-	roleId int not null,
+  role char(2) not null,
   [status] varchar(10) not null
 )
 
