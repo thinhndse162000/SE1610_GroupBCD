@@ -38,6 +38,9 @@ public class Paper implements Serializable {
     @JoinColumn(name = "JournalID", nullable = false)
     private Journal journal;
 
+    @OneToMany(mappedBy = "paper")
+    private List<Invitation> invitations;
+
     public Paper(PaperSubmitRequest model) {
         this.title = model.getTitle();
         this.summary = model.getSummary();

@@ -61,11 +61,16 @@ public class AccountServiceImpl implements AccountService {
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
         acc.setRoleId(0);
         acc.setStatus(AccountStatus.OPEN);
+
         Author author = new Author();
         author.setAccount(acc);
         author.setIntroduction("");
         author.setEducation("");
-        Reviewer reviewer = new Reviewer(0, true, acc);
+
+        Reviewer reviewer = new Reviewer();
+        reviewer.setReviewerID(0);
+        reviewer.setInvitable(true);
+        reviewer.setAccount(acc);
         acc.setAuthor(author);
         acc.setReviewer(reviewer);
         try {
