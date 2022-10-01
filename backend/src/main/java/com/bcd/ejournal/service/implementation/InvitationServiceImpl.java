@@ -36,6 +36,8 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public void sendInvitation(Integer reviewerID, ReviewerInvitationRequest request) {
+        // TODO: verify if reviewer is invitable
+        // TODO: verify manager can send invitation of paperID
         Reviewer reviewer = reviewerRepository.findById(reviewerID)
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. ID: " + reviewerID));
         Paper paper = paperRepository.findById(request.getPaperID())
@@ -61,6 +63,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public List<InvitationPaperResponse> listInvitationFromPaper(Integer paperID) {
+        // TODO: verify accountID or manager
         Paper paper = paperRepository.findById(paperID)
                 .orElseThrow(() -> new NullPointerException("Paper not found. ID: " + paperID));
 

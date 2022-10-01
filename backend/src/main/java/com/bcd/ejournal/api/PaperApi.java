@@ -32,12 +32,15 @@ public class PaperApi {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    // FIXME: change to PUT
     @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperID, @ModelAttribute PaperUpdateRequest request) {
+        // TODO: verify right account
         paperService.updatePaper(paperID, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // TODO: specify which role will use this
     @PostMapping("/search")
     public ResponseEntity<List<PaperResponse>> search(@RequestBody PaperSearchRequest request) {
         List<PaperResponse> rs = paperService.searchByRequest(request);
@@ -46,6 +49,7 @@ public class PaperApi {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePaperById(@PathVariable(name = "id") Integer paperID) {
+        // TODO: verify right account
         paperService.deleteById(paperID);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -57,6 +57,8 @@ public class AccountServiceImpl implements AccountService {
         if (!req.getPassword().equals(req.getPasswordRetype())) {
             throw new DataIntegrityViolationException("Password mismatch");
         }
+        // TODO: trim white space except password
+        // TODO: validate date of birth
         Account acc = modelMapper.map(req, Account.class);
         acc.setAccountID(0);
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
@@ -104,6 +106,8 @@ public class AccountServiceImpl implements AccountService {
     public AccountProfileResponse updateProfile(Integer id, AccountUpdateProfileRequest req) {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
+        // TODO: trim white space
+        // TODO: validate date of birth
         modelMapper.map(req, acc);
         acc = accountRepository.save(acc);
         return modelMapper.map(acc, AccountProfileResponse.class);

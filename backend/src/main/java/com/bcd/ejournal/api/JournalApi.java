@@ -1,5 +1,6 @@
 package com.bcd.ejournal.api;
 
+import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
@@ -9,6 +10,7 @@ import com.bcd.ejournal.service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -65,10 +67,18 @@ public class JournalApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // TODO: remove journalID, change it to something else
-    @GetMapping("/{journalID}/paper")
+    @GetMapping("/{journalID}/publish")
     public ResponseEntity<List<PaperResponse>> getAllPaper(@PathVariable Integer journalID) {
+        // TODO: move to publishService
         List<PaperResponse> papers = paperService.getAllPaperFromJournal(journalID);
         return new ResponseEntity<>(papers, HttpStatus.OK);
+    }
+
+    // TODO: remove journalID, change it to something else
+    // TODO: Manager role authorization
+    @GetMapping("/paper")
+    public ResponseEntity<List<PaperResponse>> getAllPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload accountJWTPayload) {
+        // TODO: validate right manager
+        return null;
     }
 }

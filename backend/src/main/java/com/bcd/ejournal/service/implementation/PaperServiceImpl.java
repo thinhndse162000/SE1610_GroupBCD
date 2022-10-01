@@ -52,6 +52,7 @@ public class PaperServiceImpl implements PaperService {
     @Override
     @Transactional
     public void submitPaper(Integer authorID, PaperSubmitRequest submitRequest) {
+        // TODO: trim white space from title and abstract
         Paper paper = new Paper(submitRequest);
         // TODO: generate random file name
         // TODO: delete file if error
@@ -89,6 +90,8 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public void updatePaper(Integer paperID, PaperUpdateRequest request) {
+        // TODO: verify accountID
+        // TODO: trim white space
         Paper paper = paperRepository.findById(paperID)
                 .orElseThrow(() -> new NullPointerException("Paper not found. ID: " + paperID));
         paper.setTitle(request.getTitle());
@@ -98,6 +101,7 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public void deleteById(Integer paperID) {
+        // TODO: verify accountID
         // TODO: log existence
         Optional<Paper> paperOpt = paperRepository.findById(paperID);
         if (paperOpt.isPresent()) {
@@ -109,6 +113,7 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest) {
+        // TODO: verify manager
         Iterable<Paper> papers = paperRepository.searchByTitle(paperSearchRequest.getTitle());
 
         return StreamSupport.stream(papers.spliterator(), false)

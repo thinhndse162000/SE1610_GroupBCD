@@ -38,6 +38,8 @@ public class ReviewReportServiceImpl implements ReviewReportService {
 
     @Override
     public void updateReviewReport(Integer reviewReportId, ReviewReportSubmitRequest req) {
+        // TODO: verify reviewer
+        // TODO: verify paper is in reviewing process
         ReviewReport reviewReport = reviewreportRepository.findById(reviewReportId)
                 .orElseThrow(() -> new NullPointerException("Review report not found. ID: " + reviewReportId));
 
@@ -55,6 +57,8 @@ public class ReviewReportServiceImpl implements ReviewReportService {
 
     @Override
     public Resource downloadFile(String fileName) throws IOException {
+        // TODO: verify reviewer can download
+        // TODO: verify author
         return FileUtils.load(uploadDir, fileName);
     }
 

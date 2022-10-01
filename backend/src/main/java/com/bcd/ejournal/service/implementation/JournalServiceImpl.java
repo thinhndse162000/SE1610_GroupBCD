@@ -32,6 +32,7 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public JournalResponse createJournal(JournalCreateRequest request) {
+        // TODO: trim white space
         Journal journal = modelMapper.map(request, Journal.class);
         journal.setJournalID(0);
         journal.setStatus(JournalStatus.OPEN);
@@ -41,6 +42,7 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public JournalResponse getJournal(Integer journalID) {
+        // TODO: return journal detail
         Journal journal = journalRepository.findById(journalID)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
         return modelMapper.map(journal, JournalResponse.class);
@@ -63,6 +65,7 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public JournalResponse updateJournal(Integer journalID, JournalCreateRequest request) {
+        // TODO: verify admin
         Journal journal = journalRepository.findById(journalID)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
         modelMapper.map(request, journal);
@@ -72,6 +75,7 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public void archiveJournal(Integer journalID) {
+        // TODO: verify admin
         Journal journal = journalRepository.findById(journalID)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
         journal.setStatus(JournalStatus.ARCHIVED);

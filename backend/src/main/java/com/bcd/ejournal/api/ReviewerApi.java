@@ -26,6 +26,8 @@ public class ReviewerApi {
 
     @PostMapping("/{id}/invitation")
     public ResponseEntity<Void> sendInvitation(@PathVariable(name = "id") Integer reviewerID, @Valid @RequestBody ReviewerInvitationRequest request) {
+        // TODO: validate if reviewer is invitable
+        // TODO: validate paper is not in reviewing process
         invitationService.sendInvitation(reviewerID, request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -41,6 +43,7 @@ public class ReviewerApi {
     public ResponseEntity<Void> acceptOrRejectInvitation(@AuthenticationPrincipal AccountJWTPayload payload,
                                                                                @PathVariable(name = "id") Integer invitationID,
                                                                                @Valid @RequestBody InvitationUpdateStatusRequest request) {
+        // TODO: validate if invitation is in PENDING status
         Integer reviewerID = payload.getAccountID();
         invitationService.updateStatus(reviewerID, invitationID, request.getStatus());
         return new ResponseEntity<>(HttpStatus.OK);

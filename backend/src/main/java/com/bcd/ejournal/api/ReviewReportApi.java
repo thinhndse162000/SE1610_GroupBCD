@@ -20,21 +20,23 @@ public class ReviewReportApi {
     @Autowired
     private ReviewReportService reportService;
 
-
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateReviewReport(@PathVariable(name = "id") Integer reviewReportId, @RequestBody ReviewReportSubmitRequest req) {
+        // TODO: verify accountID
         reportService.updateReviewReport(reviewReportId, req);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<ReviewReport>> search(@RequestBody ReviewReportSearchRequest req) {
+    public ResponseEntity<List<ReviewReport>> searchOfReviewer(@RequestBody ReviewReportSearchRequest req) {
+        // TODO: verify account
         List<ReviewReport> rs = reportService.searchByRequest(req);
         return ResponseEntity.ok(rs);
     }
 
     @PostMapping("/download")
     public ResponseEntity<Resource> getFile(@RequestBody String fileName) throws IOException {
+        // TODO: verify reviewer can download
         Resource rs = reportService.downloadFile(fileName);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + rs.getFilename() + "\"").body(rs);
     }
