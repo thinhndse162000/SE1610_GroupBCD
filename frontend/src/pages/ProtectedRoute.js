@@ -1,8 +1,8 @@
-import { useAppContext } from '../context/appContext'
+import { useSelector } from "react-redux";
 import { Navigate } from 'react-router-dom'
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAppContext()
+  const user  = useSelector((state) => state.base.user)
   if (!user) {
     return <Navigate to='/landing' />
   }

@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { FormRow, Alert } from '../../components'
-import { useAppContext } from '../../context/appContext'
+import { useSelector } from "react-redux";
 import Wrapper from '../../assets/wrappers/DashboardFormPage'
+import { displayAlert } from '../../context/service/utilService';
 const Profile = () => {
-  const { user, showAlert, displayAlert, updateUser, isLoading } =
-    useAppContext()
+  const { user, showAlert, isLoading } =
+    useSelector((state) => state)
 
   const [name, setName] = useState(user?.name)
   const [email, setEmail] = useState(user?.email)
@@ -17,7 +18,8 @@ const Profile = () => {
       displayAlert()
       return
     }
-    updateUser({ name, email, lastName, location })
+    // TODO:
+    // updateUser({ name, email, lastName, location })
   }
 
   return (

@@ -1,11 +1,9 @@
-import { useAppContext } from "../context/appContext";
+import { useSelector } from "react-redux";
 import Wrapper from '../assets/wrappers/AuthorPaperContainer'
 import Paper from "./Paper";
 
 const PaperContainer = () => {
-    const {
-        searchResult,
-    } = useAppContext()
+    const searchResult = useSelector((state) => state.member.searchResult);
     return (
         <Wrapper>
           <div className="papers">

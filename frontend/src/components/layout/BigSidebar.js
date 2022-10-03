@@ -1,10 +1,10 @@
-import { useAppContext } from '../context/appContext'
+import { useSelector } from "react-redux";
 import NavLinks from './NavLinks'
-import Logo from '../components/Logo'
-import Wrapper from '../assets/wrappers/BigSidebar'
+import Logo from './Logo'
+import Wrapper from '../../assets/wrappers/BigSidebar'
 
 const BigSidebar = () => {
-  const { showSidebar } = useAppContext()
+  const { showSidebar } = useSelector((state) => state)
   return (
     <Wrapper>
       <div

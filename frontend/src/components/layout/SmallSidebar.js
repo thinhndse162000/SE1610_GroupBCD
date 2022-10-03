@@ -1,12 +1,13 @@
-import Wrapper from '../assets/wrappers/SmallSidebar'
+import Wrapper from '../../assets/wrappers/SmallSidebar'
 import { FaTimes } from 'react-icons/fa'
-import { useAppContext } from '../context/appContext'
+import { useSelector } from "react-redux";
 
 import Logo from './Logo'
 import NavLinks from './NavLinks'
+import { toggleSidebar } from '../../context/service/utilService';
 
 const SmallSidebar = () => {
-  const { showSidebar, toggleSidebar } = useAppContext()
+  const { showSidebar } = useSelector((state) => state)
   return (
     <Wrapper>
       <div
