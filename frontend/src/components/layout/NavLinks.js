@@ -1,9 +1,9 @@
-import links from '../utils/links'
+import links from '../../utils/links'
 import { NavLink } from 'react-router-dom'
-import { useAppContext } from '../context/appContext'
+import { useSelector } from "react-redux";
 
 const NavLinks = ({ toggleSidebar }) => {
-  const { viewType } = useAppContext()
+  const { viewType } = useSelector((state) => state.base)
   return (
     <div className='nav-links'>
       {links[viewType].map((link) => {

@@ -1,11 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Signup, Landing, Error, ProtectedRoute, Login } from './pages'
 import {
-  AllJobs,
-  Profile,
   SharedLayout,
-  Stats,
-  AddJob,
   AuthorPaper,
   AddPaper,
   Journal,

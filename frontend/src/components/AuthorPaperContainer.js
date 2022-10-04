@@ -1,10 +1,12 @@
-import { useAppContext } from '../context/appContext'
+import { useSelector, useDispatch } from "react-redux";
 import Wrapper from '../assets/wrappers/AuthorPaperContainer'
 import Paper from './Paper'
+import { setEditPaper, deletePaper } from '../context/service/paperService'
 
 const AuthorPaperContainer = () => {
-    const { authorPapers: papers, setEditPaper, deletePaper } = useAppContext()
-    return (
+  const papers = useSelector((state) => (state.author.submittedPapers))
+    const dispatch = useDispatch()
+  return (
       <Wrapper>
         <div className="papers">
           {/* TODO: add list of action */}
@@ -15,13 +17,13 @@ const AuthorPaperContainer = () => {
                 to: 'submit-paper',
                 className: 'btn edit-btn',
                 label: 'Edit',
-                onClick: () => setEditPaper(paper.paperId),
+                onClick: () => dispatch(setEditPaper(paper.paperId)),
               },
               {
                 type: 'button',
                 className: 'btn delete-btn',
                 label: 'Delete',
-                onClick: () => deletePaper(paper.paperId)
+                onClick: () => dispatch(deletePaper(paper.paperId))
               }
             ]
             return <Paper key={index} paper={paper} action={action}></Paper>;
