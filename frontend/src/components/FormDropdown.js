@@ -1,5 +1,6 @@
 import AsyncSelect from 'react-select/async'
-const FormDropdown = ({ handleChange, isDisabled, value, labelText, loadOptions, required = true }) => {
+const FormDropdown = ({ handleChange, 
+  isDisabled, value, labelText, loadOptions, required = true }) => {
   return (
     <div className='form-row'>
       <label htmlFor={labelText} className='form-label'>
