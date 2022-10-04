@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Wrapper from '../assets/wrappers/Paper'
+import Wrapper from '../assets/wrappers/Item'
 
 const Journal = ({ journal }) => {
     const { journalID, name, introduction, organization, issn } = journal

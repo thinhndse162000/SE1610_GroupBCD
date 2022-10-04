@@ -18,7 +18,7 @@ export const setEditPaper = (id) => (dispatch) => {
 
 export const deletePaper = (id) => {};
 
-export const showAuthorPaper = () => async (dispatch) => {
+export const getAuthorPaper = () => async (dispatch) => {
   dispatch({ type: LOADING });
   try {
     const { data } = await authFetch.get("/author/paper");

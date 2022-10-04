@@ -1,14 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
-import Wrapper from '../assets/wrappers/AuthorPaperContainer'
-import Paper from './Paper'
-import { setEditPaper, deletePaper } from '../context/service/paperService'
+import Wrapper from '../../assets/wrappers/Container'
+import Paper from '../Paper'
+import { setEditPaper, deletePaper } from '../../context/service/paperService'
 
 const AuthorPaperContainer = () => {
   const papers = useSelector((state) => (state.author.submittedPapers))
     const dispatch = useDispatch()
   return (
       <Wrapper>
-        <div className="papers">
+        <div className="container">
           {/* TODO: add list of action */}
           {papers.map((paper, index) => {
             const action = [

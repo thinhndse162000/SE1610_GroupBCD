@@ -5,7 +5,7 @@ import {
   Loading,
   AuthorPaperContainer,
 } from "../../../components";
-import { showAuthorPaper } from "../../../context/service/paperService";
+import { getAuthorPaper } from "../../../context/service/paperService";
 
 const AuthorPaper = () => {
   const {
@@ -16,7 +16,7 @@ const AuthorPaper = () => {
 
   useEffect(() => {
     // FIXME: Performance issue when enter this component
-    dispatch(showAuthorPaper());
+    dispatch(getAuthorPaper());
   }, []);
 
   if (isLoading) {

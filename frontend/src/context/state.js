@@ -14,6 +14,10 @@ const author = {
   paperStatusOptions: ["pending", "accepted", "rejected"],
 };
 
+const reviewer = {
+  invitations: [],
+}
+
 const member = {
   searchKeyword: "",
   searchJournalType: "Journal",
@@ -37,7 +41,8 @@ const base = {
 const initialState = {
   base,
   author,
+  reviewer,
   member,
 };
 
-export { initialState, base, author, member };
+export { initialState, base, reviewer, author, member };
