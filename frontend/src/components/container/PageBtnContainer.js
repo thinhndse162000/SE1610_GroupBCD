@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi'
-import Wrapper from '../assets/wrappers/PageBtnContainer'
+import Wrapper from '../../assets/wrappers/PageBtnContainer'
 
 const PageBtnContainer = () => {
   const { numOfPages, page, changePage } = useAppContext()

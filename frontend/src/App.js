@@ -1,18 +1,20 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Signup, Landing, Error, ProtectedRoute, Login } from './pages'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Signup, Landing, Error, ProtectedRoute, Login } from "./pages";
 import {
   SharedLayout,
   AuthorPaper,
   AddPaper,
   Journal,
-} from './pages/dashboard'
+  AddReview,
+  ReviewerInvitation,
+} from "./pages/dashboard";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route
-          path='/'
+          path="/"
           element={
             <ProtectedRoute>
               <SharedLayout />
@@ -21,6 +23,7 @@ function App() {
         >
           <Route index element={<Journal />} />
         </Route>
+
         <Route
           path="/author"
           element={
@@ -32,6 +35,19 @@ function App() {
           <Route index element={<AuthorPaper />} />
           <Route path="submit-paper" element={<AddPaper />} />
         </Route>
+
+        <Route
+          path="/reviewer"
+          element={
+            <ProtectedRoute>
+              <SharedLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AddReview />} />
+          <Route path="invitation" element={<ReviewerInvitation />} />
+        </Route>
+        
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />
@@ -41,4 +57,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

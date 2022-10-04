@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import baseReducer from "./baseReducer";
 import authorReducer from "./authorReducer";
 import memberReducer from "./memberReducer";
+import reviewerReducer from "./reviewerReducer";
 import { LOGOUT_USER } from "../actions";
 import { initialState } from "../state";
 
@@ -9,6 +10,7 @@ const combinedReducer = combineReducers({
   base: baseReducer,
   author: authorReducer,
   member: memberReducer,
+  reviewer: reviewerReducer
 });
 
 const reducer = (state, action) => {

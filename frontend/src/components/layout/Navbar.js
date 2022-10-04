@@ -21,12 +21,15 @@ const Navbar = () => {
           <Logo />
           <h3 className="logo-text">dashboard</h3>
         </div>
-        <div>
+        <div className="navigation-link">
           <Link to="/" onClick={(e) => dispatch(changeView("member"))}>
             Home
           </Link>
           <Link to="/author" onClick={(e) => dispatch(changeView("author"))}>
             Author
+          </Link>
+          <Link to="/reviewer" onClick={(e) => dispatch(changeView("reviewer"))}>
+            Reviewer
           </Link>
         </div>
         <div className="btn-container">

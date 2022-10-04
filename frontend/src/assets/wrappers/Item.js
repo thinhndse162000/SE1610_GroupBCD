@@ -32,8 +32,12 @@ const Wrapper = styled.article`
     background: #fcefc7;
     color: #e9b949;
   }
-  .interview {
-    background: #e0e8f9;
+  .accepted {
+    background: #93c47d;
+    color: #647acb;
+  }
+  .reviewing {
+    background: #93c47d;
     color: #647acb;
   }
   .rejected {

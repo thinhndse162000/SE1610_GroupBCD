@@ -4,12 +4,6 @@ import { FaWpforms } from 'react-icons/fa'
 import { ImProfile } from 'react-icons/im'
 
 const links = {
-  main: [
-  { id: 1, text: 'stats', path: '/', icon: <IoBarChartSharp /> },
-  { id: 2, text: 'all jobs', path: 'all-jobs', icon: <MdQueryStats /> },
-  { id: 3, text: 'add job', path: 'add-job', icon: <FaWpforms /> },
-  { id: 4, text: 'profile', path: 'profile', icon: <ImProfile /> },
-],
   author: [
     { id: 1, text: 'papers', path: '/author', icon: <IoBarChartSharp /> },
     { id: 2, text: 'reviews', path: 'reviews', icon: <MdQueryStats /> },
@@ -17,6 +11,10 @@ const links = {
   ],
   member: [
     { id: 1, text: 'journal', path: '/', icon: <IoBarChartSharp /> },
+  ],
+  reviewer: [
+    { id: 1, text: 'reviews', path: '/reviewer', icon: <IoBarChartSharp /> },
+    { id: 2, text: 'invitations', path: 'invitation', icon: <MdQueryStats /> },
   ]
 }
 

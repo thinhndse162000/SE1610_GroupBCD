@@ -7,12 +7,13 @@ import FormDropdown from './form/FormDropdown'
 import Loading from './layout/Loading'
 import Logo from './layout/Logo'
 import Navbar from './layout/Navbar'
-import SearchContainer from './SearchContainer'
+import SearchContainer from './container/SearchContainer'
 import SmallSidebar from './layout/SmallSidebar'
-import AuthorPaperContainer from './AuthorPaperContainer'
+import AuthorPaperContainer from './container/AuthorPaperContainer'
 import Journal from './Journal'
-import JournalContainer from './JournalContainer'
-import PaperContainer from './PaperContainer'
+import JournalContainer from './container/JournalContainer'
+import PaperContainer from './container/PaperContainer'
+import InvitationContainer from './container/InvitationContainer'
 export {
   Logo,
   FormRow,
@@ -29,4 +30,5 @@ export {
   Journal,
   JournalContainer,
   PaperContainer,
+  InvitationContainer,
 }

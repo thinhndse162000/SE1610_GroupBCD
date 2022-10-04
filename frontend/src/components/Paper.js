@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { Link } from 'react-router-dom'
-import Wrapper from '../assets/wrappers/Paper'
+import Wrapper from '../assets/wrappers/Item'
 
 const Paper = ({ paper, action=[] }) => {
     let date = moment(paper.submitTime).format('DD/MM/YYYY')
@@ -12,7 +12,7 @@ const Paper = ({ paper, action=[] }) => {
             <p>
               {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} - Submit date: {date}
             </p>
-            <p>Grade: 10 - <span className={`status ${paper.status.toLowerCase()}`}>{paper.status}</span></p>
+            <p>Grade: {paper.grade} - <span className={`status ${paper.status.toLowerCase()}`}>{paper.status}</span></p>
           </div>
         </header>
         <div className="content">
