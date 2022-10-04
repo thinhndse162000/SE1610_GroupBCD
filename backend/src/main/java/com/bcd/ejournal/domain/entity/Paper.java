@@ -28,8 +28,8 @@ public class Paper implements Serializable {
     private String summary;
     private Timestamp submitTime;
     private String linkPDF;
-    private int numberOfPage;
-    private int grade;
+    private Integer numberOfPage;
+    private Integer grade;
     @Enumerated(EnumType.STRING)
     private PaperStatus status;
     @ManyToOne
@@ -41,6 +41,9 @@ public class Paper implements Serializable {
 
     @OneToMany(mappedBy = "paper")
     private List<Invitation> invitations;
+
+    @OneToMany(mappedBy = "paper")
+    private List<ReviewReport> reviewReports;
 
     public Paper(PaperSubmitRequest model) {
         this.title = model.getTitle();

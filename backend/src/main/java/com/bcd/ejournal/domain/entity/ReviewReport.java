@@ -24,8 +24,8 @@ public class ReviewReport {
     private Integer reviewReportID;
     @CreatedDate
     private Timestamp reviewDate;
-    private int grade;
-    private int confidentiality;
+    private Integer grade;
+    private Integer confidentiality;
     @Enumerated(EnumType.STRING)
     private ReviewReportVerdict verdict;
     private String note;

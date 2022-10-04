@@ -17,6 +17,6 @@ public interface InvitationRepository extends CrudRepository<Invitation, Integer
     List<Invitation> findByPaperIdAndStatus(Integer paperId, InvitationStatus status);
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE Invitation SET status = :#{#status.name()} WHERE paperID = :paperId", nativeQuery = true)
+    @Query(value = "UPDATE Invitation SET status = :#{#status.name()} WHERE paperID = :paperId AND status = 'PENDING'", nativeQuery = true)
     void updateInvitationStatusByPaperId(Integer paperId, InvitationStatus status);
 }

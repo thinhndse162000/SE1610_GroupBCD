@@ -1,12 +1,8 @@
 package com.bcd.ejournal.service.implementation;
 
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
-import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
-import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
-import com.bcd.ejournal.domain.entity.Invitation;
-import com.bcd.ejournal.domain.entity.Paper;
-import com.bcd.ejournal.domain.entity.ReviewReport;
-import com.bcd.ejournal.domain.entity.Reviewer;
+import com.bcd.ejournal.domain.dto.response.*;
+import com.bcd.ejournal.domain.entity.*;
 import com.bcd.ejournal.domain.enums.InvitationStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.repository.InvitationRepository;
@@ -64,7 +60,7 @@ public class InvitationServiceImpl implements InvitationService {
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. ID: " + reviewerID));
         List<Invitation> invitations = reviewer.getInvitations();
         return invitations.stream()
-                .map(invitation -> modelMapper.map(invitation, InvitationReviewerResponse.class))
+                .map(this::toInvitationReviewerResponse)
                 .collect(Collectors.toList());
     }
 
@@ -76,7 +72,7 @@ public class InvitationServiceImpl implements InvitationService {
 
         List<Invitation> invitations = paper.getInvitations();
         return invitations.stream()
-                .map(invitation -> modelMapper.map(invitation, InvitationPaperResponse.class))
+                .map(this::toInvitationPaperResponse)
                 .collect(Collectors.toList());
     }
 
@@ -88,8 +84,52 @@ public class InvitationServiceImpl implements InvitationService {
         // TODO: only change invitation if status is pending
         invitation.setStatus(status);
         invitationRepository.save(invitation);
-        // TODO: if 3 accept then begin review process
-        // TODO: change status of other invitation to cancel
-        List<Invitation> invitations = invitation.getPaper().getInvitations();
+
+        Paper paper = invitation.getPaper();
+        List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(), InvitationStatus.ACCEPTED);
+        if (acceptedInvitations.size() == 3) {
+            // create 3 new review reports to begin review process
+            for (Invitation inv : acceptedInvitations) {
+                ReviewReport reviewReport = new ReviewReport();
+
+                reviewReport.setReviewReportID(0);
+                reviewReport.setPaper(paper);
+                reviewReport.setReviewer(inv.getReviewer());
+                reviewReport.setStatus(ReviewReportStatus.PENDING);
+
+                reviewReportRepository.save(reviewReport);
+            }
+
+            // change status of other invitation to cancel
+            invitationRepository.updateInvitationStatusByPaperId(paper.getPaperId(), InvitationStatus.CANCEL);
+        }
+    }
+
+    private InvitationPaperResponse toInvitationPaperResponse(Invitation invitation) {
+        InvitationPaperResponse response = modelMapper.map(invitation, InvitationPaperResponse.class);
+        Reviewer reviewer = invitation.getReviewer();
+        response.setReviewerID(reviewer.getReviewerID());
+        response.setReviewerName(reviewer.getAccount().getFullName());
+        return response;
+    }
+
+    private InvitationReviewerResponse toInvitationReviewerResponse(Invitation invitation) {
+        InvitationReviewerResponse response = modelMapper.map(invitation, InvitationReviewerResponse.class);
+        PaperResponse paperResponse = fromPaper(invitation.getPaper());
+        response.setPaper(paperResponse);
+        return response;
+    }
+
+    private PaperResponse fromPaper(Paper paper) {
+        PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
+        paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
+        paperResponse.setAuthors(fromAuthor(paper.getAuthor()));
+        return paperResponse;
+    }
+
+    private AuthorResponse fromAuthor(Author author) {
+        AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
+        authorResponse.setFullName(author.getAccount().getFullName());
+        return authorResponse;
     }
 }

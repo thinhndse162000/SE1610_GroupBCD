@@ -23,5 +23,4 @@ public class PaperResponse {
     private PaperStatus status;
     private AuthorResponse authors;
     private JournalResponse journal;
-    // TODO: review report for detail
 }

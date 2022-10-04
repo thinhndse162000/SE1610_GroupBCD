@@ -15,11 +15,10 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class ReviewReportResponse {
     private Timestamp reviewDate;
-    private int grade;
-    private int confidentiality;
+    private Integer grade;
+    private Integer confidentiality;
     private ReviewReportVerdict verdict;
     private String note;
     private ReviewReportStatus status;
     private ReviewerResponse reviewer;
-    // TODO: paper detail
 }

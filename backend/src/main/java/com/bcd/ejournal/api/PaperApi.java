@@ -4,6 +4,7 @@ import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
+import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,7 @@ public class PaperApi {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    // FIXME: change to PUT
-    @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperID, @ModelAttribute PaperUpdateRequest request) {
         // TODO: verify right account
         paperService.updatePaper(paperID, request);
@@ -55,9 +55,9 @@ public class PaperApi {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaperResponse> getPaper(@PathVariable(name = "id") Integer paperID) {
+    public ResponseEntity<PaperDetailResponse> getPaper(@PathVariable(name = "id") Integer paperID) {
         // TODO: author or reviewer or journal
-        PaperResponse response = paperService.getPaper(paperID);
+        PaperDetailResponse response = paperService.getPaper(paperID);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

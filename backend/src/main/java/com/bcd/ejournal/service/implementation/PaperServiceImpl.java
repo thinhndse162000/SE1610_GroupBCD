@@ -3,17 +3,14 @@ package com.bcd.ejournal.service.implementation;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
-import com.bcd.ejournal.domain.dto.response.AuthorResponse;
-import com.bcd.ejournal.domain.dto.response.JournalResponse;
-import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.domain.dto.response.*;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
+import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.enums.PaperStatus;
-import com.bcd.ejournal.repository.AccountRepository;
-import com.bcd.ejournal.repository.JournalRepository;
-import com.bcd.ejournal.repository.PaperRepository;
-import com.bcd.ejournal.repository.RequestMapper;
+import com.bcd.ejournal.domain.enums.ReviewReportStatus;
+import com.bcd.ejournal.repository.*;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.FileUtils;
 import org.modelmapper.ModelMapper;
@@ -35,16 +32,18 @@ public class PaperServiceImpl implements PaperService {
     private final PaperRepository paperRepository;
     private final AccountRepository accountRepository;
     private final JournalRepository journalRepository;
+    private final ReviewReportRepository reviewReportRepository;
     private final RequestMapper paperMapper;
     private final ModelMapper modelMapper;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
-    public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository, JournalRepository journalRepository, RequestMapper paperMapper, ModelMapper modelMapper) {
+    public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository, JournalRepository journalRepository, ReviewReportRepository reviewReportRepository, RequestMapper paperMapper, ModelMapper modelMapper) {
         this.paperRepository = paperRepository;
         this.accountRepository = accountRepository;
         this.journalRepository = journalRepository;
+        this.reviewReportRepository = reviewReportRepository;
         this.paperMapper = paperMapper;
         this.modelMapper = modelMapper;
     }
@@ -145,11 +144,18 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public PaperResponse getPaper(Integer paperID) {
+    public PaperDetailResponse getPaper(Integer paperID) {
+        PaperDetailResponse response = new PaperDetailResponse();
         Paper paper = paperRepository.findById(paperID)
                 .orElseThrow(() -> new NullPointerException("No paper found. ID: " + paperID));
-        // TODO: author or reviewer or journal
-        return modelMapper.map(paper, PaperResponse.class);
+
+        List<ReviewReportResponse> reviewReports = paper.getReviewReports().stream()
+                .map(this::fromReviewReport)
+                .collect(Collectors.toList());
+
+        response.setPaper(fromPaper(paper));
+        response.setReviews(reviewReports);
+        return response;
     }
 
     private PaperResponse fromPaper(Paper paper) {
@@ -163,5 +169,11 @@ public class PaperServiceImpl implements PaperService {
         AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
         authorResponse.setFullName(author.getAccount().getFullName());
         return authorResponse;
+    }
+
+    private ReviewReportResponse fromReviewReport(ReviewReport reviewReport) {
+        ReviewReportResponse response = modelMapper.map(reviewReport, ReviewReportResponse.class);
+        response.setReviewer(new ReviewerResponse(reviewReport.getReviewer().getAccount().getFullName()));
+        return response;
     }
 }

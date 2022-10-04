@@ -13,7 +13,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvitationPaperResponse {
-    // TODO: check return field again
+    private Integer invitationId;
     private Integer reviewerID;
     private String reviewerName;
     private Date inviteDate;

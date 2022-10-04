@@ -3,6 +3,7 @@ package com.bcd.ejournal.service;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
+import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 
 import java.util.List;
@@ -21,5 +22,5 @@ public interface PaperService {
 
     List<PaperResponse> getAllPaperFromJournal(Integer journalID);
 
-    PaperResponse getPaper(Integer paperID);
+    PaperDetailResponse getPaper(Integer paperID);
 }
