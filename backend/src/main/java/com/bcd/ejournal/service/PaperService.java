@@ -1,11 +1,11 @@
 package com.bcd.ejournal.service;
 
+import java.util.List;
+
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
-
-import java.util.List;
 
 
 public interface PaperService {
@@ -15,7 +15,7 @@ public interface PaperService {
 
     void deleteById(Integer paperID);
 
-    List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest);
+    List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest, int pageNo , int pageSize);
 
     List<PaperResponse> getAllPaperFromAuthor(Integer authorID);
 
