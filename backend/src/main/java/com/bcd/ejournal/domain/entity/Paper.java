@@ -29,6 +29,7 @@ public class Paper implements Serializable {
     private Timestamp submitTime;
     private String linkPDF;
     private int numberOfPage;
+    private int grade;
     @Enumerated(EnumType.STRING)
     private PaperStatus status;
     @ManyToOne

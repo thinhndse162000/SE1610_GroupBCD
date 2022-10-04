@@ -35,6 +35,7 @@ public class ReviewReportApi {
     }
 
     @PostMapping("/download")
+    // TODO: which ID
     public ResponseEntity<Resource> getFile(@RequestBody String fileName) throws IOException {
         // TODO: verify reviewer can download
         Resource rs = reportService.downloadFile(fileName);

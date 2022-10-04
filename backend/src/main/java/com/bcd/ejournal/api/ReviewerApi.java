@@ -26,6 +26,7 @@ public class ReviewerApi {
 
     @PostMapping("/{id}/invitation")
     public ResponseEntity<Void> sendInvitation(@PathVariable(name = "id") Integer reviewerID, @Valid @RequestBody ReviewerInvitationRequest request) {
+        // TODO: Reviewer cannot review his own paper
         // TODO: validate if reviewer is invitable
         // TODO: validate paper is not in reviewing process
         invitationService.sendInvitation(reviewerID, request);

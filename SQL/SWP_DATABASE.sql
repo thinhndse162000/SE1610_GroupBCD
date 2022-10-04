@@ -3,7 +3,6 @@ go
 CREATE DATABASE eJournal_DB
 go
 USE eJournal_DB
-SET QUOTED_IDENTIFIER ON
 
 --Tạo bảng Chính--
 CREATE TABLE Account(
@@ -16,13 +15,14 @@ CREATE TABLE Account(
 	Organization NVARCHAR(150) not null,
 	DateOfBirth DATE,
 	profileImage char(100),
-  role char(2) not null,
+  role varchar(10) not null,
   [status] varchar(10) not null
 )
 
-CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
-ON Account(profileImage)
-WHERE profileImage IS NOT NULL;
+-- CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
+-- ON Account(profileImage)
+-- WHERE profileImage IS NOT NULL;
+
 go
 CREATE TABLE Reviewer(
 	ReviewerId int PRIMARY KEY not null,
@@ -37,9 +37,10 @@ CREATE TABLE Author(
 	profileImage char(100),
 )
 
-CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
-ON Author(profileImage)
-WHERE profileImage IS NOT NULL;
+-- CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
+-- ON Author(profileImage)
+-- WHERE profileImage IS NOT NULL;
+
 go
 CREATE TABLE Field(
 	FieldId int not null PRIMARY KEY IDENTITY(1,1),
@@ -53,6 +54,7 @@ CREATE TABLE Paper(
 	SubmitTime DATETIME not null,
 	LinkPDF char(100) not null,
 	NumberOfPage int not null,
+  Grade int,
 	[status] varchar(10) not null,
 	JournalId int not null,
   authorID int not null,
@@ -72,7 +74,7 @@ CREATE TABLE Publish(
 	PaperId int not null,
 	IssueId int not null,
 	PublishDate Date not null,
-	AccessLevel bit not null
+	AccessLevel varchar(10) not null,
 	CONSTRAINT UQ_Publish UNIQUE(PaperId,IssueId)
 )
 go 
@@ -121,6 +123,7 @@ CREATE TABLE ReviewReport(
 	ReviewDate DATE,
 	grade int CHECK(grade>=0 AND grade<=10),
 	Confidentiality INT,
+  Verdict varchar(10),
 	Note text,
 	[status] varchar(10) not null
 	CONSTRAINT UQ_ReviewReport UNIQUE(PaperId,ReviewerId)
@@ -132,7 +135,6 @@ CREATE TABLE PaperField(
 	PRIMARY KEY(PaperId,FieldId)
 )
 go 
-
 CREATE TABLE Manager(
 	JournalId int not null UNIQUE,
 	AccountId int not null UNIQUE,

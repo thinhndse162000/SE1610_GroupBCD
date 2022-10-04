@@ -1,5 +1,6 @@
 package com.bcd.ejournal.domain.dto.response;
 
+import com.bcd.ejournal.domain.enums.InvitationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +13,11 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvitationReviewerResponse {
+    // TODO: check return field again
     private Integer paperID;
     private String paperTitle;
     private Integer journalID;
     private String journalName;
     private Date inviteDate;
-    private Boolean status;
+    private InvitationStatus status;
 }

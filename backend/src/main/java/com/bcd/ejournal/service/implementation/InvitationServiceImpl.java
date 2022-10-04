@@ -5,10 +5,13 @@ import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.entity.Invitation;
 import com.bcd.ejournal.domain.entity.Paper;
+import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.entity.Reviewer;
 import com.bcd.ejournal.domain.enums.InvitationStatus;
+import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.repository.InvitationRepository;
 import com.bcd.ejournal.repository.PaperRepository;
+import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
 import com.bcd.ejournal.service.InvitationService;
 import org.modelmapper.ModelMapper;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +28,15 @@ public class InvitationServiceImpl implements InvitationService {
     private final InvitationRepository invitationRepository;
     private final ReviewerRepository reviewerRepository;
     private final PaperRepository paperRepository;
+    private final ReviewReportRepository reviewReportRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ModelMapper modelMapper) {
+    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, ModelMapper modelMapper) {
         this.invitationRepository = invitationRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
+        this.reviewReportRepository = reviewReportRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -41,10 +47,11 @@ public class InvitationServiceImpl implements InvitationService {
         Reviewer reviewer = reviewerRepository.findById(reviewerID)
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. ID: " + reviewerID));
         Paper paper = paperRepository.findById(request.getPaperID())
-                .orElseThrow(() -> new NullPointerException("Paper not found. ID" + request.getPaperID()));
+                .orElseThrow(() -> new NullPointerException("Paper not found. ID: " + request.getPaperID()));
         Invitation invitation = new Invitation();
         invitation.setInvitationID(0);
-        invitation.setStatus(null);
+        invitation.setStatus(InvitationStatus.PENDING);
+        invitation.setInviteDate(new Date(System.currentTimeMillis()));
         invitation.setReviewer(reviewer);
         invitation.setPaper(paper);
 

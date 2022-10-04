@@ -45,6 +45,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
 
         modelMapper.map(reviewReport, req);
         reviewreportRepository.save(reviewReport);
+        // TODO: begin evaluation process
     }
 
     @Override

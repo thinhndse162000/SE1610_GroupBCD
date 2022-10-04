@@ -3,6 +3,7 @@ package com.bcd.ejournal.domain.entity;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
 
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
+import com.bcd.ejournal.domain.enums.ReviewReportVerdict;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,8 @@ public class ReviewReport {
     private Timestamp reviewDate;
     private int grade;
     private int confidentiality;
+    @Enumerated(EnumType.STRING)
+    private ReviewReportVerdict verdict;
     private String note;
     @Enumerated(EnumType.STRING)
     private ReviewReportStatus status;
