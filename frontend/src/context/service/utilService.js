@@ -10,14 +10,16 @@ import {
   HANDLE_REVIEWER_CHANGE,
 } from "../actions";
 
-export const addUserToLocalStorage = ({ user, token }) => {
+export const addUserToLocalStorage = ({ user, token, role }) => {
   localStorage.setItem("user", user);
   localStorage.setItem("token", token);
+  localStorage.setItem("role", role);
 };
 
 export const removeUserFromLocalStorage = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
+  localStorage.removeItem("role");
 };
 
 export const changeView = (viewType) => (dispatch) => {

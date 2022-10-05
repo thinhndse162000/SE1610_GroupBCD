@@ -1,5 +1,7 @@
 const user = localStorage.getItem("user");
 const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
+
 const author = {
   submittedPapers: [],
   editPaperId: "",
@@ -35,7 +37,12 @@ const member = {
   journalDetailId: '',
 };
 
+const manager = {
+  sentPapers: [],
+}
+
 const base = {
+  role: role,
   isLoading: false,
   showAlert: false,
   alertText: "",
@@ -52,6 +59,7 @@ const initialState = {
   author,
   reviewer,
   member,
+  manager,
 };
 
-export { initialState, base, reviewer, author, member };
+export { initialState, base, reviewer, author, member, manager };

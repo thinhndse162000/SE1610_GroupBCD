@@ -7,6 +7,7 @@ const PaperReviewDetail = ({ reviewReport, action = [] }) => {
     <Wrapper>
       <header>
         <div className="info">
+          <h3>Paper</h3>
           <h5>{paper.title}</h5>
           <p>Author: {paper.authors.fullName}</p>
         </div>
@@ -14,6 +15,7 @@ const PaperReviewDetail = ({ reviewReport, action = [] }) => {
       <div className="content">
         {review.status === "DONE" && (
           <div>
+            <h3>Review Detail</h3>
             <p>
               Grade: {review.grade} - Confidentiality: {review.confidentiality}{" "}
               - Verdict:{" "}

@@ -16,7 +16,7 @@ const Paper = ({ paper, action=[] }) => {
           </div>
         </header>
         <div className="content">
-          <div>
+          <div className='content-center'>
             <h5>Abstract</h5>
             <p>{paper.summary}</p>
           </div>

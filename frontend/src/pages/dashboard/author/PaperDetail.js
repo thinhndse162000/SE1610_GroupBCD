@@ -23,9 +23,15 @@ const PaperDetail = () => {
   if (Object.keys(paperDetail).length !== 0) {
     return (
       <>
-        <Paper paper={paperDetail.paper} />
         <ContainerWrapper>
           <div className="container">
+            <h3>Paper</h3>
+            <Paper paper={paperDetail.paper} />
+          </div>
+        </ContainerWrapper>
+        <ContainerWrapper>
+          <div className="container">
+            <h3>Reviews</h3>
             {paperDetail.reviews.map((review, index) => {
               return <ReviewReport key={index} review={review} />;
             })}

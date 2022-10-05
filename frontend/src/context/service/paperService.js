@@ -31,8 +31,11 @@ export const getAuthorPaper = () => async (dispatch) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    console.log("error getting paper");
+    if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
   }
   dispatch(clearAlert());
 };
@@ -49,8 +52,11 @@ export const getPaperDetail = (paperId) => async (dispatch) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    console.log("error getting paper");
+    if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
   }
   dispatch(clearAlert());
 };
@@ -77,7 +83,6 @@ export const createPaper = (paper) => async (dispatch) => {
     });
     dispatch({ type: CLEAR_PAPER_VALUES });
   } catch (error) {
-    console.log(error);
     if (error.response.status === 401) return;
     dispatch({
       type: ERROR,
@@ -99,7 +104,6 @@ export const editPaper = (paper) => async (dispatch) => {
     await authFetch.put(`/paper/${editPaperId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        "Access-Control-Allow-Origin": "*",
       },
     });
     dispatch({
@@ -154,6 +158,3 @@ export const search =
     }
     dispatch(clearAlert());
   };
-
-
-// TODO: combine searching function

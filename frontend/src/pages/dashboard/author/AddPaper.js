@@ -32,6 +32,7 @@ const AddPaper = () => {
   });
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(paperTitle, paperSummary, paperJournal, paperPdfFile)
     if (
       !paperTitle ||
       !paperSummary ||
@@ -91,7 +92,7 @@ const AddPaper = () => {
       );
       requestResults = data.map((journal) => ({
         label: journal.name,
-        value: journal.journalID,
+        value: journal.journalId,
       }));
     } catch (error) {}
     callback(requestResults);

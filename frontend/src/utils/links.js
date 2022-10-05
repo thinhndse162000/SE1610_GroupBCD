@@ -14,9 +14,12 @@ const links = {
   ],
   reviewer: [
     { id: 1, text: 'reviews', path: '/reviewer', icon: <IoBarChartSharp /> },
-    { id: 2, text: 'submit review', path: 'submit-review', icon: <MdQueryStats /> },
-    { id: 3, text: 'invitations', path: 'invitation', icon: <MdQueryStats /> },
-  ]
+    { id: 2, text: 'invitations', path: 'invitation', icon: <MdQueryStats /> },
+  ],
+  manager: [
+    { id: 1, text: 'papers', path: '/manager', icon: <IoBarChartSharp /> },
+    { id: 2, text: 'invite', path: 'invite', icon: <IoBarChartSharp /> },
+  ],
 }
 
 export default links

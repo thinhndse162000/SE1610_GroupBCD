@@ -18,7 +18,9 @@ const ReviewerInvitation = () => {
     return <Loading center />;
   }
 
-  return <>{invitations.length > 0 && <InvitationContainer />}</>;
+  return <>
+  {invitations.length > 0 ? <InvitationContainer /> : <p>No invitation found</p> }
+  </>;
 };
 
 export default ReviewerInvitation;

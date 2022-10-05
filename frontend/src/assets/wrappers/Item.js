@@ -11,7 +11,7 @@ const Wrapper = styled.article`
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--grey-100);
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr;
     align-items: center;
     h5 {
       letter-spacing: 0;
@@ -48,17 +48,9 @@ const Wrapper = styled.article`
     padding: 1rem 1.5rem;
   }
   .content-center {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 0.5rem;
-    @media (min-width: 576px) {
-      grid-template-columns: 1fr 1fr;
-    }
-    @media (min-width: 992px) {
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 1120px) {
-      grid-template-columns: 1fr 1fr;
+    witdh: 100%;
+    .p {
+      display:inline-block;
     }
   }
 

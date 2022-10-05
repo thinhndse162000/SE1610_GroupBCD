@@ -13,7 +13,7 @@ const AllReviewReport = () => {
 
   return (
     <>
-      {reviewReports.length > 0 && <ReviewReportContainer />}
+      {reviewReports.length > 0 ? <ReviewReportContainer /> : <p>No review found</p>}
     </>
   );
 };

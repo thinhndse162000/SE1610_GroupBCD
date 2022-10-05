@@ -52,7 +52,7 @@ const authorReducer = (state = author, action) => {
             file: "",
           },
           paperJournal: {
-            journalId: journal.journalID,
+            journalId: journal.journald,
             journalName: journal.name,
           },
         },

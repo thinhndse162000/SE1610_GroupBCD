@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Signup, Landing, Error, ProtectedRoute, Login } from "./pages";
+import { Signup, Landing, Error, ProtectedRoute, Login, ManagerProtectedRoute } from "./pages";
 import {
   SharedLayout,
   AuthorPaper,
@@ -10,6 +10,7 @@ import {
   PaperDetail,
   AllReviewReport,
   ReviewReportDetail,
+  JournalPaper,
 } from "./pages/dashboard";
 
 function App() {
@@ -52,6 +53,18 @@ function App() {
           <Route path="submit-review" element={<AddReview />} />
           <Route path="review-detail/:reviewId" element={<ReviewReportDetail />} />
           <Route path="invitation" element={<ReviewerInvitation />} />
+        </Route>
+
+        <Route
+          path="/manager"
+          element={
+            <ManagerProtectedRoute>
+              <SharedLayout viewType="manager"/>
+            </ManagerProtectedRoute>
+          }
+        >
+          <Route index element={<JournalPaper />} />
+          {/* <Route path="invite" element={<ReviewReportDetail />} /> */}
         </Route>
 
         <Route path="/signup" element={<Signup />} />
