@@ -17,16 +17,16 @@ import java.sql.Date;
 public class Invitation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer invitationID;
+    private Integer invitationId;
     private Date inviteDate;
     @Enumerated(EnumType.STRING)
     private InvitationStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "ReviewerID", nullable = false)
+    @JoinColumn(name = "ReviewerId", nullable = false)
     private Reviewer reviewer;
 
     @ManyToOne
-    @JoinColumn(name = "PaperID", nullable = false)
+    @JoinColumn(name = "PaperId", nullable = false)
     private Paper paper;
 }

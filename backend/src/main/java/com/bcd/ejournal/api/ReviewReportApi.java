@@ -22,7 +22,7 @@ public class ReviewReportApi {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateReviewReport(@PathVariable(name = "id") Integer reviewReportId, @RequestBody ReviewReportSubmitRequest req) {
-        // TODO: verify accountID
+        // TODO: verify accountId
         reportService.updateReviewReport(reviewReportId, req);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -35,7 +35,7 @@ public class ReviewReportApi {
     }
 
     @PostMapping("/download")
-    // TODO: which ID
+    // TODO: which Id
     public ResponseEntity<Resource> getFile(@RequestBody String fileName) throws IOException {
         // TODO: verify reviewer can download
         Resource rs = reportService.downloadFile(fileName);

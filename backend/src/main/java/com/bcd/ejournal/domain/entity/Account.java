@@ -24,7 +24,7 @@ import java.util.List;
 public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer accountID;
+    private Integer accountId;
     private String email;
     private String password;
     private String phone;

@@ -60,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         // TODO: trim white space except password
         // TODO: validate date of birth
         Account acc = modelMapper.map(req, Account.class);
-        acc.setAccountID(0);
+        acc.setAccountId(0);
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
         acc.setRole(AccountRole.MEMBER);
         acc.setStatus(AccountStatus.OPEN);
@@ -71,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
         author.setEducation("");
 
         Reviewer reviewer = new Reviewer();
-        reviewer.setReviewerID(0);
+        reviewer.setReviewerId(0);
         reviewer.setInvitable(true);
         reviewer.setAccount(acc);
         acc.setAuthor(author);

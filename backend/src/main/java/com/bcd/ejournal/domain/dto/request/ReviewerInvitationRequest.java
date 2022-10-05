@@ -11,5 +11,5 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ReviewerInvitationRequest {
     @NotNull(message = "Paper cannot be null")
-    private Integer paperID;
+    private Integer paperId;
 }

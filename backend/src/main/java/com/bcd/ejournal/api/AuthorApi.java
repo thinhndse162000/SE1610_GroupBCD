@@ -30,14 +30,14 @@ public class AuthorApi {
 
     @GetMapping("/paper")
     public ResponseEntity<List<PaperResponse>> getAllPaper(@AuthenticationPrincipal AccountJWTPayload payload) {
-        Integer authorID = payload.getAccountID();
-        List<PaperResponse> papers = paperService.getAllPaperFromAuthor(authorID);
+        Integer authorId = payload.getAccountId();
+        List<PaperResponse> papers = paperService.getAllPaperFromAuthor(authorId);
         return new ResponseEntity<>(papers, HttpStatus.OK);
     }
 
     @GetMapping("/paper/{id}")
     public ResponseEntity<PaperDetailResponse> getPaper(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId) {
-        Integer authorID = payload.getAccountID();
+        Integer authorId = payload.getAccountId();
         PaperDetailResponse response = paperService.getPaper(paperId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

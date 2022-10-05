@@ -16,14 +16,17 @@ import java.util.List;
 public class Reviewer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ReviewerID;
+    private Integer ReviewerId;
     private boolean invitable;
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "ReviewerID")
+    @JoinColumn(name = "ReviewerId")
     private Account account;
 
     @OneToMany(mappedBy = "reviewer")
     private List<Invitation> invitations;
+
+    @OneToMany(mappedBy = "reviewer")
+    private List<ReviewReport> reviewReports;
 }

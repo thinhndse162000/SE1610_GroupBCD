@@ -9,7 +9,6 @@ import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.enums.PaperStatus;
-import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.repository.*;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.FileUtils;
@@ -50,7 +49,7 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public void submitPaper(Integer authorID, PaperSubmitRequest submitRequest) {
+    public void submitPaper(Integer authorId, PaperSubmitRequest submitRequest) {
         // TODO: trim white space from title and abstract
         Paper paper = new Paper(submitRequest);
         // TODO: generate random file name
@@ -74,9 +73,9 @@ public class PaperServiceImpl implements PaperService {
         paper.setStatus(PaperStatus.PENDING);
 
         Journal journal = journalRepository.findById(submitRequest.getJournalId())
-                .orElseThrow(() -> new NullPointerException("Journal not found. ID: " + submitRequest.getJournalId()));
-        Author author = accountRepository.findById(authorID)
-                .orElseThrow(() -> new NullPointerException("Author not found. ID: " + authorID))
+                .orElseThrow(() -> new NullPointerException("Journal not found. Id: " + submitRequest.getJournalId()));
+        Author author = accountRepository.findById(authorId)
+                .orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId))
                 .getAuthor();
         paper.setAuthor(author);
         author.getPapers().add(paper);
@@ -88,26 +87,26 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public void updatePaper(Integer paperID, PaperUpdateRequest request) {
-        // TODO: verify accountID
+    public void updatePaper(Integer paperId, PaperUpdateRequest request) {
+        // TODO: verify accountId
         // TODO: trim white space
-        Paper paper = paperRepository.findById(paperID)
-                .orElseThrow(() -> new NullPointerException("Paper not found. ID: " + paperID));
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
         paper.setTitle(request.getTitle());
         paper.setSummary(request.getSummary());
         paperRepository.save(paper);
     }
 
     @Override
-    public void deleteById(Integer paperID) {
-        // TODO: verify accountID
+    public void deleteById(Integer paperId) {
+        // TODO: verify accountId
         // TODO: log existence
-        Optional<Paper> paperOpt = paperRepository.findById(paperID);
+        Optional<Paper> paperOpt = paperRepository.findById(paperId);
         if (paperOpt.isPresent()) {
             Paper paper = paperOpt.get();
             // TODO: file service delete
         }
-        paperRepository.deleteById(paperID);
+        paperRepository.deleteById(paperId);
     }
 
     @Override
@@ -121,9 +120,9 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public List<PaperResponse> getAllPaperFromAuthor(Integer authorID) {
-        Author author = accountRepository.findById(authorID)
-                .orElseThrow(() -> new NullPointerException("Author not found. ID: " + authorID))
+    public List<PaperResponse> getAllPaperFromAuthor(Integer authorId) {
+        Author author = accountRepository.findById(authorId)
+                .orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId))
                 .getAuthor();
 
         List<Paper> papers = author.getPapers();
@@ -133,9 +132,9 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public List<PaperResponse> getAllPaperFromJournal(Integer journalID) {
-        Journal journal = journalRepository.findById(journalID)
-                .orElseThrow(() -> new NullPointerException("Journal not found. ID: " + journalID));
+    public List<PaperResponse> getAllPaperFromJournal(Integer journalId) {
+        Journal journal = journalRepository.findById(journalId)
+                .orElseThrow(() -> new NullPointerException("Journal not found. Id: " + journalId));
 
         List<Paper> papers = journal.getPapers();
         return papers.stream()
@@ -144,10 +143,10 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public PaperDetailResponse getPaper(Integer paperID) {
+    public PaperDetailResponse getPaper(Integer paperId) {
         PaperDetailResponse response = new PaperDetailResponse();
-        Paper paper = paperRepository.findById(paperID)
-                .orElseThrow(() -> new NullPointerException("No paper found. ID: " + paperID));
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new NullPointerException("No paper found. Id: " + paperId));
 
         List<ReviewReportResponse> reviewReports = paper.getReviewReports().stream()
                 .map(this::fromReviewReport)

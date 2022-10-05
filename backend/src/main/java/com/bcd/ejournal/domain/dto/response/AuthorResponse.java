@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthorResponse {
-    private Integer authorID;
+    private Integer authorId;
     private String fullName;
     private String introduction;
     private String education;

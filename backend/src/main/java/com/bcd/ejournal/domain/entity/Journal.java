@@ -17,7 +17,7 @@ import java.util.List;
 public class Journal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer journalID;
+    private Integer journalId;
     private String name;
     private String introduction;
     private String organization;

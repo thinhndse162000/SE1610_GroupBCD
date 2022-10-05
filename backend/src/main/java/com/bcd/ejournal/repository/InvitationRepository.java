@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InvitationRepository extends CrudRepository<Invitation, Integer> {
-    @Query(value = "SELECT * FROM Invitation i WHERE i.InvitationID = :Id AND i.ReviewerID = :reviewerID", nativeQuery = true)
-    Optional<Invitation> findByIdAndReviewerId(Integer Id, Integer reviewerID);
+    @Query(value = "SELECT * FROM Invitation i WHERE i.InvitationId = :Id AND i.ReviewerId = :reviewerId", nativeQuery = true)
+    Optional<Invitation> findByIdAndReviewerId(Integer Id, Integer reviewerId);
 
-    @Query(value = "SELECT * FROM Invitation i WHERE i.paperID = :paperId AND i.status = :#{#status.name()}", nativeQuery = true)
+    @Query(value = "SELECT * FROM Invitation i WHERE i.paperId = :paperId AND i.status = :#{#status.name()}", nativeQuery = true)
     List<Invitation> findByPaperIdAndStatus(Integer paperId, InvitationStatus status);
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE Invitation SET status = :#{#status.name()} WHERE paperID = :paperId AND status = 'PENDING'", nativeQuery = true)
+    @Query(value = "UPDATE Invitation SET status = :#{#status.name()} WHERE paperId = :paperId AND status = 'PENDING'", nativeQuery = true)
     void updateInvitationStatusByPaperId(Integer paperId, InvitationStatus status);
 }

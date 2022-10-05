@@ -17,11 +17,11 @@ public class AccountJWTPayload implements JWTPayload {
     }
 
     public static AccountJWTPayload of(Account account, long epochSecondExpired) {
-        return new AccountJWTPayload(account.getAccountID(), account.getEmail(), epochSecondExpired);
+        return new AccountJWTPayload(account.getAccountId(), account.getEmail(), epochSecondExpired);
     }
 
     @Override
-    public Integer getAccountID() {
+    public Integer getAccountId() {
         return sub;
     }
 

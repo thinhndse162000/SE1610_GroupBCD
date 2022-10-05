@@ -34,17 +34,17 @@ public class JournalServiceImpl implements JournalService {
     public JournalResponse createJournal(JournalCreateRequest request) {
         // TODO: trim white space
         Journal journal = modelMapper.map(request, Journal.class);
-        journal.setJournalID(0);
+        journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
         journal = journalRepository.save(journal);
         return modelMapper.map(journal, JournalResponse.class);
     }
 
     @Override
-    public JournalResponse getJournal(Integer journalID) {
+    public JournalResponse getJournal(Integer journalId) {
         // TODO: return journal detail
-        Journal journal = journalRepository.findById(journalID)
-                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
+        Journal journal = journalRepository.findById(journalId)
+                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
         return modelMapper.map(journal, JournalResponse.class);
     }
 
@@ -56,28 +56,28 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<IssueResponse> listAllIssues(Integer journalID) {
-        Iterable<Issue> issues = issueRepository.findAllByJournalID(journalID);
+    public List<IssueResponse> listAllIssues(Integer journalId) {
+        Iterable<Issue> issues = issueRepository.findAllByJournalId(journalId);
         return StreamSupport.stream(issues.spliterator(), false)
                 .map(this::fromIssue)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public JournalResponse updateJournal(Integer journalID, JournalCreateRequest request) {
+    public JournalResponse updateJournal(Integer journalId, JournalCreateRequest request) {
         // TODO: verify admin
-        Journal journal = journalRepository.findById(journalID)
-                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
+        Journal journal = journalRepository.findById(journalId)
+                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
         modelMapper.map(request, journal);
         journal = journalRepository.save(journal);
         return modelMapper.map(journal, JournalResponse.class);
     }
 
     @Override
-    public void archiveJournal(Integer journalID) {
+    public void archiveJournal(Integer journalId) {
         // TODO: verify admin
-        Journal journal = journalRepository.findById(journalID)
-                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalID));
+        Journal journal = journalRepository.findById(journalId)
+                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
         journal.setStatus(JournalStatus.ARCHIVED);
         journalRepository.save(journal);
     }

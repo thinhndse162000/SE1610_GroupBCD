@@ -10,17 +10,17 @@ import java.util.List;
 
 
 public interface PaperService {
-    void submitPaper(Integer authorID, PaperSubmitRequest paperSubmitRequest);
+    void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest);
 
-    void updatePaper(Integer paperID, PaperUpdateRequest request);
+    void updatePaper(Integer paperId, PaperUpdateRequest request);
 
-    void deleteById(Integer paperID);
+    void deleteById(Integer paperId);
 
     List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest);
 
-    List<PaperResponse> getAllPaperFromAuthor(Integer authorID);
+    List<PaperResponse> getAllPaperFromAuthor(Integer authorId);
 
-    List<PaperResponse> getAllPaperFromJournal(Integer journalID);
+    List<PaperResponse> getAllPaperFromJournal(Integer journalId);
 
-    PaperDetailResponse getPaper(Integer paperID);
+    PaperDetailResponse getPaper(Integer paperId);
 }

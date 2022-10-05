@@ -29,14 +29,14 @@ public class PaperApi {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> submitPaper(@AuthenticationPrincipal AccountJWTPayload payload, @ModelAttribute PaperSubmitRequest request) {
-        paperService.submitPaper(payload.getAccountID(), request);
+        paperService.submitPaper(payload.getAccountId(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperID, @ModelAttribute PaperUpdateRequest request) {
+    public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperId, @ModelAttribute PaperUpdateRequest request) {
         // TODO: verify right account
-        paperService.updatePaper(paperID, request);
+        paperService.updatePaper(paperId, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -48,16 +48,16 @@ public class PaperApi {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePaperById(@PathVariable(name = "id") Integer paperID) {
+    public ResponseEntity<Void> deletePaperById(@PathVariable(name = "id") Integer paperId) {
         // TODO: verify right account
-        paperService.deleteById(paperID);
+        paperService.deleteById(paperId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaperDetailResponse> getPaper(@PathVariable(name = "id") Integer paperID) {
+    public ResponseEntity<PaperDetailResponse> getPaper(@PathVariable(name = "id") Integer paperId) {
         // TODO: author or reviewer or journal
-        PaperDetailResponse response = paperService.getPaper(paperID);
+        PaperDetailResponse response = paperService.getPaper(paperId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer authorID;
+    private Integer authorId;
     private String introduction;
     private String education;
     private String address;
@@ -25,7 +25,7 @@ public class Author {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "AuthorID")
+    @JoinColumn(name = "AuthorId")
     private Account account;
 
     @OneToMany(mappedBy = "author")

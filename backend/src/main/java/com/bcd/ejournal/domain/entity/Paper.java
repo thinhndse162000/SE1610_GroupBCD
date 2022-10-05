@@ -33,10 +33,10 @@ public class Paper implements Serializable {
     @Enumerated(EnumType.STRING)
     private PaperStatus status;
     @ManyToOne
-    @JoinColumn(name = "AuthorID", nullable = false)
+    @JoinColumn(name = "AuthorId", nullable = false)
     private Author author;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "JournalID", nullable = false)
+    @JoinColumn(name = "JournalId", nullable = false)
     private Journal journal;
 
     @OneToMany(mappedBy = "paper")

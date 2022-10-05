@@ -1,7 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
-
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportVerdict;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,7 @@ import java.sql.Timestamp;
 public class ReviewReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer reviewReportID;
+    private Integer reviewReportId;
     @CreatedDate
     private Timestamp reviewDate;
     private Integer grade;
@@ -33,11 +32,11 @@ public class ReviewReport {
     private ReviewReportStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "ReviewerID", nullable = false)
+    @JoinColumn(name = "ReviewerId", nullable = false)
     private Reviewer reviewer;
 
     @ManyToOne
-    @JoinColumn(name = "PaperID", nullable = false)
+    @JoinColumn(name = "PaperId", nullable = false)
     private Paper paper;
 
     public ReviewReport(ReviewReportSubmitRequest req) {
