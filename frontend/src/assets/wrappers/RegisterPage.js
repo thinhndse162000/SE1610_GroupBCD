@@ -20,6 +20,7 @@ const Wrapper = styled.section`
     margin: 0;
     margin-top: 1rem;
     text-align: center;
+    color:red;
   }
   .btn {
     margin-top: 1rem;

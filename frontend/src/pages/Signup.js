@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../context/service/authService";
 import { displayAlert } from "../context/service/utilService";
+import ValidateInfo from '../components/container/ValidateInfo'
+
 const initialState = {
   firstName: "",
   lastName: "",
@@ -16,7 +18,6 @@ const initialState = {
   password: "",
   passwordRetype: "",
 };
-
 const Signup = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
@@ -25,13 +26,7 @@ const Signup = () => {
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
-  const handleFileInput = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: URL.createObjectURL(e.target.files[0]),
-    });
-  };
-
+  const [errors, setErrors] = useState({});
   const onSubmit = (e) => {
     e.preventDefault();
     const {
@@ -71,7 +66,7 @@ const Signup = () => {
       password,
       passwordRetype,
     };
-
+    setErrors(ValidateInfo(values))
     signup({ currentUser });
   };
 
@@ -92,19 +87,18 @@ const Signup = () => {
 
         {/* email input */}
         <FormRow
-          type="email"
+          type="text"
           name="email"
           value={values.email}
           handleChange={handleChange}
-        />
-
+        />{errors.email && <p>{errors.email}</p>}
         {/* password input */}
         <FormRow
           type="password"
           name="password"
           value={values.password}
           handleChange={handleChange}
-        />
+        />{errors.password && <p>{errors.password}</p>}
 
         {/* retype password input */}
         <FormRow
@@ -113,7 +107,7 @@ const Signup = () => {
           labelText="Retype password"
           value={values.retypePassword}
           handleChange={handleChange}
-        />
+        />{errors.passwordRetype && <p>{errors.passwordRetype}</p>}
 
         {/* first name input */}
         <FormRow
@@ -122,7 +116,7 @@ const Signup = () => {
           labelText="First name"
           value={values.firstName}
           handleChange={handleChange}
-        />
+        />{errors.firstName && <p>{errors.firstName}</p>}
 
         {/* last name input */}
         <FormRow
@@ -131,7 +125,7 @@ const Signup = () => {
           labelText="Last name"
           value={values.lastName}
           handleChange={handleChange}
-        />
+        />{errors.lastName && <p>{errors.lastName}</p>}
 
         {/* date of birth input */}
         <FormRow
@@ -148,27 +142,14 @@ const Signup = () => {
           name="organization"
           value={values.organization}
           handleChange={handleChange}
-        />
+        />{errors.organization && <p>{errors.organization}</p>}
 
         <FormRow
           type="text"
           name="phone"
           value={values.phone}
           handleChange={handleChange}
-        />
-
-        {/* profile image input */}
-        <FormRow
-          type="file"
-          name="profileImage"
-          labelText="Profile image"
-          accept="image/*"
-          handleChange={handleFileInput}
-          require={false}
-        />
-        {values.profileImage && (
-          <img width="100%" src={values.profileImage} alt="Profile" />
-        )}
+        />{errors.phone && <p>{errors.phone}</p>}
 
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           Signup

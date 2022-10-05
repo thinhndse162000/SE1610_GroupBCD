@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../context/service/authService";
 import { displayAlert } from "../context/service/utilService";
 
+// const initError= {
+  
+// };
 const initialState = {
   email: "",
   password: "",
@@ -14,6 +17,7 @@ const initialState = {
 const Login = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
+  // const [error, setError] = useState(initError);
   const { user, isLoading, showAlert } = useSelector((state) => state.base);
   const dispatch = useDispatch();
   const handleChange = (e) => {
