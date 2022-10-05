@@ -26,7 +26,7 @@ const AuthorPaper = () => {
   return (
     <>
       {/* <SearchContainer /> */}
-      {papers.length > 0 && <AuthorPaperContainer />}
+      {papers.length > 0 ? <AuthorPaperContainer /> : <p>No submitted paper yet</p>}
     </>
   );
 };

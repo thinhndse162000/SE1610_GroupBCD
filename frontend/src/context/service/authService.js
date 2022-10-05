@@ -18,16 +18,17 @@ export const login =
     try {
       const { data } = await authFetch.post(`auth`, currentUser);
 
-      const { fullName, token } = data;
+      const { fullName, token, role } = data;
       dispatch({
         type: SETUP_USER_SUCCESS,
         payload: {
           user: fullName,
           token,
+          role,
           alertText: "Login Successfully! Redirecting",
         },
       });
-      addUserToLocalStorage({ user: fullName, token });
+      addUserToLocalStorage({ user: fullName, token, role });
       window.location.reload();
     } catch (error) {
       let msg = "Wrong email or password";
@@ -46,16 +47,17 @@ export const signup =
     try {
       const { data } = await authFetch.post(`/auth/signup`, currentUser);
 
-      const { fullName, token } = data;
+      const { fullName, token, role } = data;
       dispatch({
         type: SETUP_USER_SUCCESS,
         payload: {
           user: fullName,
           token,
+          role,
           alertText: "Account created successfully",
         },
       });
-      addUserToLocalStorage({ user: fullName, token });
+      addUserToLocalStorage({ user: fullName, token, role });
       window.location.reload();
     } catch (error) {
       dispatch({

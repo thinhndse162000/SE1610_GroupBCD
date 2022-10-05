@@ -6,9 +6,7 @@ import {
 } from "../../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
-import {
-  search
-} from "../../../context/service/paperService";
+import { search } from "../../../context/service/paperService";
 import { handleChange } from "../../../context/service/utilService";
 const Journal = () => {
   const {
@@ -30,30 +28,32 @@ const Journal = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    dispatch(search({ keyword: searchKeyword, type: searchJournalType }))
+    dispatch(search({ keyword: searchKeyword, type: searchJournalType }));
   };
 
   return (
     <div>
       <SearchWrapper>
         <form className="form">
-          <FormRow
-            labelText="Keyword"
-            type="text"
-            name="searchKeyword"
-            value={searchKeyword}
-            handleChange={handleInputChange}
-          />
-          <FormRowSelect
-            labelText="Type"
-            name="searchJournalType"
-            value={searchJournalType}
-            handleChange={handleInputChange}
-            list={[...journalSearchOptions]}
-          />
-          <button className="btn" disabled={isLoading} onClick={handleSearch}>
-            Search
-          </button>
+          <div className="journal-form">
+            <FormRow
+              labelText="Keyword"
+              type="text"
+              name="searchKeyword"
+              value={searchKeyword}
+              handleChange={handleInputChange}
+            />
+            <FormRowSelect
+              labelText="Type"
+              name="searchJournalType"
+              value={searchJournalType}
+              handleChange={handleInputChange}
+              list={[...journalSearchOptions]}
+            />
+            <button className="btn" disabled={isLoading} onClick={handleSearch}>
+              Search
+            </button>
+          </div>
         </form>
       </SearchWrapper>
       {searchJournalType === "Journal" ? (

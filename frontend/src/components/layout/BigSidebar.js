@@ -4,7 +4,7 @@ import Logo from './Logo'
 import Wrapper from '../../assets/wrappers/BigSidebar'
 
 const BigSidebar = () => {
-  const { showSidebar } = useSelector((state) => state)
+  const { showSidebar } = useSelector((state) => state.base)
   return (
     <Wrapper>
       <div

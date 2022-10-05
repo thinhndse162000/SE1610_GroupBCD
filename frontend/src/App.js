@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Signup, Landing, Error, ProtectedRoute, Login } from "./pages";
+import { Signup, Landing, Error, ProtectedRoute, Login, ManagerProtectedRoute } from "./pages";
 import {
   SharedLayout,
   AuthorPaper,
@@ -7,6 +7,10 @@ import {
   Journal,
   AddReview,
   ReviewerInvitation,
+  PaperDetail,
+  AllReviewReport,
+  ReviewReportDetail,
+  JournalPaper,
 } from "./pages/dashboard";
 
 function App() {
@@ -17,7 +21,7 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <SharedLayout />
+              <SharedLayout viewType="member"/>
             </ProtectedRoute>
           }
         >
@@ -28,11 +32,12 @@ function App() {
           path="/author"
           element={
             <ProtectedRoute>
-              <SharedLayout />
+              <SharedLayout viewType="author"/>
             </ProtectedRoute>
           }
         >
           <Route index element={<AuthorPaper />} />
+          <Route path="paper-detail/:paperId" element={<PaperDetail />} />
           <Route path="submit-paper" element={<AddPaper />} />
         </Route>
 
@@ -40,14 +45,28 @@ function App() {
           path="/reviewer"
           element={
             <ProtectedRoute>
-              <SharedLayout />
+              <SharedLayout viewType="reviewer"/>
             </ProtectedRoute>
           }
         >
-          <Route index element={<AddReview />} />
+          <Route index element={<AllReviewReport />} />
+          <Route path="submit-review" element={<AddReview />} />
+          <Route path="review-detail/:reviewId" element={<ReviewReportDetail />} />
           <Route path="invitation" element={<ReviewerInvitation />} />
         </Route>
-        
+
+        <Route
+          path="/manager"
+          element={
+            <ManagerProtectedRoute>
+              <SharedLayout viewType="manager"/>
+            </ManagerProtectedRoute>
+          }
+        >
+          <Route index element={<JournalPaper />} />
+          {/* <Route path="invite" element={<ReviewReportDetail />} /> */}
+        </Route>
+
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />

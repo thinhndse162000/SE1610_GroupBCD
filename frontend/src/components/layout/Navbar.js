@@ -9,12 +9,16 @@ import { logoutUser } from "../../context/service/authService";
 
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
-  const { user } = useSelector((state) => state.base);
+  const { user, role } = useSelector((state) => state.base);
   const dispatch = useDispatch();
   return (
     <Wrapper>
       <div className="nav-center">
-        <button type="button" className="toggle-btn" onClick={() => dispatch(toggleSidebar())}>
+        <button
+          type="button"
+          className="toggle-btn"
+          onClick={() => dispatch(toggleSidebar())}
+        >
           <FaAlignLeft />
         </button>
         <div>
@@ -22,15 +26,32 @@ const Navbar = () => {
           <h3 className="logo-text">dashboard</h3>
         </div>
         <div className="navigation-link">
-          <Link to="/" onClick={(e) => dispatch(changeView("member"))}>
-            Home
-          </Link>
-          <Link to="/author" onClick={(e) => dispatch(changeView("author"))}>
-            Author
-          </Link>
-          <Link to="/reviewer" onClick={(e) => dispatch(changeView("reviewer"))}>
-            Reviewer
-          </Link>
+          {role === "MANAGER" ? (
+            <Link
+              to="/manager"
+              onClick={(e) => dispatch(changeView("manager"))}
+            >
+              Manager
+            </Link>
+          ) : (
+            <>
+              <Link to="/" onClick={(e) => dispatch(changeView("member"))}>
+                Home
+              </Link>
+              <Link
+                to="/author"
+                onClick={(e) => dispatch(changeView("author"))}
+              >
+                Author
+              </Link>
+              <Link
+                to="/reviewer"
+                onClick={(e) => dispatch(changeView("reviewer"))}
+              >
+                Reviewer
+              </Link>
+            </>
+          )}
         </div>
         <div className="btn-container">
           <button
@@ -43,7 +64,11 @@ const Navbar = () => {
             <FaCaretDown />
           </button>
           <div className={showLogout ? "dropdown show-dropdown" : "dropdown"}>
-            <button type="button" className="dropdown-btn" onClick={() => dispatch(logoutUser())}>
+            <button
+              type="button"
+              className="dropdown-btn"
+              onClick={() => dispatch(logoutUser())}
+            >
               logout
             </button>
           </div>

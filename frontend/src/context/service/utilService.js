@@ -7,16 +7,19 @@ import {
   CHANGE_PAGE,
   HANDLE_AUTHOR_CHANGE,
   HANDLE_MEMBER_CHANGE,
+  HANDLE_REVIEWER_CHANGE,
 } from "../actions";
 
-export const addUserToLocalStorage = ({ user, token }) => {
+export const addUserToLocalStorage = ({ user, token, role }) => {
   localStorage.setItem("user", user);
   localStorage.setItem("token", token);
+  localStorage.setItem("role", role);
 };
 
 export const removeUserFromLocalStorage = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
+  localStorage.removeItem("role");
 };
 
 export const changeView = (viewType) => (dispatch) => {
@@ -44,6 +47,9 @@ export const handleChange =
         break;
       case "member":
         dispatchType = HANDLE_MEMBER_CHANGE;
+        break;
+      case "reviewer":
+        dispatchType = HANDLE_REVIEWER_CHANGE;
         break;
     }
     dispatch({ type: dispatchType, payload: { name, value } });
