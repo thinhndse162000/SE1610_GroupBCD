@@ -29,6 +29,13 @@ const Wrapper = styled.section`
     height: 35px;
     margin-top: 1rem;
   }
+  .container-3{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 1rem;
+    align-self: flex-end;
+    margin-top: 0.5rem;
+  }
   .btn-container {
     display: grid;
     grid-template-columns: 1fr 1fr;

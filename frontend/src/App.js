@@ -7,6 +7,9 @@ import {
   Journal,
   AddReview,
   ReviewerInvitation,
+  PaperDetail,
+  AllReviewReport,
+  ReviewReportDetail,
 } from "./pages/dashboard";
 
 function App() {
@@ -17,7 +20,7 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <SharedLayout />
+              <SharedLayout viewType="member"/>
             </ProtectedRoute>
           }
         >
@@ -28,11 +31,12 @@ function App() {
           path="/author"
           element={
             <ProtectedRoute>
-              <SharedLayout />
+              <SharedLayout viewType="author"/>
             </ProtectedRoute>
           }
         >
           <Route index element={<AuthorPaper />} />
+          <Route path="paper-detail/:paperId" element={<PaperDetail />} />
           <Route path="submit-paper" element={<AddPaper />} />
         </Route>
 
@@ -40,14 +44,16 @@ function App() {
           path="/reviewer"
           element={
             <ProtectedRoute>
-              <SharedLayout />
+              <SharedLayout viewType="reviewer"/>
             </ProtectedRoute>
           }
         >
-          <Route index element={<AddReview />} />
+          <Route index element={<AllReviewReport />} />
+          <Route path="submit-review" element={<AddReview />} />
+          <Route path="review-detail/:reviewId" element={<ReviewReportDetail />} />
           <Route path="invitation" element={<ReviewerInvitation />} />
         </Route>
-        
+
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />

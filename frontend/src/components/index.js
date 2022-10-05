@@ -11,9 +11,12 @@ import SearchContainer from './container/SearchContainer'
 import SmallSidebar from './layout/SmallSidebar'
 import AuthorPaperContainer from './container/AuthorPaperContainer'
 import Journal from './Journal'
+import Paper from './Paper'
 import JournalContainer from './container/JournalContainer'
 import PaperContainer from './container/PaperContainer'
 import InvitationContainer from './container/InvitationContainer'
+import ReviewReportContainer from './container/ReviewReportContainer'
+import ReviewReport from './ReviewReport'
 export {
   Logo,
   FormRow,
@@ -28,7 +31,10 @@ export {
   AuthorPaperContainer,
   FormDropdown,
   Journal,
+  Paper,
   JournalContainer,
   PaperContainer,
   InvitationContainer,
+  ReviewReport,
+  ReviewReportContainer,
 }

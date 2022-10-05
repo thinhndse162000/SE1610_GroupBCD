@@ -8,6 +8,7 @@ import {
   AUTHOR_PAPER,
   SUCCESS_NO_MESSAGE,
   SEARCH_RESULT,
+  PAPER_DETAIL,
 } from "../actions";
 import { clearAlert } from "./utilService";
 import authFetch from "../../utils/authFetch";
@@ -27,6 +28,24 @@ export const getAuthorPaper = () => async (dispatch) => {
       type: AUTHOR_PAPER,
       payload: {
         papers: data,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    console.log("error getting paper");
+  }
+  dispatch(clearAlert());
+};
+
+export const getPaperDetail = (paperId) => async (dispatch) => {
+  dispatch({ type: LOADING });
+  try {
+    const { data } = await authFetch.get(`/author/paper/${paperId}`);
+    dispatch({ type: SUCCESS_NO_MESSAGE });
+    dispatch({
+      type: PAPER_DETAIL,
+      payload: {
+        paperDetail: data,
       },
     });
   } catch (error) {
@@ -77,7 +96,7 @@ export const editPaper = (paper) => async (dispatch) => {
     formData.append("title", paperTitle);
     formData.append("summary", paperSummary);
 
-    await authFetch.post(`/paper/${editPaperId}`, formData, {
+    await authFetch.put(`/paper/${editPaperId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         "Access-Control-Allow-Origin": "*",
@@ -135,5 +154,6 @@ export const search =
     }
     dispatch(clearAlert());
   };
+
 
 // TODO: combine searching function

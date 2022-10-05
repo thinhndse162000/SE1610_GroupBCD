@@ -3,7 +3,7 @@ const token = localStorage.getItem("token");
 const author = {
   submittedPapers: [],
   editPaperId: "",
-  detailPaperId: "",
+  paperDetail: {},
   newPaper: {
     paperTitle: "",
     paperSummary: "",
@@ -16,6 +16,15 @@ const author = {
 
 const reviewer = {
   invitations: [],
+  reviewReports: [],
+  editReviewId: "",
+  newReview: {
+    reviewPaper: {},
+    reviewNote: "",
+    reviewGrade: 0,
+    reviewConfidentiality: 0,
+    reviewVerdict: "",
+  }
 }
 
 const member = {

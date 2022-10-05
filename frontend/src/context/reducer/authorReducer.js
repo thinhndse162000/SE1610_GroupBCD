@@ -3,6 +3,7 @@ import {
   CLEAR_PAPER_VALUES,
   SET_EDIT_PAPER,
   HANDLE_AUTHOR_CHANGE,
+  PAPER_DETAIL,
 } from "../actions";
 import { author } from "../state";
 
@@ -61,6 +62,11 @@ const authorReducer = (state = author, action) => {
         ...state,
         submittedPapers: action.payload.papers,
       };
+    case PAPER_DETAIL:
+      return {
+        ...state,
+        paperDetail: action.payload.paperDetail,
+      }
     default:
       return state;
   }

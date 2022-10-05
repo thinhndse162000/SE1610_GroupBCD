@@ -7,6 +7,7 @@ import {
   CHANGE_PAGE,
   HANDLE_AUTHOR_CHANGE,
   HANDLE_MEMBER_CHANGE,
+  HANDLE_REVIEWER_CHANGE,
 } from "../actions";
 
 export const addUserToLocalStorage = ({ user, token }) => {
@@ -44,6 +45,9 @@ export const handleChange =
         break;
       case "member":
         dispatchType = HANDLE_MEMBER_CHANGE;
+        break;
+      case "reviewer":
+        dispatchType = HANDLE_REVIEWER_CHANGE;
         break;
     }
     dispatch({ type: dispatchType, payload: { name, value } });
