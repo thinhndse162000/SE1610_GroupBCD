@@ -83,14 +83,15 @@ ADD FOREIGN KEY (FieldId) REFERENCES Field(FieldId);
 -- INSERT DATA
 -- duy123, duy123, duy123, duynguyen, bcd123, ejournal
 INSERT INTO Account
-  (email, password, phone, firstName, lastName, organization, DateOfBirth, profileImage, role, status)
+  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status)
 VALUES
-  ('nguyenduduy233@gmail.com', '$2a$10$v5VVaxM8IQ579t529zVrN.NPFDmC4BQNLmqOyLQGWc5CGXJqLwBnW', '9944823835', 'Duy', 'Nguyen', 'FPT', '2002-05-25', '1.png', 'MEMBER', 'OPEN'),
-  ('duy@gmail.com', '$2a$10$agxfXpT8HRFdITllgTqwVeEPZRvnc2pPxSgdK3QPsLy9CYeNtcNc.', '0137275723', 'Duy Du', 'Ng', 'FPT', '2002-05-25', '2.png', 'MEMBER', 'OPEN'),
-  ('thinh@gmail.com', '$2a$10$XMjee4bxLs44QZMJRXBk7.P9JOkBWbp8HVV5htCECIOfP.a/sW64C', '4100569746', 'Thinh', 'Nguyen', 'FPT', '2002-05-25', '3.png', 'MEMBER', 'OPEN'),
-  ('nam@gmail.com', '$2a$10$u6xDaHIKEWQuCTTn4xkn2.kHRMzgGCwRfmlGDW9VRnIpNnz6HoZj.', '9805066264', 'Nam', 'Nguyen', 'FPT', '2002-05-25', '4.png', 'MEMBER', 'OPEN'),
-  ('tue@gmail.com', '$2a$10$5IBOUGV1UyeXsBAkqXPdfeOB3m3IKzV8KHFvxZ3lPzDfRTjDuSixG', '6896272792', 'Tue', 'Nguyen', 'FPT', '2002-05-25', '5.png', 'MEMBER', 'OPEN'),
-  ('bcd@gmail.com', '$2a$10$MfNx2TVpwsPRWSpNWUxmQeJbmy/YhHUXnQR/N5IJ5btwrH3U2PhHC', '6838090326', 'BCD', 'Nguyen', 'FPT', '2002-05-25', '6.png', 'MEMBER', 'OPEN');
+  ('nguyenduduy233@gmail.com', '$2a$10$v5VVaxM8IQ579t529zVrN.NPFDmC4BQNLmqOyLQGWc5CGXJqLwBnW', '9944823835', 'Duy', 'Nguyen', 'FPT', '2002-05-25', 'MEMBER', 'OPEN'),
+  ('duy@gmail.com', '$2a$10$agxfXpT8HRFdITllgTqwVeEPZRvnc2pPxSgdK3QPsLy9CYeNtcNc.', '0137275723', 'Duy Du', 'Ng', 'FPT', '2002-05-25', 'MEMBER', 'OPEN'),
+  ('thinh@gmail.com', '$2a$10$XMjee4bxLs44QZMJRXBk7.P9JOkBWbp8HVV5htCECIOfP.a/sW64C', '4100569746', 'Thinh', 'Nguyen', 'FPT', '2002-05-25', 'MEMBER', 'OPEN'),
+  ('nam@gmail.com', '$2a$10$u6xDaHIKEWQuCTTn4xkn2.kHRMzgGCwRfmlGDW9VRnIpNnz6HoZj.', '9805066264', 'Nam', 'Nguyen', 'FPT', '2002-05-25', 'MEMBER', 'OPEN'),
+  ('tue@gmail.com', '$2a$10$5IBOUGV1UyeXsBAkqXPdfeOB3m3IKzV8KHFvxZ3lPzDfRTjDuSixG', '6896272792', 'Tue', 'Nguyen', 'FPT', '2002-05-25', 'MEMBER', 'OPEN'),
+  ('bcd@gmail.com', '$2a$10$MfNx2TVpwsPRWSpNWUxmQeJbmy/YhHUXnQR/N5IJ5btwrH3U2PhHC', '6838090326', 'BCD', 'Nguyen', 'FPT', '2002-05-25', 'MEMBER', 'OPEN'),
+  ('manager@gmail.com', '$2a$10$Ho0ZmhMKJyh6vPKiW9Gzc.eGijS54ME/vq0oM2qutPAENS3kurkve', '6838090328', 'Manager', 'Manager', 'FPT', '2002-05-25', 'MANAGER', 'OPEN');
 
 INSERT INTO Reviewer
   (ReviewerId, Invitable)
@@ -100,17 +101,19 @@ VALUES
   (3, 1),
   (4, 1),
   (5, 1),
-  (6, 1);
+  (6, 1),
+  (7, 0);
 
 INSERT INTO Author
-  (AuthorId, Introduction, Education, Address, profileImage)
+  (AuthorId, Introduction, Education, Address)
 VALUES
-  (1, 'Duy day', 'FPT', '123 O dau do', '1.png'),
-  (2, 'Duy day', 'FPT', '123 O dau do', '2.png'),
-  (3, 'Duy day', 'FPT', '123 O dau do', '3.png'),
-  (4, 'Duy day', 'FPT', '123 O dau do', '4.png'),
-  (5, 'Duy day', 'FPT', '123 O dau do', '5.png'),
-  (6, 'Duy day', 'FPT', '123 O dau do', '6.png');
+  (1, 'Duy day', 'FPT', '123 O dau do'),
+  (2, 'Duy day', 'FPT', '123 O dau do'),
+  (3, 'Duy day', 'FPT', '123 O dau do'),
+  (4, 'Duy day', 'FPT', '123 O dau do'),
+  (5, 'Duy day', 'FPT', '123 O dau do'),
+  (6, 'Duy day', 'FPT', '123 O dau do'),
+  (7, 'Manager day', 'FPT', '123 O dau do');
   
 INSERT INTO Field
   (FieldName)
@@ -240,4 +243,9 @@ VALUES
   (1, 1, '2022-09-15', 'OPEN'),
   (2, 1, '2022-09-15', 'PRIVATE');
 
--- TODO: Invoice, Manger
+INSERT INTO Manager
+  (journalId, accountId)
+VALUES
+  (1, 7)
+
+-- TODO: Invoice

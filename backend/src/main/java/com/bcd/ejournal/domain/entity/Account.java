@@ -32,7 +32,6 @@ public class Account implements UserDetails {
     private String lastName;
     private String organization;
     private Date dateOfBirth;
-    private String profileImage;
     @Enumerated(EnumType.STRING)
     private AccountRole role;
     @Enumerated(EnumType.STRING)

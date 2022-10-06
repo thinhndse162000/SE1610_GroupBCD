@@ -21,7 +21,6 @@ public class Author {
     private String introduction;
     private String education;
     private String address;
-    private String profileImage;
 
     @OneToOne
     @MapsId

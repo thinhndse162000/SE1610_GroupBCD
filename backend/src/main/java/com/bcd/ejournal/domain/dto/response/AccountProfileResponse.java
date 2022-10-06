@@ -18,5 +18,4 @@ public class AccountProfileResponse {
     private String lastName;
     private String organization;
     private Date dateOfBirth;
-    private String profileImage;
 }

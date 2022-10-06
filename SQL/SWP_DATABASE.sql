@@ -14,14 +14,9 @@ CREATE TABLE Account(
 	lastName NVARCHAR(150) not null,
 	Organization NVARCHAR(150) not null,
 	DateOfBirth DATE,
-	profileImage char(100),
   role varchar(10) not null,
   [status] varchar(10) not null
 )
-
--- CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
--- ON Account(profileImage)
--- WHERE profileImage IS NOT NULL;
 
 go
 CREATE TABLE Reviewer(
@@ -34,12 +29,7 @@ CREATE TABLE Author(
 	Introduction text not null,
 	Education text not null,
 	[Address] text,
-	profileImage char(100),
 )
-
--- CREATE UNIQUE NONCLUSTERED INDEX profileImage_idx
--- ON Author(profileImage)
--- WHERE profileImage IS NOT NULL;
 
 go
 CREATE TABLE Field(
