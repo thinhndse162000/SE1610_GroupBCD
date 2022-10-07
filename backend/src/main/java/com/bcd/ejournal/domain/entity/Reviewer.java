@@ -19,7 +19,7 @@ public class Reviewer {
     private Integer ReviewerId;
     private boolean invitable;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "ReviewerId")
     private Account account;

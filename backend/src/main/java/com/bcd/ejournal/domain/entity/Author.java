@@ -22,7 +22,7 @@ public class Author {
     private String education;
     private String address;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "AuthorId")
     private Account account;

@@ -25,6 +25,9 @@ public class Journal {
     @Enumerated(EnumType.STRING)
     private JournalStatus status;
 
+    @OneToOne(mappedBy = "journal")
+    private Account manager;
+
     @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
     private List<Issue> issues;
 

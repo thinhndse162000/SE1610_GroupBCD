@@ -45,6 +45,12 @@ public class Account implements UserDetails {
     @PrimaryKeyJoinColumn
     private Reviewer reviewer;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "Manager",
+            joinColumns = @JoinColumn(name = "accountId", referencedColumnName = "accountId"),
+            inverseJoinColumns = @JoinColumn(name = "journalId", referencedColumnName = "journalId"))
+    private Journal journal;
+
     public String getFullName() {
         return lastName + " " + firstName;
     }

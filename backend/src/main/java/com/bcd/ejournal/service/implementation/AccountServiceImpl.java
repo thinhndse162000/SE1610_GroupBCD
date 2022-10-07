@@ -46,6 +46,7 @@ public class AccountServiceImpl implements AccountService {
             AccountTokenResponse response = new AccountTokenResponse();
             response.setToken(jwtService.jwtFromAccount(acc));
             response.setFullName(acc.getFullName());
+            response.setRole(acc.getRole());
             return response;
         } else {
             throw new UnauthorizedException("Account not found");
@@ -84,6 +85,7 @@ public class AccountServiceImpl implements AccountService {
         AccountTokenResponse response = new AccountTokenResponse();
         response.setToken(jwtService.jwtFromAccount(acc));
         response.setFullName(acc.getFullName());
+        response.setRole(acc.getRole());
         return response;
     }
 
