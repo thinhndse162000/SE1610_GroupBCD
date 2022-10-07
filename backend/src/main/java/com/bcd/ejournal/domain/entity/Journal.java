@@ -1,6 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
-import com.bcd.ejournal.domain.enumstatus.JournalStatus;
+import com.bcd.ejournal.domain.enums.JournalStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,13 +17,16 @@ import java.util.List;
 public class Journal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer journalID;
+    private Integer journalId;
     private String name;
     private String introduction;
     private String organization;
     private String issn;
     @Enumerated(EnumType.STRING)
     private JournalStatus status;
+
+    @OneToOne(mappedBy = "journal")
+    private Account manager;
 
     @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
     private List<Issue> issues;

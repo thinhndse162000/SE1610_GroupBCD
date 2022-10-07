@@ -1,5 +1,7 @@
 package com.bcd.ejournal.configuration;
 
+import com.bcd.ejournal.domain.exception.ForbiddenException;
+import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,24 @@ public class GlobalExceptionHandler {
         body.put("message", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = {ForbiddenException.class})
+    public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = {MethodNotAllowedException.class})
+    public ResponseEntity<Object> handleMethodNotAllowedException(MethodNotAllowedException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

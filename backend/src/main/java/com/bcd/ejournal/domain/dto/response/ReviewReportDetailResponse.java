@@ -7,12 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class JournalResponse {
-    private String journalId;
-    private String name;
-    private String introduction;
-    private String organization;
-    private String issn;
+@NoArgsConstructor
+public class ReviewReportDetailResponse {
+    private ReviewReportResponse review;
+    private PaperResponse paper;
 }

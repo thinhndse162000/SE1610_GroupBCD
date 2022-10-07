@@ -1,7 +1,7 @@
 package com.bcd.ejournal.domain.entity;
 
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
-import com.bcd.ejournal.domain.enumstatus.PaperStatus;
+import com.bcd.ejournal.domain.enums.PaperStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table
@@ -27,15 +28,22 @@ public class Paper implements Serializable {
     private String summary;
     private Timestamp submitTime;
     private String linkPDF;
-    private int numberOfPage;
+    private Integer numberOfPage;
+    private Integer grade;
     @Enumerated(EnumType.STRING)
     private PaperStatus status;
     @ManyToOne
-    @JoinColumn(name = "AuthorID", nullable = false)
+    @JoinColumn(name = "AuthorId", nullable = false)
     private Author author;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "JournalID", nullable = false)
+    @JoinColumn(name = "JournalId", nullable = false)
     private Journal journal;
+
+    @OneToMany(mappedBy = "paper")
+    private List<Invitation> invitations;
+
+    @OneToMany(mappedBy = "paper")
+    private List<ReviewReport> reviewReports;
 
     public Paper(PaperSubmitRequest model) {
         this.title = model.getTitle();

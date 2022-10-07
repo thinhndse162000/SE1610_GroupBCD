@@ -3,19 +3,22 @@ package com.bcd.ejournal.service;
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
+import com.bcd.ejournal.domain.dto.response.PaperResponse;
 
 import java.util.List;
 
 public interface JournalService {
     JournalResponse createJournal(JournalCreateRequest request);
 
-    JournalResponse getJournal(Integer journalID);
+    JournalResponse getJournal(Integer journalId);
 
     List<JournalResponse> search(String name);
 
-    List<IssueResponse> listAllIssues(Integer journalID);
+    List<IssueResponse> listAllIssues(Integer journalId);
 
-    JournalResponse updateJournal(Integer journalID, JournalCreateRequest request);
+    JournalResponse updateJournal(Integer journalId, JournalCreateRequest request);
 
-    void archiveJournal(Integer journalID);
+    void archiveJournal(Integer journalId);
+
+    List<PaperResponse> getAllPaper(Integer accountId);
 }

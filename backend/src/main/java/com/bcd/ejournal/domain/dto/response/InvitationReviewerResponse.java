@@ -1,5 +1,6 @@
 package com.bcd.ejournal.domain.dto.response;
 
+import com.bcd.ejournal.domain.enums.InvitationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,9 @@ import java.sql.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IssueResponse {
-    private Integer issueId;
-    private String volume;
-    private String issue;
-    private Date startDate;
-    private Date endDate;
-    private int numberOfPages;
-    private JournalResponse journal;
+public class InvitationReviewerResponse {
+    private Integer invitationId;
+    private Date inviteDate;
+    private InvitationStatus status;
+    private PaperResponse paper;
 }

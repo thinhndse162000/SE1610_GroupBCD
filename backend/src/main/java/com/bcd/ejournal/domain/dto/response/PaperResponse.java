@@ -1,6 +1,6 @@
 package com.bcd.ejournal.domain.dto.response;
 
-import com.bcd.ejournal.domain.enumstatus.PaperStatus;
+import com.bcd.ejournal.domain.enums.PaperStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +19,7 @@ public class PaperResponse {
     private Timestamp submitTime;
     private String linkPDF;
     private int numberOfPage;
+    private int grade;
     private PaperStatus status;
     private AuthorResponse authors;
     private JournalResponse journal;

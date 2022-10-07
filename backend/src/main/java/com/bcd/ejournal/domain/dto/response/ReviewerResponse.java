@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorResponse {
-    private Integer authorId;
+public class ReviewerResponse {
+    private Integer reviewerId;
     private String fullName;
-    private String introduction;
-    private String education;
-    private String address;
 }

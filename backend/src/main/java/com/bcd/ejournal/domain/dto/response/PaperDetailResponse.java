@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorResponse {
-    private Integer authorId;
-    private String fullName;
-    private String introduction;
-    private String education;
-    private String address;
+public class PaperDetailResponse {
+    private PaperResponse paper;
+    private List<ReviewReportResponse> reviews;
 }

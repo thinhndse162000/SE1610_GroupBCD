@@ -1,6 +1,7 @@
 package com.bcd.ejournal.api;
 
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
+import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.service.AccountService;
 import com.bcd.ejournal.service.PaperService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,8 +30,15 @@ public class AuthorApi {
 
     @GetMapping("/paper")
     public ResponseEntity<List<PaperResponse>> getAllPaper(@AuthenticationPrincipal AccountJWTPayload payload) {
-        Integer authorID = payload.getAccountID();
-        List<PaperResponse> papers = paperService.getAllPaperFromAuthor(authorID);
+        Integer authorId = payload.getAccountId();
+        List<PaperResponse> papers = paperService.getAllPaperFromAuthor(authorId);
         return new ResponseEntity<>(papers, HttpStatus.OK);
+    }
+
+    @GetMapping("/paper/{id}")
+    public ResponseEntity<PaperDetailResponse> getPaper(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId) {
+        Integer authorId = payload.getAccountId();
+        PaperDetailResponse response = paperService.getPaper(paperId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

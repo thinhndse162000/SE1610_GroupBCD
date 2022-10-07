@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,11 +16,17 @@ import javax.persistence.*;
 public class Reviewer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ReviewerID;
+    private Integer ReviewerId;
     private boolean invitable;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "ReviewerID")
+    @JoinColumn(name = "ReviewerId")
     private Account account;
+
+    @OneToMany(mappedBy = "reviewer")
+    private List<Invitation> invitations;
+
+    @OneToMany(mappedBy = "reviewer")
+    private List<ReviewReport> reviewReports;
 }

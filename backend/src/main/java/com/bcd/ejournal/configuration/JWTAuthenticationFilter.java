@@ -46,7 +46,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         final String token = header.split(" ")[1].trim();
         try {
             JWTPayload payload = jwtService.jwtPayloadFromJWT(token);
-            Account account = accountRepo.findById(payload.getAccountID())
+            Account account = accountRepo.findById(payload.getAccountId())
                     .filter(Account::isEnabled)
                     .orElse(null);
 

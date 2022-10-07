@@ -1,6 +1,7 @@
 package com.bcd.ejournal.domain.entity;
 
-import com.bcd.ejournal.domain.enumstatus.AccountStatus;
+import com.bcd.ejournal.domain.enums.AccountRole;
+import com.bcd.ejournal.domain.enums.AccountStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.List;
 public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer accountID;
+    private Integer accountId;
     private String email;
     private String password;
     private String phone;
@@ -31,8 +32,8 @@ public class Account implements UserDetails {
     private String lastName;
     private String organization;
     private Date dateOfBirth;
-    private String profileImage;
-    private Integer roleId;
+    @Enumerated(EnumType.STRING)
+    private AccountRole role;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
@@ -44,6 +45,12 @@ public class Account implements UserDetails {
     @PrimaryKeyJoinColumn
     private Reviewer reviewer;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "Manager",
+            joinColumns = @JoinColumn(name = "accountId", referencedColumnName = "accountId"),
+            inverseJoinColumns = @JoinColumn(name = "journalId", referencedColumnName = "journalId"))
+    private Journal journal;
+
     public String getFullName() {
         return lastName + " " + firstName;
     }
@@ -51,11 +58,9 @@ public class Account implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<>();
-
-        if (roleId == 1) {
-            list.add(new SimpleGrantedAuthority("ADMIN"));
-        } else {
-            list.add(new SimpleGrantedAuthority("MEMBER"));
+        list.add(new SimpleGrantedAuthority(role.name()));
+        if (role == AccountRole.MANAGER) {
+            list.add(new SimpleGrantedAuthority(AccountRole.MEMBER.name()));
         }
         return list;
     }

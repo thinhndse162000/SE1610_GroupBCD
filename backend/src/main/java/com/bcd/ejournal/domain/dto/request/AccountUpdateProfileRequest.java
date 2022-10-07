@@ -23,5 +23,4 @@ public class AccountUpdateProfileRequest {
     private String organization;
     @NotNull(message = "Date of birth must not be blank")
     private Date dateOfBirth;
-    private String profileImage;
 }

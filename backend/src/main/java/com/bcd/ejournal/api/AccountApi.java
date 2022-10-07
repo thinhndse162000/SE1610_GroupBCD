@@ -25,25 +25,25 @@ public class AccountApi {
 
     @GetMapping("/profile")
     public ResponseEntity<AccountProfileResponse> getProfile(@AuthenticationPrincipal AccountJWTPayload jwt) {
-        AccountProfileResponse response = accountService.getProfile(jwt.getAccountID());
+        AccountProfileResponse response = accountService.getProfile(jwt.getAccountId());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/profile")
     public ResponseEntity<AccountProfileResponse> updateProfile(@AuthenticationPrincipal AccountJWTPayload jwt, @Valid @RequestBody AccountUpdateProfileRequest request) {
-        AccountProfileResponse response = accountService.updateProfile(jwt.getAccountID(), request);
+        AccountProfileResponse response = accountService.updateProfile(jwt.getAccountId(), request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal AccountJWTPayload jwt, @Valid @RequestBody AccountChangePasswordRequest request) {
-        accountService.changePassword(jwt.getAccountID(), request);
+        accountService.changePassword(jwt.getAccountId(), request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> archiveAccount(@AuthenticationPrincipal AccountJWTPayload jwt) {
-        accountService.archiveAccount(jwt.getAccountID());
+        accountService.archiveAccount(jwt.getAccountId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
