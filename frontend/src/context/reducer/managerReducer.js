@@ -4,6 +4,7 @@ import {
   SENT_INVITATION,
   AVAILABLE_REVIEWER,
   REMOVE_AVAILABLE_REVIEWER,
+  ADD_SENT_INVITATION,
 } from "../actions";
 import { manager } from "../state";
 
@@ -36,7 +37,15 @@ const managerReducer = (state = manager, action) => {
       return {
         ...state,
         availableReviewers,
-      }
+      };
+    case ADD_SENT_INVITATION:
+      let sentInvitations = state.sentInvitations;
+      sentInvitations.push(action.payload.invitation);
+
+      return {
+        ...state,
+        sentInvitations,
+      };
     default:
       return state;
   }

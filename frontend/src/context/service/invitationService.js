@@ -8,17 +8,19 @@ import {
   INVITATION,
   SUCCESS,
   HANDLE_INVITATION_CHANGE,
+  ADD_SENT_INVITATION,
 } from "../actions";
 
 export const getInvitation = () => async (dispatch) => {
   dispatch({ type: LOADING });
   try {
     const { data } = await authFetch.get("/reviewer/invitation");
+    
     dispatch({ type: SUCCESS_NO_MESSAGE });
     dispatch({
       type: INVITATION,
       payload: {
-        invitations: data,
+        invitation: data,
       },
     });
   } catch (error) {
@@ -74,6 +76,11 @@ export const sendInvitation =
         type: SUCCESS,
         payload: { msg: "Send invitation successfully" },
       });
+      dispatch({
+        type: ADD_SENT_INVITATION,
+        payload: { invitation: data },
+      })
+    
       dispatch({
         type: REMOVE_AVAILABLE_REVIEWER,
         payload: { id: reviewerId },

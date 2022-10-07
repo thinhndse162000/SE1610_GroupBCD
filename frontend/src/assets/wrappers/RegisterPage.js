@@ -12,7 +12,14 @@ const Wrapper = styled.section`
     max-width: 400px;
     border-top: 5px solid var(--primary-500);
   }
-
+  .form-signup {
+    max-width: 800px;
+  }
+  .signup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
   h3 {
     text-align: center;
   }
