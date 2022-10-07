@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Logo, FormRow, Alert } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../context/service/authService";
 import { displayAlert } from "../context/service/utilService";
@@ -22,6 +22,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
   const { user, isLoading, showAlert } = useSelector((state) => state.base);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -52,7 +53,7 @@ const Signup = () => {
         passwordRetype
       )
     ) {
-      displayAlert();
+      dispatch(displayAlert());
       return;
     }
     const currentUser = {
@@ -67,7 +68,7 @@ const Signup = () => {
       passwordRetype,
     };
     setErrors(ValidateInfo(values));
-    signup({ currentUser });
+    dispatch(signup({ currentUser }));
   };
 
   useEffect(() => {

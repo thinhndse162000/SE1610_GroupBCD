@@ -22,6 +22,7 @@ const SentInvitationContainer = () => {
             const reviewer = {
               fullName: invitation.reviewerName,
             };
+            // TODO: change to Invitation with status
             return <Reviewer key={index} reviewer={reviewer} />;
           })}
         </div>
