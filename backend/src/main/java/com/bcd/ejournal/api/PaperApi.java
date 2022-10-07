@@ -4,16 +4,21 @@ import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
+import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -21,10 +26,12 @@ import java.util.List;
 @RequestMapping(path = "/paper")
 public class PaperApi {
     private final PaperService paperService;
+    private final InvitationService invitationService;
 
     @Autowired
-    public PaperApi(PaperService paperService) {
+    public PaperApi(PaperService paperService, InvitationService invitationService) {
         this.paperService = paperService;
+        this.invitationService = invitationService;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -59,5 +66,20 @@ public class PaperApi {
         // TODO: author or reviewer or journal
         PaperDetailResponse response = paperService.getPaper(paperId);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/download")
+    // TODO: which Id
+    public ResponseEntity<Resource> getFile(@PathVariable(name = "id") Integer paperId) throws IOException {
+        // TODO: verify reviewer can download
+        Resource rs = paperService.downloadFile(paperId);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + rs.getFilename() + "\"").header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(rs);
+    }
+
+    @GetMapping("/{id}/invitation")
+    public ResponseEntity<List<InvitationPaperResponse>> getInvitation(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId) {
+        Integer accountId = payload.getAccountId();
+        List<InvitationPaperResponse> responses = invitationService.listInvitationFromPaper(paperId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }

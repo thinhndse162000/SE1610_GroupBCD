@@ -10,5 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewerResponse {
+    private Integer reviewerId;
     private String fullName;
 }

@@ -77,8 +77,9 @@ public class JournalApi {
     // TODO: remove journalId, change it to something else
     // TODO: Manager role authorization
     @GetMapping("/paper")
-    public ResponseEntity<List<PaperResponse>> getAllPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload accountJWTPayload) {
-        // TODO: validate right manager
-        return null;
+    public ResponseEntity<List<PaperResponse>> getAllPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload) {
+        Integer accountId = payload.getAccountId();
+        List<PaperResponse> responses = journalService.getAllPaper(accountId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }

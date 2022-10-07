@@ -1,11 +1,15 @@
 package com.bcd.ejournal.service.implementation;
 
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
+import com.bcd.ejournal.domain.dto.response.AuthorResponse;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
-import com.bcd.ejournal.domain.entity.Issue;
-import com.bcd.ejournal.domain.entity.Journal;
+import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.domain.entity.*;
+import com.bcd.ejournal.domain.enums.AccountRole;
 import com.bcd.ejournal.domain.enums.JournalStatus;
+import com.bcd.ejournal.domain.exception.ForbiddenException;
+import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.IssueRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.service.JournalService;
@@ -21,12 +25,14 @@ import java.util.stream.StreamSupport;
 public class JournalServiceImpl implements JournalService {
     private final JournalRepository journalRepository;
     private final IssueRepository issueRepository;
+    private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public JournalServiceImpl(JournalRepository journalRepository, IssueRepository issueRepository, ModelMapper modelMapper) {
+    public JournalServiceImpl(JournalRepository journalRepository, IssueRepository issueRepository, AccountRepository accountRepository, ModelMapper modelMapper) {
         this.journalRepository = journalRepository;
         this.issueRepository = issueRepository;
+        this.accountRepository = accountRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -86,5 +92,32 @@ public class JournalServiceImpl implements JournalService {
         IssueResponse issueResponse = modelMapper.map(issue, IssueResponse.class);
         issueResponse.setJournal(modelMapper.map(issue.getJournal(), JournalResponse.class));
         return issueResponse;
+    }
+
+    @Override
+    public List<PaperResponse> getAllPaper(Integer accountId) {
+        Account acc = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
+
+        if (acc.getRole() != AccountRole.MANAGER) {
+            throw new ForbiddenException("Unauthorized action");
+        }
+
+        return acc.getJournal().getPapers().stream()
+                .map(this::fromPaper)
+                .collect(Collectors.toList());
+    }
+
+    private PaperResponse fromPaper(Paper paper) {
+        PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
+        paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
+        paperResponse.setAuthors(fromAuthor(paper.getAuthor()));
+        return paperResponse;
+    }
+
+    private AuthorResponse fromAuthor(Author author) {
+        AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
+        authorResponse.setFullName(author.getAccount().getFullName());
+        return authorResponse;
     }
 }

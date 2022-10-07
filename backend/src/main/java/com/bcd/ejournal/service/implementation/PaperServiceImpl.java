@@ -4,10 +4,7 @@ import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.*;
-import com.bcd.ejournal.domain.entity.Author;
-import com.bcd.ejournal.domain.entity.Journal;
-import com.bcd.ejournal.domain.entity.Paper;
-import com.bcd.ejournal.domain.entity.ReviewReport;
+import com.bcd.ejournal.domain.entity.*;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.repository.*;
 import com.bcd.ejournal.service.PaperService;
@@ -15,6 +12,7 @@ import com.bcd.ejournal.utils.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,8 +54,7 @@ public class PaperServiceImpl implements PaperService {
         // TODO: delete file if error
         String fileName = submitRequest.getFile().getOriginalFilename();
         MultipartFile file = submitRequest.getFile();
-        String filePath = uploadDir + fileName;
-        paper.setLinkPDF(filePath);
+        paper.setLinkPDF(fileName);
         try {
             FileUtils.saveFile(uploadDir, fileName, file);
         } catch (NullPointerException ex) {
@@ -94,6 +91,19 @@ public class PaperServiceImpl implements PaperService {
                 .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
         paper.setTitle(request.getTitle());
         paper.setSummary(request.getSummary());
+
+        String fileName = request.getFile().getOriginalFilename();
+        MultipartFile file = request.getFile();
+        paper.setLinkPDF(fileName);
+        // TODO: delete old file if update
+        try {
+            FileUtils.saveFile(uploadDir, fileName, file);
+        } catch (NullPointerException ex) {
+            System.out.println("Null");
+        } catch (IOException ex) {
+            System.out.println("IOexception");
+        }
+
         paperRepository.save(paper);
     }
 
@@ -157,6 +167,16 @@ public class PaperServiceImpl implements PaperService {
         return response;
     }
 
+    @Override
+    public Resource downloadFile(Integer paperId) throws IOException {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
+        String fileName = paper.getLinkPDF();
+        // TODO: verify reviewer can download
+        // TODO: verify author
+        return FileUtils.load(uploadDir, fileName.trim());
+    }
+
     private PaperResponse fromPaper(Paper paper) {
         PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
         paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
@@ -172,7 +192,8 @@ public class PaperServiceImpl implements PaperService {
 
     private ReviewReportResponse fromReviewReport(ReviewReport reviewReport) {
         ReviewReportResponse response = modelMapper.map(reviewReport, ReviewReportResponse.class);
-        response.setReviewer(new ReviewerResponse(reviewReport.getReviewer().getAccount().getFullName()));
+        Account acc = reviewReport.getReviewer().getAccount();
+        response.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName()));
         return response;
     }
 }

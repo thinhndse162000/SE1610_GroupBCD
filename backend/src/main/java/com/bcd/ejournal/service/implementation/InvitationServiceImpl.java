@@ -4,6 +4,7 @@ import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.*;
 import com.bcd.ejournal.domain.entity.*;
 import com.bcd.ejournal.domain.enums.InvitationStatus;
+import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.repository.InvitationRepository;
 import com.bcd.ejournal.repository.PaperRepository;
@@ -87,18 +88,19 @@ public class InvitationServiceImpl implements InvitationService {
 
         Paper paper = invitation.getPaper();
         List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(), InvitationStatus.ACCEPTED);
+
+        // Create new review report
+        ReviewReport reviewReport = new ReviewReport();
+        reviewReport.setReviewReportId(0);
+        reviewReport.setPaper(paper);
+        reviewReport.setReviewer(invitation.getReviewer());
+        reviewReport.setStatus(ReviewReportStatus.PENDING);
+
+        reviewReportRepository.save(reviewReport);
         if (acceptedInvitations.size() == 3) {
-            // create 3 new review reports to begin review process
-            for (Invitation inv : acceptedInvitations) {
-                ReviewReport reviewReport = new ReviewReport();
-
-                reviewReport.setReviewReportId(0);
-                reviewReport.setPaper(paper);
-                reviewReport.setReviewer(inv.getReviewer());
-                reviewReport.setStatus(ReviewReportStatus.PENDING);
-
-                reviewReportRepository.save(reviewReport);
-            }
+            // update paper status
+            paper.setStatus(PaperStatus.REVIEWING);
+            paperRepository.save(paper);
 
             // change status of other invitation to cancel
             invitationRepository.updateInvitationStatusByPaperId(paper.getPaperId(), InvitationStatus.CANCEL);
