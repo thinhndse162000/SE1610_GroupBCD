@@ -3,6 +3,7 @@ package com.bcd.ejournal.api;
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.InvitationUpdateStatusRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
+import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewReportDetailResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewerResponse;
@@ -33,12 +34,12 @@ public class ReviewerApi {
     }
 
     @PostMapping("/{id}/invitation")
-    public ResponseEntity<Void> sendInvitation(@PathVariable(name = "id") Integer reviewerId, @Valid @RequestBody ReviewerInvitationRequest request) {
+    public ResponseEntity<InvitationPaperResponse> sendInvitation(@PathVariable(name = "id") Integer reviewerId, @Valid @RequestBody ReviewerInvitationRequest request) {
         // TODO: Reviewer cannot review his own paper
         // TODO: validate if reviewer is invitable
         // TODO: validate paper is not in reviewing process
-        invitationService.sendInvitation(reviewerId, request);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        InvitationPaperResponse response = invitationService.sendInvitation(reviewerId, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/invitation")

@@ -69,7 +69,6 @@ public class PaperApi {
     }
 
     @GetMapping("/{id}/download")
-    // TODO: which Id
     public ResponseEntity<Resource> getFile(@PathVariable(name = "id") Integer paperId) throws IOException {
         // TODO: verify reviewer can download
         Resource rs = paperService.downloadFile(paperId);

@@ -38,7 +38,7 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public void sendInvitation(Integer reviewerId, ReviewerInvitationRequest request) {
+    public InvitationPaperResponse sendInvitation(Integer reviewerId, ReviewerInvitationRequest request) {
         // TODO: verify if reviewer is invitable
         // TODO: verify manager can send invitation of paperId
         Reviewer reviewer = reviewerRepository.findById(reviewerId)
@@ -53,6 +53,7 @@ public class InvitationServiceImpl implements InvitationService {
         invitation.setPaper(paper);
 
         invitationRepository.save(invitation);
+        return toInvitationPaperResponse(invitation);
     }
 
     @Override
