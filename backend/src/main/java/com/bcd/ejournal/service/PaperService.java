@@ -15,7 +15,7 @@ public interface PaperService {
 
     void deleteById(Integer paperID);
 
-    List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest, int pageNo , int pageSize);
+    List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest);
 
     List<PaperResponse> getAllPaperFromAuthor(Integer authorID);
 

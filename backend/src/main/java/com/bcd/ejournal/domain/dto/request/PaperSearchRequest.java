@@ -8,4 +8,5 @@ import lombok.Setter;
 public class PaperSearchRequest {
     private int paperId;
     private String title;
+    private int pageNumber;
 }

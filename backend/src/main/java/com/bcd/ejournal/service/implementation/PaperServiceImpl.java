@@ -1,5 +1,22 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
@@ -10,25 +27,13 @@ import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.enums.PaperStatus;
+import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.FileUtils;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class PaperServiceImpl implements PaperService {
@@ -94,6 +99,9 @@ public class PaperServiceImpl implements PaperService {
         // TODO: trim white space
         Paper paper = paperRepository.findById(paperID)
                 .orElseThrow(() -> new NullPointerException("Paper not found. ID: " + paperID));
+        if(!paper.getInvitations().isEmpty()) {
+        	throw new MethodNotAllowedException("Aciton not allow");
+        }
         paper.setTitle(request.getTitle());
         paper.setSummary(request.getSummary());
         paperRepository.save(paper);
@@ -105,17 +113,25 @@ public class PaperServiceImpl implements PaperService {
         // TODO: log existence
         Optional<Paper> paperOpt = paperRepository.findById(paperID);
         if (paperOpt.isPresent()) {
-            Paper paper = paperOpt.get();
+            File file = new File(paperOpt.get().getLinkPDF());           
             // TODO: file service delete
+            boolean isDelete = file.delete();
+        	paperRepository.deleteById(paperID);
+            if(isDelete) {
+            	System.out.println("File delete successfully");
+            	
+            } else {
+            	System.out.println("File doesn't exist");
+            }
+            
         }
-        paperRepository.deleteById(paperID);
     }
 
     @Override
     public List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest) {
         // TODO: verify manager
-        Iterable<Paper> papers = paperRepository.searchByTitle(paperSearchRequest.getTitle());
-
+    	Pageable pageable = PageRequest.of(0, 2);
+        Iterable<Paper> papers = paperRepository.searchByTitle(paperSearchRequest.getTitle(), pageable);
         return StreamSupport.stream(papers.spliterator(), false)
                 .map(this::fromPaper)
                 .collect(Collectors.toList());
@@ -149,6 +165,9 @@ public class PaperServiceImpl implements PaperService {
         Paper paper = paperRepository.findById(paperID)
                 .orElseThrow(() -> new NullPointerException("No paper found. ID: " + paperID));
         // TODO: author or reviewer or journal
+        if(!paper.getAuthor().equals(paper)) {
+        	throw new MethodNotAllowedException(" This action not Allow");
+        }
         return modelMapper.map(paper, PaperResponse.class);
     }
 
