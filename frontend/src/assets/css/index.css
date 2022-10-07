@@ -79,7 +79,6 @@ body {
 
 p {
   margin-bottom: 1.5rem;
-  max-width: 40em;
 }
 
 h1,
@@ -310,12 +309,3 @@ ul {
   color: var(--primary-500);
 }
 
-@media screen and (min-width: 992px) {
-  .coffee-info {
-    text-align: left;
-  }
-  .coffee-info span {
-    display: inline-block;
-    margin-right: 0.5rem;
-  }
-}

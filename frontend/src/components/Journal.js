@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import Wrapper from '../assets/wrappers/Paper'
+import Wrapper from '../assets/wrappers/Item'
 
 const Journal = ({ journal }) => {
-    const { journalID, name, introduction, organization, issn } = journal
+    const { journalId, name, introduction, organization, issn } = journal
     /*
         {
-        "journalID": "2",
+        "journalId": "2",
         "name": "Chemistry",
         "introduction": "this is the second chemistry",
         "organization": "HUS",
@@ -15,7 +15,7 @@ const Journal = ({ journal }) => {
       <Wrapper>
         <header>
           <div className="info">
-            <Link to={"/journal/" + journalID}>
+            <Link to={"/journal/" + journalId}>
               <h3>{name}</h3>
             </Link>
           </div>

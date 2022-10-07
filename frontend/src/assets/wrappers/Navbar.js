@@ -13,13 +13,14 @@ const Wrapper = styled.nav`
   }
   .nav-center {
     display: flex;
-    width: 90vw;
+    width: 90%;
     align-items: center;
     justify-content: space-between;
   }
   .toggle-btn {
     background: transparent;
     border-color: transparent;
+    width: 100%
     font-size: 1.75rem;
     color: var(--primary-500);
     cursor: pointer;
@@ -34,9 +35,20 @@ const Wrapper = styled.nav`
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 6rem;
     gap: 0 0.5rem;
     position: relative;
     box-shadow: var(--shadow-2);
+  }
+
+  .navigation-link > a {
+    padding: 10px;
+    &:visited {
+      color: black;
+    }
+    &:link {
+      color: black;
+    }
   }
 
   .dropdown {
@@ -66,19 +78,6 @@ const Wrapper = styled.nav`
     display: none;
     margin: 0;
   }
-  @media (min-width: 992px) {
-    position: sticky;
-    top: 0;
 
-    .nav-center {
-      width: 90%;
-    }
-    .logo {
-      display: none;
-    }
-    .logo-text {
-      display: block;
-    }
-  }
 `
 export default Wrapper

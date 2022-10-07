@@ -7,12 +7,14 @@ const Wrapper = styled.section`
   }
   .form-input,
   .form-select,
+  .btn,
   .btn-block {
     height: 35px;
   }
   .form-row {
     margin-bottom: 0;
   }
+  .journal-form,
   .form-center {
     display: grid;
     grid-template-columns: 1fr;
@@ -22,6 +24,7 @@ const Wrapper = styled.section`
   h5 {
     font-weight: 700;
   }
+  .btn,
   .btn-block {
     align-self: end;
     margin-top: 1rem;
@@ -34,6 +37,9 @@ const Wrapper = styled.section`
   @media (min-width: 992px) {
     .form-center {
       grid-template-columns: 1fr 1fr 1fr;
+    }
+    .journal-form {
+      grid-template-columns: 3fr 0.7fr 0.5fr;
     }
     .btn-block {
       margin-top: 0;
