@@ -6,9 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../context/service/authService";
 import { displayAlert } from "../context/service/utilService";
 
-// const initError= {
-  
-// };
 const initialState = {
   email: "",
   password: "",
@@ -17,8 +14,9 @@ const initialState = {
 const Login = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
-  // const [error, setError] = useState(initError);
-  const { user, isLoading, showAlert } = useSelector((state) => state.base);
+  const { user, isLoading, showAlert, role } = useSelector(
+    (state) => state.base
+  );
   const dispatch = useDispatch();
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -37,7 +35,8 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-        navigate("/author");
+      if (role === "MANAGER") navigate("/manager");
+      else navigate("/author");
     }
   }, [user, navigate]);
 

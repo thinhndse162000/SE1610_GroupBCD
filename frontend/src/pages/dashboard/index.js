@@ -8,7 +8,7 @@ import {
   AllReviewReport,
   ReviewReportDetail,
 } from "./reviewer";
-import { JournalPaper } from "./manager";
+import { JournalPaper, SendInvitation, } from "./manager";
 
 export {
   Profile,
@@ -22,4 +22,5 @@ export {
   AllReviewReport,
   ReviewReportDetail,
   JournalPaper,
+  SendInvitation,
 };

@@ -39,6 +39,9 @@ const member = {
 
 const manager = {
   sentPapers: [],
+  sentInvitations: [],
+  availableReviewers: [],
+  paper: {},
 }
 
 const base = {

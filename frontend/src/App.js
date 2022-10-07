@@ -11,6 +11,7 @@ import {
   AllReviewReport,
   ReviewReportDetail,
   JournalPaper,
+  SendInvitation,
 } from "./pages/dashboard";
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
           }
         >
           <Route index element={<JournalPaper />} />
+          <Route path="send-invitation/:paperId" element={<SendInvitation />} />
           {/* <Route path="invite" element={<ReviewReportDetail />} /> */}
         </Route>
 

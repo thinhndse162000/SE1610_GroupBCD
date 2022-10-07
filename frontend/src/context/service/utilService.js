@@ -7,7 +7,8 @@ import {
   CHANGE_PAGE,
   HANDLE_AUTHOR_CHANGE,
   HANDLE_MEMBER_CHANGE,
-  HANDLE_REVIEWER_CHANGE,
+  HANDLE_REVIEW_CHANGE,
+  HANDLE_INVITATION_CHANGE,
 } from "../actions";
 
 export const addUserToLocalStorage = ({ user, token, role }) => {
@@ -49,8 +50,13 @@ export const handleChange =
         dispatchType = HANDLE_MEMBER_CHANGE;
         break;
       case "reviewer":
-        dispatchType = HANDLE_REVIEWER_CHANGE;
+        dispatchType = HANDLE_REVIEW_CHANGE;
         break;
+      case "invitation":
+        dispatchType = HANDLE_INVITATION_CHANGE;
+        break;
+      default:
+        dispatchType = HANDLE_CHANGE;
     }
     dispatch({ type: dispatchType, payload: { name, value } });
   };

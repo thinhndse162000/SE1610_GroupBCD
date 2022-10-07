@@ -3,7 +3,8 @@ import {
   REVIEW_REPORT,
   SET_EDIT_REVIEW,
   CLEAR_REVIEW_VALUES,
-  HANDLE_REVIEWER_CHANGE,
+  HANDLE_REVIEW_CHANGE,
+  HANDLE_INVITATION_CHANGE,
 } from "../actions";
 import { reviewer } from "../state";
 
@@ -48,7 +49,7 @@ const reviewerReducer = (state = reviewer, action) => {
           reviewPaper: reviewReport.paper,
         },
       };
-    case HANDLE_REVIEWER_CHANGE:
+    case HANDLE_REVIEW_CHANGE:
       return {
         ...state,
         newReview: {
@@ -56,6 +57,18 @@ const reviewerReducer = (state = reviewer, action) => {
           [action.payload.name]: action.payload.value,
         },
       };
+      case HANDLE_INVITATION_CHANGE:
+        const invitations = state.invitations.map((invitation) => {
+          if (invitation.invitationId === action.payload.id) {
+            return { ...invitation, status: action.payload.status }
+          }
+          return invitation
+        })
+
+        return {
+          ...state,
+          invitations,
+        };
     default:
       return state;
   }

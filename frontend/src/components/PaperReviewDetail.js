@@ -1,8 +1,12 @@
 import Wrapper from "../assets/wrappers/Item";
 import { Link } from "react-router-dom";
+import { downloadFile } from "../context/service/paperService";
+import { useDispatch } from "react-redux";
 
 const PaperReviewDetail = ({ reviewReport, action = [] }) => {
   const { paper, review } = reviewReport;
+  const dispatch = useDispatch();
+
   return (
     <Wrapper>
       <header>
@@ -11,6 +15,17 @@ const PaperReviewDetail = ({ reviewReport, action = [] }) => {
           <h5>{paper.title}</h5>
           <p>Author: {paper.authors.fullName}</p>
         </div>
+        <footer>
+          <div className="actions">
+            <button
+              type="button"
+              className="btn edit-btn"
+              onClick={() => dispatch(downloadFile(paper.paperId))}
+            >
+              Download PDF
+            </button>
+          </div>
+        </footer>
       </header>
       <div className="content">
         {review.status === "DONE" && (

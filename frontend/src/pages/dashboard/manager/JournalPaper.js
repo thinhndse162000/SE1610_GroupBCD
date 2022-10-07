@@ -18,7 +18,16 @@ const JournalPaper = () => {
         <Wrapper>
           <div className="container">
             {papers.map((paper, index) => {
-              return <Paper key={index} paper={paper} />;
+              let action = [];
+              if (paper.status === "PENDING") {
+                action.push({
+                  type: "link",
+                  to: `send-invitation/${paper.paperId}`,
+                  className: "btn edit-btn",
+                  label: "Send invitation",
+                });
+              }
+              return <Paper key={index} paper={paper} action={action} />;
             })}
           </div>
         </Wrapper>

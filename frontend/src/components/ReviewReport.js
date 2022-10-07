@@ -1,7 +1,6 @@
 import Wrapper from "../assets/wrappers/Item";
 
 const ReviewReport = ({ review }) => {
-  console.log(review)
   return (
     <Wrapper>
       <header>

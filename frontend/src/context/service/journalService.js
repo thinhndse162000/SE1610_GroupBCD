@@ -7,7 +7,6 @@ export const getSentPaper = () => async (dispatch) => {
     try {
       const { data } = await authFetch.get("/journal/paper");
       // TODO:
-      console.log(data)
       dispatch({ type: SUCCESS_NO_MESSAGE });
       dispatch({
         type: JOURNAL_PAPER,
@@ -16,6 +15,7 @@ export const getSentPaper = () => async (dispatch) => {
         },
       });
     } catch (error) {
+      console.log(error)
       if (error.response.status === 401) return;
       dispatch({
         type: ERROR,

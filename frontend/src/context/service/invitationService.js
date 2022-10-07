@@ -1,6 +1,14 @@
 import authFetch from "../../utils/authFetch";
 import { clearAlert } from "./utilService";
-import { LOADING, SUCCESS_NO_MESSAGE, INVITATION, SUCCESS } from "../actions";
+import {
+  REMOVE_AVAILABLE_REVIEWER,
+  ERROR,
+  LOADING,
+  SUCCESS_NO_MESSAGE,
+  INVITATION,
+  SUCCESS,
+  HANDLE_INVITATION_CHANGE,
+} from "../actions";
 
 export const getInvitation = () => async (dispatch) => {
   dispatch({ type: LOADING });
@@ -14,8 +22,11 @@ export const getInvitation = () => async (dispatch) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    console.log("error getting invitation");
+    if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
   }
   dispatch(clearAlert());
 };
@@ -30,11 +41,53 @@ export const updateInvitationStatus =
           status,
         }
       );
-      let msg = (status === "ACCEPTED") ? "Accept invitation" : "Reject invitation";
+      let msg =
+        status === "ACCEPTED" ? "Accept invitation" : "Reject invitation";
       dispatch({ type: SUCCESS, payload: { msg } });
+      dispatch({
+        type: HANDLE_INVITATION_CHANGE,
+        payload: { id: invitationId, status },
+      });
     } catch (error) {
-      console.log(error);
-      console.log("error update invitation");
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };
+
+export const sendInvitation =
+  ({ paperId, reviewerId }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      const { data } = await authFetch.post(
+        `/reviewer/${reviewerId}/invitation`,
+        {
+          paperId,
+        }
+      );
+      // TODO: add to sent invitation
+      dispatch({
+        type: SUCCESS,
+        payload: { msg: "Send invitation successfully" },
+      });
+      dispatch({
+        type: REMOVE_AVAILABLE_REVIEWER,
+        payload: { id: reviewerId },
+      });
+    } catch (error) {
+      let msg = error.response.data.message;
+      if (error.response.status === 401) return;
+      if (error.response.status === 409) {
+        msg = "Already sent invitation to reviewer";
+      }
+      dispatch({
+        type: ERROR,
+        payload: { msg },
+      });
     }
     dispatch(clearAlert());
   };

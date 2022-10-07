@@ -2,12 +2,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateInvitationStatus } from "../../context/service/invitationService";
 import Wrapper from "../../assets/wrappers/Container";
 import Invitation from "../Invitation";
+import { downloadFile } from "../../context/service/paperService";
 
 const InvitationContainer = () => {
   const dispatch = useDispatch();
   const invitations = useSelector((state) => state.reviewer.invitations);
-
-
   return (
     <Wrapper>
       <div className="container">
@@ -27,6 +26,12 @@ const InvitationContainer = () => {
               onClick: () => dispatch(updateInvitationStatus(invitation.invitationId, "REJECTED")),
             });
           }
+          action.push({
+            type: "button",
+            className: "btn edit-btn",
+            label: "Download PDF",
+            onClick: () => dispatch(downloadFile(invitation.paper.paperId)),
+          });
           return (
             <Invitation key={index} invitation={invitation} action={action} />
           );

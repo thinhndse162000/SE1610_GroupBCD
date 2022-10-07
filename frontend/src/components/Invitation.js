@@ -9,7 +9,8 @@ const Invitation = ({ invitation, action = [] }) => {
         <div className="info">
           <h5>{paper.title}</h5>
           <p>
-            Author: {authors.fullName} - {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"}
+            Author: {authors.fullName} - {paper.numberOfPage}{" "}
+            {paper.numberOfPage > 1 ? "pages" : "page"}
           </p>
         </div>
       </header>
@@ -19,11 +20,6 @@ const Invitation = ({ invitation, action = [] }) => {
           <p>{paper.summary}</p>
         </div>
         <footer>
-          <p>
-            <span className={`status ${invitation.status.toLowerCase()}`}>
-              {invitation.status}
-            </span>
-          </p>
           <div className="actions">
             {action.map((act, index) => {
               return (
@@ -38,6 +34,11 @@ const Invitation = ({ invitation, action = [] }) => {
               );
             })}
           </div>
+          <p>
+            Invitation status: <span className={`status ${invitation.status.toLowerCase()}`}>
+              {invitation.status}
+            </span>
+          </p>
         </footer>
       </div>
     </Wrapper>

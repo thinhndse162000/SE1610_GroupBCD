@@ -206,7 +206,6 @@ ul {
 
 .form {
   width: 90vw;
-  max-width: var(--fixed-width);
   background: var(--white);
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);
@@ -291,8 +290,6 @@ ul {
 }
 
 .container {
-  width: var(--fluid-width);
-  max-width: var(--max-width);
   margin: 0 auto;
 }
 .full-page {
