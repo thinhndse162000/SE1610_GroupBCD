@@ -25,6 +25,10 @@ public class Journal {
     @Enumerated(EnumType.STRING)
     private JournalStatus status;
 
+    @ManyToMany
+    @JoinTable(name = "JournalField", joinColumns = @JoinColumn(name = "JournalId", referencedColumnName = "JournalId"), inverseJoinColumns = @JoinColumn(name = "FieldId", referencedColumnName = "FieldId"))
+    private List<Field> fields;
+
     @OneToOne(mappedBy = "journal")
     private Account manager;
 

@@ -12,6 +12,8 @@ public interface JournalService {
 
     JournalResponse getJournal(Integer journalId);
 
+    JournalResponse getJournalManager(Integer accountId);
+
     List<JournalResponse> search(String name);
 
     List<IssueResponse> listAllIssues(Integer journalId);

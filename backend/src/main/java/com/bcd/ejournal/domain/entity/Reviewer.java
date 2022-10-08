@@ -19,6 +19,10 @@ public class Reviewer {
     private Integer ReviewerId;
     private boolean invitable;
 
+    @ManyToMany
+    @JoinTable(name = "ReviewerField", joinColumns = @JoinColumn(name = "ReviewerId", referencedColumnName = "ReviewerId"), inverseJoinColumns = @JoinColumn(name = "FieldId", referencedColumnName = "FieldId"))
+    private List<Field> fields;
+
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "ReviewerId")

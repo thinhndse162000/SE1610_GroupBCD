@@ -31,17 +31,21 @@ public class PaperServiceImpl implements PaperService {
     private final AccountRepository accountRepository;
     private final JournalRepository journalRepository;
     private final ReviewReportRepository reviewReportRepository;
+    private final FieldRepository fieldRepository;
     private final RequestMapper paperMapper;
     private final ModelMapper modelMapper;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
-    public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository, JournalRepository journalRepository, ReviewReportRepository reviewReportRepository, RequestMapper paperMapper, ModelMapper modelMapper) {
+    public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository,
+            JournalRepository journalRepository, ReviewReportRepository reviewReportRepository,
+            FieldRepository fieldRepository, RequestMapper paperMapper, ModelMapper modelMapper) {
         this.paperRepository = paperRepository;
         this.accountRepository = accountRepository;
         this.journalRepository = journalRepository;
         this.reviewReportRepository = reviewReportRepository;
+        this.fieldRepository = fieldRepository;
         this.paperMapper = paperMapper;
         this.modelMapper = modelMapper;
     }
@@ -71,9 +75,10 @@ public class PaperServiceImpl implements PaperService {
         // TODO: read number of page from pdf
         paper.setNumberOfPage(10);
         paper.setStatus(PaperStatus.PENDING);
+        paper.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 
-        Journal journal = journalRepository.findById(submitRequest.getJournalId())
-                .orElseThrow(() -> new NullPointerException("Journal not found. Id: " + submitRequest.getJournalId()));
+        Journal journal = journalRepository.findById(request.getJournalId())
+                .orElseThrow(() -> new NullPointerException("Journal not found. Id: " + request.getJournalId()));
         Author author = accountRepository.findById(authorId)
                 .orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId))
                 .getAuthor();
@@ -184,6 +189,7 @@ public class PaperServiceImpl implements PaperService {
         String fileName = paper.getLinkPDF();
         // TODO: verify reviewer can download
         // TODO: verify author
+        // TODO: verify manager
         return FileUtils.load(uploadDir, fileName.trim());
     }
 

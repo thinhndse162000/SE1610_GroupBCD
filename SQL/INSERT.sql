@@ -135,7 +135,15 @@ VALUES
   ('Culture And Life', 'This is a journal Culture', 'FPT', '123-1238', 'OPEN'),
   ('Economics And Life', 'This is a journal Economics', 'FPT', '123-1239', 'OPEN');
 
--- TODO: Journal field, Paper field, Reviewer Field
+INSERT INTO JournalField
+  (journalId, FieldId)
+VALUES
+  (1, 1),
+  (2, 2),
+  (3, 3),
+  (4, 4),
+  (5, 5),
+  (6, 6);
 
 INSERT INTO Paper
   (title, abstract, SubmitTime, LinkPDF, NumberOfPage, Grade, Status, JournalID, authorID)
@@ -145,7 +153,27 @@ VALUES
   ('Improving PM2.5 forecast during haze episodes over China based on a coupled', 'To improve the PM2.5 forecast during severe haze episodes, we developed a data assimilation system based on the four-dimensional local ensemble transform Kalman filter (4D-LETKF) and the WRF-Chem model to assimilate surface PM2.5 observations. The data assimilation system was successful in optimizing the initial PM2.5 mass concentrations. The root-mean-square error (RMSE) of the initial PM2.5 concentrations after assimilation decreased at 76.75% of the stations and the RMSE reduction exceeds 30% at 20.7% of the stations. The correlation coefficients for the PM2.5 analyses increased by more than 0.3 at 33% of the stations. The forecasts for the spatial distribution and evolution of the haze were improved remarkably after assimilation while the forecasts without assimilation usually significantly underestimated the PM2.5 mass concentrations during the severe haze episodes. The RMSE of the 24-h forecasts after assimilation can be reduced by 32.02% in the polluted regions. During haze episodes, the 48-h forecasts after assimilation can benefit from the assimilation to a similar extent with the 24-h forecasts. Both the forecast accuracy and the duration of assimilation benefits were improved remarkably which demonstrate the effectiveness of the 4D-LETKF-PM2.5 data assimilation system, and further experiments are to be conducted to improve its performance.', '2022-09-15', '3.pdf', 20, 5, 'REJECTED', 2, 1),
   ('Math for 2s and 3s: The impact of parent-child math activities on parents’', 'Mathematics knowledge and skills are critical for success in school and beyond. Professional interest in the role parents play in young childrens math development has been increasing, but there is still relatively little rigorous research on this topic, especially for children younger than 4 years old and as compared with research on parents’ role in literacy development. This study provided parents of 2- and 3-year-old children with a 12-week series of simple, fun math activities to do with their children and used a randomized controlled design to examine whether the program had effects on parents’ ideas and beliefs about math for young children, their math interactions with their children, and the childrens learning outcomes. The sample consisted of 358 families who were randomly assigned to receive the early math activity program, which was delivered via text messaging, or not. Findings indicated that the program strengthened parents’ beliefs that math was important for young children, increased their engagement in math activities with their child (particularly while they were receiving the program), and enhanced childrens skill in subitizing, a foundational early math concept. The program did not significantly affect childrens skill levels in other math domains, parents’ own math self-efficacy, or parent and child outcomes not related to math.', '2022-08-20', '4.pdf', 20, null, 'REVIEWING', 3, 2),
   ('Widening the lens of family math engagement', 'Young children’s math learning opportunities in families appear to relate to long-term math achievement and attitudes. While there is growing interest in promoting families’ support of children’s math learning, existing family math models do not fully capture sources of variation in how families support early math learning. We propose an expanded conceptual framework incorporating macrosystem and mesosystem dimensions, along with developmental considerations, that may influence family math engagement and children’s math learning. We use this framework to guide a systematic review on family math engagement from birth through early elementary school. Reviewing 194 articles from peer-reviewed journals, we asked three questions: 1) How do different aspects of family ', '2022-08-20', '5.pdf', 18, null, 'REVIEWING', 3, 2),
-  ('A method for embedding a computer vision application into a wearable device', 'Pattern classification applications can be found everywhere, especially the ones that use computer vision. What makes them difficult to embed is the fact that they often require a lot of computational resources. Embedded computer vision has been applied in many contexts, such as industrial or home automation, robotics, and assistive technologies. This work performs a design space exploration in an image classification system and embeds a computer vision application into a minimum resource platform, targeting wearable devices. The feature extractor and the classifier are evaluated for memory usage and computation time. A method is proposed to optimize such characteristics, leading to a reduction of over 99% in computation time and 92% in memory usage, with respect to a standard ', '2022-08-15', '6.pdf', 22, null, 'PENDING', 4, 2);
+  ('A method for embedding a computer vision application into a wearable device', 'Pattern classification applications can be found everywhere, especially the ones that use computer vision. What makes them difficult to embed is the fact that they often require a lot of computational resources. Embedded computer vision has been applied in many contexts, such as industrial or home automation, robotics, and assistive technologies. This work performs a design space exploration in an image classification system and embeds a computer vision application into a minimum resource platform, targeting wearable devices. The feature extractor and the classifier are evaluated for memory usage and computation time. A method is proposed to optimize such characteristics, leading to a reduction of over 99% in computation time and 92% in memory usage, with respect to a standard ', '2022-08-15', '6.pdf', 22, null, 'PENDING', 1, 2);
+
+INSERT INTO PaperField
+  (paperId, FieldId)
+VALUES
+  (1, 1), (1, 2), (1, 3),
+  (2, 1), (2, 2), 
+  (3, 1), (3, 2), (3, 6),
+  (4, 3),
+  (5, 3), (5, 5),
+  (6, 4), (6, 5), (6, 6);
+
+INSERT INTO ReviewerField
+  (ReviewerId, FieldId)
+VALUES
+  (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6),
+  (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6),
+  (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6),
+  (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6),
+  (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6),
+  (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6);
 
 -- FOR Paper ID 1
 INSERT INTO Invitation

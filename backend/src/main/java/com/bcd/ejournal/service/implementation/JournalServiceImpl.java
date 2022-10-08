@@ -61,6 +61,16 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
+    public JournalResponse getJournalManager(Integer accountId) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
+        if (account.getRole() != AccountRole.MANAGER) {
+            throw new ForbiddenException("Unauthorized action");
+        }
+        return modelMapper.map(account.getJournal(), JournalResponse.class);
+    }
+
+    @Override
     public List<JournalResponse> search(String name) {
         return StreamSupport.stream(journalRepository.findByNameContains(name).spliterator(), false)
                 .map((journal) -> modelMapper.map(journal, JournalResponse.class))

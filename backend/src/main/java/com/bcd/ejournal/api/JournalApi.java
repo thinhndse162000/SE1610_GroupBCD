@@ -40,8 +40,16 @@ public class JournalApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<JournalResponse> getJournalManager(@AuthenticationPrincipal AccountJWTPayload payload) {
+        Integer accountId = payload.getAccountId();
+        JournalResponse response = journalService.getJournalManager(accountId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/search")
-    public ResponseEntity<List<JournalResponse>> searchJournal(@RequestParam String name) {
+    public ResponseEntity<List<JournalResponse>> searchJournal(@RequestParam String name, @RequestParam(name = "field", required = false) List<Integer> fieldIds) {
+        // TODO: filter fields
         List<JournalResponse> responses = journalService.search(name);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
