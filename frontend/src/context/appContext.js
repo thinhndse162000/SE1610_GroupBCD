@@ -4,9 +4,11 @@ import reducer from "./reducer";
 import { applyMiddleware, createStore } from "redux";
 import { initialState } from "./state";
 import thunk from "redux-thunk";
+import { getField } from "./service/utilService";
 
 const AppProvider = ({ children }) => {
   const store = createStore(reducer, initialState, applyMiddleware(thunk));
+  store.dispatch(getField());
 
     // TODO:
   // const updateUser = async (currentUser) => {

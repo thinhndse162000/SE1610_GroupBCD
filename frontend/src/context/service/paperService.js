@@ -88,13 +88,14 @@ export const getPaper = (paperId) => async (dispatch) => {
 export const createPaper = (paper) => async (dispatch) => {
   dispatch({ type: LOADING_ALERT });
   try {
-    const { paperTitle, paperSummary, paperJournal, paperPdfFile } = paper;
+    const { paperTitle, paperSummary, paperJournal, paperPdfFile, paperFields } = paper;
     let formData = new FormData();
 
     formData.append("file", paperPdfFile.file);
     formData.append("title", paperTitle);
     formData.append("summary", paperSummary);
     formData.append("journalId", paperJournal.journalId);
+    formData.append("fieldId", paperFields.map(f => f.fieldId))
 
     await authFetch.post("/paper", formData, {
       headers: {

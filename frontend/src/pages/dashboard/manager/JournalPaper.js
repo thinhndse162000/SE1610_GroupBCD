@@ -12,6 +12,7 @@ const JournalPaper = () => {
     dispatch(getSentPaper());
   }, []);
 
+  // TODO: get journal title
   return (
     <>
       {papers.length > 0 && (
