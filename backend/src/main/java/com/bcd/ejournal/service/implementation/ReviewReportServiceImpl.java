@@ -4,7 +4,10 @@ import com.bcd.ejournal.domain.dto.request.ReviewReportSearchRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
 import com.bcd.ejournal.domain.dto.response.*;
 import com.bcd.ejournal.domain.entity.*;
+import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
+import com.bcd.ejournal.domain.exception.ForbiddenException;
+import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.repository.ReviewReportRepository;
@@ -40,11 +43,17 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     }
 
     @Override
-    public void updateReviewReport(Integer reviewReportId, ReviewReportSubmitRequest req) {
-        // TODO: verify reviewer
-        // TODO: verify paper is in reviewing process
+    public void updateReviewReport(Integer accountId, Integer reviewReportId, ReviewReportSubmitRequest req) {
         ReviewReport reviewReport = reviewreportRepository.findById(reviewReportId)
                 .orElseThrow(() -> new NullPointerException("Review report not found. Id: " + reviewReportId));
+        // check if reviewer ownership
+        if (reviewReport.getReviewer().getReviewerId() != accountId) {
+            throw new ForbiddenException("Access denied for review report. Id: " + reviewReportId);
+        } 
+        // check if in reviewing process
+        if (reviewReport.getPaper().getStatus() != PaperStatus.REVIEWING) {
+            throw new MethodNotAllowedException("Paper not in reviewing process. Review report Id: " + reviewReportId);
+        }
 
         modelMapper.map(req, reviewReport);
         reviewReport.setReviewDate(new Timestamp(System.currentTimeMillis()));
@@ -68,19 +77,6 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         return reviewer.getReviewReports().stream()
                 .map(this::fromReviewReport)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    // TODO: remove this, already created in invitation
-    public void submitReviewReport(ReviewReportSubmitRequest req) {
-        ReviewReport report = new ReviewReport(req);
-//        try {
-//            report.setGrade(req.getGrade());
-//            report.setText(req.getText());
-//            report.setCondentiality(req.getConfidentiality());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     private ReviewReportDetailResponse fromReviewReport(ReviewReport reviewReport) {

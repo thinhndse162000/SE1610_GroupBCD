@@ -34,11 +34,8 @@ public class ReviewerApi {
     }
 
     @PostMapping("/{id}/invitation")
-    public ResponseEntity<InvitationPaperResponse> sendInvitation(@PathVariable(name = "id") Integer reviewerId, @Valid @RequestBody ReviewerInvitationRequest request) {
-        // TODO: Reviewer cannot review his own paper
-        // TODO: validate if reviewer is invitable
-        // TODO: validate paper is not in reviewing process
-        InvitationPaperResponse response = invitationService.sendInvitation(reviewerId, request);
+    public ResponseEntity<InvitationPaperResponse> sendInvitation(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer reviewerId, @Valid @RequestBody ReviewerInvitationRequest request) {
+        InvitationPaperResponse response = invitationService.sendInvitation(payload.getAccountId(), reviewerId, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -53,7 +50,6 @@ public class ReviewerApi {
     public ResponseEntity<Void> acceptOrRejectInvitation(@AuthenticationPrincipal AccountJWTPayload payload,
                                                          @PathVariable(name = "id") Integer invitationId,
                                                          @Valid @RequestBody InvitationUpdateStatusRequest request) {
-        // TODO: validate if invitation is in PENDING status
         Integer reviewerId = payload.getAccountId();
         invitationService.updateStatus(reviewerId, invitationId, request.getStatus());
         return new ResponseEntity<>(HttpStatus.OK);

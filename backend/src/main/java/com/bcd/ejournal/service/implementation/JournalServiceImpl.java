@@ -29,7 +29,8 @@ public class JournalServiceImpl implements JournalService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public JournalServiceImpl(JournalRepository journalRepository, IssueRepository issueRepository, AccountRepository accountRepository, ModelMapper modelMapper) {
+    public JournalServiceImpl(JournalRepository journalRepository, IssueRepository issueRepository,
+            AccountRepository accountRepository, ModelMapper modelMapper) {
         this.journalRepository = journalRepository;
         this.issueRepository = issueRepository;
         this.accountRepository = accountRepository;
@@ -38,7 +39,12 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public JournalResponse createJournal(JournalCreateRequest request) {
-        // TODO: trim white space
+        // trim white space 
+        request.setName(request.getName().trim());
+        request.setIntroduction(request.getIntroduction().trim());
+        request.setOrganization(request.getOrganization().trim());
+        request.setIssn(request.getIssn().trim());
+
         Journal journal = modelMapper.map(request, Journal.class);
         journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
@@ -71,7 +77,6 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public JournalResponse updateJournal(Integer journalId, JournalCreateRequest request) {
-        // TODO: verify admin
         Journal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
         modelMapper.map(request, journal);
@@ -81,7 +86,6 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public void archiveJournal(Integer journalId) {
-        // TODO: verify admin
         Journal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
         journal.setStatus(JournalStatus.ARCHIVED);

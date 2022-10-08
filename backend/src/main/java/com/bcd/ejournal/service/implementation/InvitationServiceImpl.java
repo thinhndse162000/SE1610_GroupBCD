@@ -6,6 +6,8 @@ import com.bcd.ejournal.domain.entity.*;
 import com.bcd.ejournal.domain.enums.InvitationStatus;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
+import com.bcd.ejournal.domain.exception.ForbiddenException;
+import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.InvitationRepository;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.ReviewReportRepository;
@@ -38,13 +40,29 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public InvitationPaperResponse sendInvitation(Integer reviewerId, ReviewerInvitationRequest request) {
-        // TODO: verify if reviewer is invitable
-        // TODO: verify manager can send invitation of paperId
+    public InvitationPaperResponse sendInvitation(Integer accountId, Integer reviewerId, ReviewerInvitationRequest request) {
         Reviewer reviewer = reviewerRepository.findById(reviewerId)
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. Id: " + reviewerId));
+        // check if reviewer invitable
+        if (!reviewer.isInvitable()) {
+            throw new MethodNotAllowedException("Reviewer not invitable. Id:" + reviewerId);
+        }
+
         Paper paper = paperRepository.findById(request.getPaperId())
                 .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + request.getPaperId()));
+        // check if manager has permission
+        if (paper.getJournal().getManager().getAccountId() != accountId) {
+            throw new ForbiddenException("Paper is not sent to manager's journal. Paper Id: " + request.getPaperId());
+        }
+        // check paper is in pending status
+        if (paper.getStatus() != PaperStatus.PENDING) {
+            throw new MethodNotAllowedException("Paper is not in PENDING. Id: " + request.getPaperId());
+        }
+        // check reviewer cannot review his own paper
+        if (reviewerId == paper.getAuthor().getAuthorId()) {
+            throw new MethodNotAllowedException("Reviewer cannot review his own paper. Reviewer Id: " + reviewerId);
+        }
+
         Invitation invitation = new Invitation();
         invitation.setInvitationId(0);
         invitation.setStatus(InvitationStatus.PENDING);
@@ -67,10 +85,13 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public List<InvitationPaperResponse> listInvitationFromPaper(Integer paperId) {
-        // TODO: verify accountId or manager
+    public List<InvitationPaperResponse> listInvitationFromPaper(Integer accountId, Integer paperId) {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
+        // check if manager has the ownership of the paper
+        if (paper.getJournal().getManager().getAccountId() != accountId) {
+            throw new MethodNotAllowedException("Paper is not sent to manager's journal. Id: " + paperId);
+        }
 
         List<Invitation> invitations = paper.getInvitations();
         return invitations.stream()
@@ -83,7 +104,12 @@ public class InvitationServiceImpl implements InvitationService {
     public void updateStatus(Integer reviewerId, Integer invitationId, InvitationStatus status) {
         Invitation invitation = invitationRepository.findByIdAndReviewerId(invitationId, reviewerId)
                 .orElseThrow(() -> new NullPointerException("Invitation not found. Id: " + invitationId));
-        // TODO: only change invitation if status is pending
+
+        // check if is in PENDING status
+        if (invitation.getStatus() != InvitationStatus.PENDING) {
+            throw new MethodNotAllowedException("Invitation is not in PENDING status. Id: " + invitationId);
+        }
+
         invitation.setStatus(status);
         invitationRepository.save(invitation);
 

@@ -28,7 +28,6 @@ public class JournalApi {
         this.paperService = paperService;
     }
 
-    // TODO: admin authorization
     @PostMapping
     public ResponseEntity<JournalResponse> createJournal(@RequestBody JournalCreateRequest request) {
         JournalResponse response = journalService.createJournal(request);
@@ -47,7 +46,6 @@ public class JournalApi {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    // TODO: admin authorization
     @PutMapping("/{journalId}")
     public ResponseEntity<JournalResponse> updateJournal(@PathVariable Integer journalId, @Valid @RequestBody JournalCreateRequest request) {
         JournalResponse response = journalService.updateJournal(journalId, request);
@@ -60,7 +58,6 @@ public class JournalApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // TODO: admin authorization
     @DeleteMapping("/{journalId}")
     public ResponseEntity<Void> archiveJournal(@PathVariable Integer journalId) {
         journalService.archiveJournal(journalId);
@@ -74,8 +71,6 @@ public class JournalApi {
         return new ResponseEntity<>(papers, HttpStatus.OK);
     }
 
-    // TODO: remove journalId, change it to something else
-    // TODO: Manager role authorization
     @GetMapping("/paper")
     public ResponseEntity<List<PaperResponse>> getAllPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload) {
         Integer accountId = payload.getAccountId();

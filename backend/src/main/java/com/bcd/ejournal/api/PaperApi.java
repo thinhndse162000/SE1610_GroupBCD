@@ -41,9 +41,8 @@ public class PaperApi {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperId, @ModelAttribute PaperUpdateRequest request) {
-        // TODO: verify right account
-        paperService.updatePaper(paperId, request);
+    public ResponseEntity<Void> updatePaper(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId, @ModelAttribute PaperUpdateRequest request) {
+        paperService.updatePaper(payload.getAccountId(), paperId, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -78,7 +77,7 @@ public class PaperApi {
     @GetMapping("/{id}/invitation")
     public ResponseEntity<List<InvitationPaperResponse>> getInvitation(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId) {
         Integer accountId = payload.getAccountId();
-        List<InvitationPaperResponse> responses = invitationService.listInvitationFromPaper(paperId);
+        List<InvitationPaperResponse> responses = invitationService.listInvitationFromPaper(accountId, paperId);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }

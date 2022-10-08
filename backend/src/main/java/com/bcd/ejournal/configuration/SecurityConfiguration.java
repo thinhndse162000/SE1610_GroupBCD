@@ -3,6 +3,7 @@ package com.bcd.ejournal.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +13,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.bcd.ejournal.domain.enums.AccountRole;
 
 @Configuration
 public class SecurityConfiguration {
@@ -59,7 +62,13 @@ public class SecurityConfiguration {
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests()
-                .anyRequest().permitAll();
+            .antMatchers("/auth", "/auth/signup").permitAll()
+            .antMatchers("/journal/paper", "/journal", "/journal/{id}/invitation").hasRole(AccountRole.MANAGER.name())
+            .antMatchers(HttpMethod.POST, "journal/{id}/invitation").hasRole(AccountRole.MANAGER.name())
+            .antMatchers(HttpMethod.PUT, "/journal/{id}").hasRole(AccountRole.ADMIN.name())
+            .antMatchers(HttpMethod.DELETE, "/journal/{id}").hasRole(AccountRole.ADMIN.name())
+            .antMatchers(HttpMethod.POST, "/journal").hasRole(AccountRole.ADMIN.name())
+            .anyRequest().authenticated();
 
         return http.build();
     }

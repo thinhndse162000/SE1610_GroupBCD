@@ -6,6 +6,7 @@ import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.*;
 import com.bcd.ejournal.domain.entity.*;
 import com.bcd.ejournal.domain.enums.PaperStatus;
+import com.bcd.ejournal.domain.exception.ForbiddenException;
 import com.bcd.ejournal.repository.*;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.FileUtils;
@@ -47,13 +48,15 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public void submitPaper(Integer authorId, PaperSubmitRequest submitRequest) {
-        // TODO: trim white space from title and abstract
-        Paper paper = new Paper(submitRequest);
+    public void submitPaper(Integer authorId, PaperSubmitRequest request) {
+        request.setTitle(request.getTitle().trim());
+        request.setSummary(request.getSummary().trim());
+
+        Paper paper = new Paper(request);
         // TODO: generate random file name
         // TODO: delete file if error
-        String fileName = submitRequest.getFile().getOriginalFilename();
-        MultipartFile file = submitRequest.getFile();
+        String fileName = request.getFile().getOriginalFilename();
+        MultipartFile file = request.getFile();
         paper.setLinkPDF(fileName);
         try {
             FileUtils.saveFile(uploadDir, fileName, file);
@@ -84,11 +87,18 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public void updatePaper(Integer paperId, PaperUpdateRequest request) {
-        // TODO: verify accountId
-        // TODO: trim white space
+    public void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request) {
+        // trim whitespace 
+        request.setTitle(request.getTitle().trim());
+        request.setSummary(request.getSummary().trim());
+
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
+        // check author's ownership
+        if (paper.getAuthor().getAuthorId() != accountId) {
+            throw new ForbiddenException("Author does not own paper. Paper Id: " + paperId);
+        }
+
         paper.setTitle(request.getTitle());
         paper.setSummary(request.getSummary());
 
@@ -120,9 +130,9 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest) {
+    public List<PaperResponse> searchByRequest(PaperSearchRequest request) {
         // TODO: verify manager
-        Iterable<Paper> papers = paperRepository.searchByTitle(paperSearchRequest.getTitle());
+        Iterable<Paper> papers = paperRepository.searchByTitle(request.getTitle());
 
         return StreamSupport.stream(papers.spliterator(), false)
                 .map(this::fromPaper)

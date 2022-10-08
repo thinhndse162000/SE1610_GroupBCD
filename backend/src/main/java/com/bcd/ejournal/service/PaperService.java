@@ -14,7 +14,7 @@ import java.util.List;
 public interface PaperService {
     void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest);
 
-    void updatePaper(Integer paperId, PaperUpdateRequest request);
+    void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request);
 
     void deleteById(Integer paperId);
 

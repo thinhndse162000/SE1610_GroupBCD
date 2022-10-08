@@ -29,7 +29,8 @@ public class AccountServiceImpl implements AccountService {
     private final JWTService jwtService;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, JWTService jwtService) {
+    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
+            ModelMapper modelMapper, JWTService jwtService) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
@@ -58,8 +59,16 @@ public class AccountServiceImpl implements AccountService {
         if (!req.getPassword().equals(req.getPasswordRetype())) {
             throw new DataIntegrityViolationException("Password mismatch");
         }
-        // TODO: trim white space except password
+
+        // trim white space
+        req.setEmail(req.getEmail().trim());
+        req.setFirstName(req.getFirstName().trim());
+        req.setLastName(req.getLastName().trim());
+        req.setOrganization(req.getOrganization().trim());
+        req.setPhone(req.getPhone().trim());
+
         // TODO: validate date of birth
+
         Account acc = modelMapper.map(req, Account.class);
         acc.setAccountId(0);
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
@@ -108,7 +117,12 @@ public class AccountServiceImpl implements AccountService {
     public AccountProfileResponse updateProfile(Integer id, AccountUpdateProfileRequest req) {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
-        // TODO: trim white space
+
+        req.setFirstName(req.getFirstName().trim());
+        req.setLastName(req.getLastName().trim());
+        req.setOrganization(req.getOrganization().trim());
+        req.setPhone(req.getPhone().trim());
+
         // TODO: validate date of birth
         modelMapper.map(req, acc);
         acc = accountRepository.save(acc);
