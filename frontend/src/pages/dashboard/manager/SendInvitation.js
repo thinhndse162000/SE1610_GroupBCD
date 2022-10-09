@@ -19,7 +19,7 @@ const SendInvitation = () => {
   const [keyword, setKeyword] = useState("");
   useEffect(() => {
     dispatch(getPaper(paperId));
-  }, []);
+  }, [paperId, dispatch]);
 
   const handleSearch = (e) => {
     e.preventDefault();

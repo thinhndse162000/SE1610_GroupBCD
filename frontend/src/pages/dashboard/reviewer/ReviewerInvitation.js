@@ -12,7 +12,7 @@ const ReviewerInvitation = () => {
 
   useEffect(() => {
     dispatch(getInvitation());
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) {
     return <Loading center />;

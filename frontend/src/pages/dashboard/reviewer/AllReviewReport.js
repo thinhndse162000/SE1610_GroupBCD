@@ -9,7 +9,7 @@ const AllReviewReport = () => {
 
   useEffect(() => {
     dispatch(getReviewReport());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

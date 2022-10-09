@@ -32,7 +32,7 @@ const managerReducer = (state = manager, action) => {
       };
     case REMOVE_AVAILABLE_REVIEWER:
       const availableReviewers = state.availableReviewers.filter(
-        (reviewer) => reviewer.reviewerId != action.payload.id
+        (reviewer) => reviewer.reviewerId !== action.payload.id
       );
       return {
         ...state,

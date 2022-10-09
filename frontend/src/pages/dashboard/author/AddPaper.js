@@ -49,6 +49,7 @@ const AddPaper = () => {
     paperJournal["journalName"] = "";
     paperJournal["journalId"] = "";
     setSelectValue("");
+    // eslint-disable-next-line
   }, [paperFields]);
 
   const handleSubmit = (e) => {

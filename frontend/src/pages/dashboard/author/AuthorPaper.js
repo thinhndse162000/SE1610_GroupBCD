@@ -17,7 +17,7 @@ const AuthorPaper = () => {
   useEffect(() => {
     // FIXME: Performance issue when enter this component
     dispatch(getAuthorPaper());
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) {
     return <Loading center />;
