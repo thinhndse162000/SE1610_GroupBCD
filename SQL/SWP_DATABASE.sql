@@ -126,14 +126,14 @@ CREATE TABLE PaperField(
 )
 go 
 CREATE TABLE Manager(
-	JournalId int not null UNIQUE,
-	AccountId int not null UNIQUE,
+	JournalId int not null,
+	AccountId int not null,
 	PRIMARY KEY (JournalId,AccountId)
 )
 go 
 CREATE TABLE JournalField(
-	JournalId int not null UNIQUE,
-	FieldId int not null UNIQUE,
+	JournalId int not null,
+	FieldId int not null,
 	PRIMARY KEY (JournalId,FieldId)
 )
 -- kết thúc bảng nối--

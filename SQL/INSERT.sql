@@ -123,7 +123,14 @@ VALUES
   ('Math'),
   ('Computer Science'),
   ('Culture'),
-  ('Economics');
+  ('Economics'),
+  ('Biologoy'),
+  ('History'),
+  ('Medical'),
+  ('Psychology'),
+  ('Sociology'),
+  ('Philosophy');
+  
 
 INSERT INTO Journal
   (name, Introduction, organization, issn, status)
