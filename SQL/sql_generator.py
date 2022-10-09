@@ -150,8 +150,8 @@ class JournalSql(SqlTemplate):
                 self.issn += 1
                 super().insert(f"('{name.format(field_name)}', 'This is {name.format(field_name)}', 'FPT', '123-{self.issn}', 'OPEN')")
 
-                self.journal_field.insert(id, i+1)
                 self.journal_field.insert(id, random.choice(list(range(1,i+1)) + list(range(i+2, len(fields)))))
+                self.journal_field.insert(id, i+1)
                 self.manager.insert(id, account_num + id)
 
 class PaperFieldSql(SqlTemplate):
