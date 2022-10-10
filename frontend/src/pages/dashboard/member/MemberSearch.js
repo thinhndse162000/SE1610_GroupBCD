@@ -1,17 +1,20 @@
-import {
-  FormRow,
-  FormRowSelect,
-  JournalContainer,
-  PaperContainer,
-} from "../../../components";
+import { FormRow, FormRowSelect, PaperContainer } from "../../../components";
 import { useSelector, useDispatch } from "react-redux";
+import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
 import { search } from "../../../context/service/paperService";
 import { handleChange } from "../../../context/service/utilService";
-const Journal = () => {
+import { Journal } from "../../../components"
+
+const MemberSearch = () => {
   const {
     isLoading,
-    member: { searchKeyword, searchJournalType, journalSearchOptions },
+    member: {
+      searchKeyword,
+      searchResult,
+      searchJournalType,
+      journalSearchOptions,
+    },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
 
@@ -56,12 +59,19 @@ const Journal = () => {
           </div>
         </form>
       </SearchWrapper>
+      {/* TODO: refactor not to use container */}
       {searchJournalType === "Journal" ? (
-        <JournalContainer />
+        <ContainerWrapper>
+          <div className="container">
+            {searchResult.map((journal, index) => {
+              return <Journal key={index} journal={journal} />;
+            })}
+          </div>
+        </ContainerWrapper>
       ) : (
         <PaperContainer />
       )}
     </div>
   );
 };
-export default Journal;
+export default MemberSearch;

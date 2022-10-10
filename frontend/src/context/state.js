@@ -42,6 +42,7 @@ const manager = {
   sentInvitations: [],
   availableReviewers: [],
   paper: {},
+  state: {},
 }
 
 const base = {

@@ -12,6 +12,7 @@ import {
   HANDLE_MEMBER_CHANGE,
   HANDLE_REVIEW_CHANGE,
   HANDLE_INVITATION_CHANGE,
+  HANDLE_MANAGER_CHANGE,
 } from "../actions";
 import authFetch from "../../utils/authFetch";
 
@@ -58,6 +59,9 @@ export const handleChange =
         break;
       case "invitation":
         dispatchType = HANDLE_INVITATION_CHANGE;
+        break;
+      case "manager":
+        dispatchType = HANDLE_MANAGER_CHANGE;
         break;
       default:
         dispatchType = HANDLE_CHANGE;

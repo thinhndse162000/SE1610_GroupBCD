@@ -25,7 +25,8 @@ const AuthorPaper = () => {
 
   return (
     <>
-      {/* <SearchContainer /> */}
+      {/* <SearchContainer />
+        TODO: Refoctor to not use container */}
       {papers.length > 0 ? <AuthorPaperContainer /> : <p>No submitted paper yet</p>}
     </>
   );

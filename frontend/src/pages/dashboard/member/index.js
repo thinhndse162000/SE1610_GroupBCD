@@ -1,3 +1,3 @@
-import Journal from './Journal'
+import MemberSearch from './MemberSearch'
 
-export { Journal }
+export { MemberSearch }

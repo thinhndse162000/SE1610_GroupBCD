@@ -13,6 +13,7 @@ const AllReviewReport = () => {
 
   return (
     <>
+    {/* TODO: Refactor not to use container */}
       {reviewReports.length > 0 ? <ReviewReportContainer /> : <p>No review found</p>}
     </>
   );

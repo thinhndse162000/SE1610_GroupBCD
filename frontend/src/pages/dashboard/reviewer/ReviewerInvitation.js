@@ -19,6 +19,7 @@ const ReviewerInvitation = () => {
   }
 
   return <>
+    {/* TODO: refactor not to use container */}
   {invitations.length > 0 ? <InvitationContainer /> : <p>No invitation found</p> }
   </>;
 };

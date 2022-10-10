@@ -4,7 +4,7 @@ import {
   SharedLayout,
   AuthorPaper,
   AddPaper,
-  Journal,
+  MemberSearch,
   AddReview,
   ReviewerInvitation,
   PaperDetail,
@@ -26,7 +26,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Journal />} />
+          <Route index element={<MemberSearch />} />
         </Route>
 
         <Route

@@ -57,18 +57,18 @@ const reviewerReducer = (state = reviewer, action) => {
           [action.payload.name]: action.payload.value,
         },
       };
-      case HANDLE_INVITATION_CHANGE:
-        const invitations = state.invitations.map((invitation) => {
-          if (invitation.invitationId === action.payload.id) {
-            return { ...invitation, status: action.payload.status }
-          }
-          return invitation
-        })
+    case HANDLE_INVITATION_CHANGE:
+      const invitations = state.invitations.map((invitation) => {
+        if (invitation.invitationId === action.payload.id) {
+          return { ...invitation, status: action.payload.status };
+        }
+        return invitation;
+      });
 
-        return {
-          ...state,
-          invitations,
-        };
+      return {
+        ...state,
+        invitations,
+      };
     default:
       return state;
   }

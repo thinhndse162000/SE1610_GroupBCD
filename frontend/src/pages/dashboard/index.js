@@ -1,7 +1,7 @@
 import Profile from "./Profile";
 import SharedLayout from "./SharedLayout";
 import { AddPaper, AuthorPaper, PaperDetail } from "./author";
-import { Journal } from "./member";
+import { MemberSearch } from "./member";
 import {
   AddReview,
   ReviewerInvitation,
@@ -16,7 +16,7 @@ export {
   AuthorPaper,
   AddPaper,
   PaperDetail,
-  Journal,
+  MemberSearch,
   AddReview,
   ReviewerInvitation,
   AllReviewReport,

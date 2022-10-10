@@ -1,10 +1,5 @@
-import {
-  LOADING,
-  ERROR,
-  SUCCESS_NO_MESSAGE,
-  AVAILABLE_REVIEWER,
-} from "../actions";
-import { clearAlert } from "./utilService";
+import { LOADING, ERROR, SUCCESS_NO_MESSAGE } from "../actions";
+import { clearAlert, handleChange } from "./utilService";
 import authFetch from "../../utils/authFetch";
 
 export const searchAvailableReviewer =
@@ -22,12 +17,13 @@ export const searchAvailableReviewer =
       dispatch({
         type: SUCCESS_NO_MESSAGE,
       });
-      dispatch({
-        type: AVAILABLE_REVIEWER,
-        payload: {
-          availableReviewers: data,
-        },
-      });
+      dispatch(
+        handleChange({
+          name: "availableReviewers",
+          value: data,
+          type: "manager",
+        })
+      );
     } catch (error) {
       dispatch({
         type: ERROR,

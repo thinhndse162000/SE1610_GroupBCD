@@ -51,6 +51,7 @@ const SendInvitation = () => {
             </div>
           </form>
         </SearchWrapper>
+      {/* TODO: Refactor not to use container*/}
         <ReviewerResultContainer />
       </>
     );
