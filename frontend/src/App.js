@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { PaperDetails } from "./components";
 import { Signup, Landing, Error, ProtectedRoute, Login, ManagerProtectedRoute } from "./pages";
 import {
   SharedLayout,
@@ -65,6 +66,7 @@ function App() {
           }
         >
           <Route index element={<JournalPaper />} />
+          <Route path="paper-detail/:paperId" element={<PaperDetail />} />
           <Route path="send-invitation/:paperId" element={<SendInvitation />} />
           {/* <Route path="invite" element={<ReviewReportDetail />} /> */}
         </Route>

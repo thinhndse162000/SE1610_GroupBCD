@@ -20,7 +20,7 @@ export const getInvitation = () => async (dispatch) => {
     dispatch({
       type: INVITATION,
       payload: {
-        invitation: data,
+        invitations: data,
       },
     });
   } catch (error) {

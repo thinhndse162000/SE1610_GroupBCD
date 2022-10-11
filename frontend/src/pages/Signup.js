@@ -161,7 +161,7 @@ const Signup = () => {
           {errors.phone && <p>{errors.phone}</p>}
         </div>
         <button type="submit" className="btn btn-block" disabled={isLoading}>
-          Signup
+          Create Account
         </button>
         <p>
           Already a member?

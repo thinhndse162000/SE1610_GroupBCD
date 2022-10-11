@@ -21,7 +21,8 @@ import Invitation from "./Invitation";
 import Reviewer from "./Reviewer";
 import SentInvitationContainer from "./container/SentInvitationContainer";
 import ReviewerResultContainer from "./container/ReviewerResultContainer";
-
+import PaperCompact from './PaperCompact'
+import PaperDetails from './PaperDetails'
 export {
   Logo,
   FormRow,
@@ -37,6 +38,8 @@ export {
   FormDropdown,
   Journal,
   Paper,
+  PaperCompact,
+  PaperDetails,
   JournalContainer,
   PaperContainer,
   InvitationContainer,

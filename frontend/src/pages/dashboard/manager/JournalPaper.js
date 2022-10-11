@@ -1,5 +1,5 @@
 import Wrapper from "../../../assets/wrappers/Container";
-import { Paper } from "../../../components";
+import { Paper, PaperCompact } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getSentPaper } from "../../../context/service/journalService";
@@ -27,7 +27,13 @@ const JournalPaper = () => {
                   label: "Send invitation",
                 });
               }
-              return <Paper key={index} paper={paper} action={action} />;
+              action.push({
+                type: "link",
+                to: `paper-detail/${paper.paperId}`,
+                className: "btn edit-btn",
+                label: "Detail",
+              });
+              return <PaperCompact key={index} paper={paper} action={action} />;
             })}
           </div>
         </Wrapper>
