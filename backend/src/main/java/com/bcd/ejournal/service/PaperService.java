@@ -6,7 +6,6 @@ import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
-import com.bcd.ejournal.domain.entity.Paper;
 
 
 public interface PaperService {
@@ -16,7 +15,7 @@ public interface PaperService {
 
     void deleteById(Integer paperID);
 
-    List<Paper> searchByRequest(PaperSearchRequest paperSearchRequest);
+    List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest);
 
     List<PaperResponse> getAllPaperFromAuthor(Integer authorID);
 

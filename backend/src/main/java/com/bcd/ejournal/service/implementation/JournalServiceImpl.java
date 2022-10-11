@@ -1,6 +1,15 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
+import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.entity.Issue;
@@ -9,13 +18,6 @@ import com.bcd.ejournal.domain.enums.JournalStatus;
 import com.bcd.ejournal.repository.IssueRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.service.JournalService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class JournalServiceImpl implements JournalService {
@@ -48,12 +50,12 @@ public class JournalServiceImpl implements JournalService {
         return modelMapper.map(journal, JournalResponse.class);
     }
 
-    @Override
-    public List<JournalResponse> search(String name) {
-        return StreamSupport.stream(journalRepository.findByNameContains(name).spliterator(), false)
-                .map((journal) -> modelMapper.map(journal, JournalResponse.class))
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<JournalResponse> search(JournalSearchRequest request) {
+		
+		List<Journal> journals = journalRepository.searchRequest(request);
+		return journals.stream().map((journal) -> modelMapper.map(journal, JournalResponse.class)).collect(Collectors.toList());
+	}
 
     @Override
     public List<IssueResponse> listAllIssues(Integer journalID) {
@@ -87,4 +89,5 @@ public class JournalServiceImpl implements JournalService {
         issueResponse.setJournal(modelMapper.map(issue.getJournal(), JournalResponse.class));
         return issueResponse;
     }
+
 }

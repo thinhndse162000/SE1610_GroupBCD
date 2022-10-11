@@ -22,7 +22,6 @@ import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
-import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.service.PaperService;
 
 
@@ -52,9 +51,10 @@ public class PaperApi {
 
     // TODO: specify which role will use this
     @PostMapping("/search")
-    public ResponseEntity<List<Paper>> search(@RequestBody PaperSearchRequest request) {
-        List<Paper> rs = paperService.searchByRequest(request);
-        return ResponseEntity.ok(rs);
+    public ResponseEntity<List<PaperResponse>> search(@RequestBody PaperSearchRequest request) {
+        List<PaperResponse> rs = paperService.searchByRequest(request);
+//        List<PapperResponse> rsl = rs.stream().map(p -> new PapperResponse(p.getPaperId())).collect(Collectors.toList());
+        return ResponseEntity.ok(rs) ;
     }
 
     @DeleteMapping("/{id}")

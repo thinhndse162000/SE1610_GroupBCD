@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -125,17 +127,16 @@ public class PaperServiceImpl implements PaperService {
 	}
 
 	@Override
-	public List<Paper> searchByRequest(PaperSearchRequest paperSearchRequest) {
+	public List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest) {
 		// TODO: verify manager
-		/* Pageable pageable = PageRequest.of(0, 2); */
-		/*
-		 * Iterable<Paper> papers =
+		Pageable pageable = PageRequest.of(0, 2); 
+		 /** Iterable<Paper> papers =
 		 * paperRepository.searchByTitle(paperSearchRequest.getTitle() , pageable );
 		 * return StreamSupport.stream(papers.spliterator(), false)
 		 * .map(this::fromPaper) .collect(Collectors.toList());
 		 */
-		List<Paper> paper = paperRepository.searchByRequest(paperSearchRequest);
-			return paper;
+		List<Paper> paper = paperRepository.searchByRequest(paperSearchRequest, pageable);
+		return paper.stream().map(this::fromPaper).collect(Collectors.toList());
 	}
 
 	@Override
