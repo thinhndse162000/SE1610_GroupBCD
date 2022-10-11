@@ -1,15 +1,15 @@
 package com.bcd.ejournal.configuration.jwt;
 
+import static java.time.Instant.now;
+
+import java.util.regex.Pattern;
+
 import com.bcd.ejournal.configuration.jwt.encoder.Base64URL;
 import com.bcd.ejournal.configuration.jwt.encoder.HmacSHA256;
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.configuration.jwt.payload.JWTPayload;
 import com.bcd.ejournal.domain.entity.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.regex.Pattern;
-
-import static java.time.Instant.now;
 
 public class JWTService implements JWTSerializer, JWTDeserializer {
     private static final String JWT_HEADER = Base64URL.encode("{\"alg\":\"HS256\",\"type\":\"JWT\"}");
@@ -37,7 +37,7 @@ public class JWTService implements JWTSerializer, JWTDeserializer {
         final String signature = Base64URL.encode(HmacSHA256.sign(secret, message));
         return message.concat(".").concat(signature);
     }
-
+    
     @Override
     public JWTPayload jwtPayloadFromJWT(String jwtToken) {
         // Check structure

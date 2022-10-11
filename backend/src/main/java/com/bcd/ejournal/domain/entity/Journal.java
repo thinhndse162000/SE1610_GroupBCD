@@ -32,6 +32,9 @@ public class Journal implements Serializable {
     private String introduction;
     private String organization;
     private String issn;
+    private int issueId;
+    private int paperId;
+    
     @Enumerated(EnumType.STRING)
     private JournalStatus status;
 

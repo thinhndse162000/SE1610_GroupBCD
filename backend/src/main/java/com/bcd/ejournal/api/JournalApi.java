@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
@@ -52,8 +51,8 @@ public class JournalApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<JournalResponse>> searchJournal(@RequestParam JournalSearchRequest request) {
+    @PostMapping("/search")
+    public ResponseEntity<List<JournalResponse>> searchJournal(@RequestBody JournalSearchRequest request) {
         List<JournalResponse> responses = journalService.search(request);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }

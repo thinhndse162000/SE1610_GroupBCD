@@ -6,6 +6,8 @@ import java.util.stream.StreamSupport;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
@@ -52,7 +54,7 @@ public class JournalServiceImpl implements JournalService {
 
 	@Override
 	public List<JournalResponse> search(JournalSearchRequest request) {
-		
+		Pageable pageable = PageRequest.of(1, 2); 
 		List<Journal> journals = journalRepository.searchRequest(request);
 		return journals.stream().map((journal) -> modelMapper.map(journal, JournalResponse.class)).collect(Collectors.toList());
 	}

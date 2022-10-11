@@ -129,7 +129,7 @@ public class PaperServiceImpl implements PaperService {
 	@Override
 	public List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest) {
 		// TODO: verify manager
-		Pageable pageable = PageRequest.of(0, 2); 
+		Pageable pageable = PageRequest.of(1, 2); 
 		 /** Iterable<Paper> papers =
 		 * paperRepository.searchByTitle(paperSearchRequest.getTitle() , pageable );
 		 * return StreamSupport.stream(papers.spliterator(), false)
