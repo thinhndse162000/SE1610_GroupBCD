@@ -68,7 +68,12 @@ const Signup = () => {
       passwordRetype,
     };
     setErrors(ValidateInfo(values));
-    dispatch(signup({ currentUser }));
+    if (Object.getOwnPropertyNames(errors).length === 0 ) {
+      return
+    } else {
+      dispatch(signup({ currentUser }));
+    }
+    
   };
 
   useEffect(() => {
@@ -88,77 +93,87 @@ const Signup = () => {
 
         <div className="signup">
           {/* email input */}
-          <FormRow
-            type="text"
-            name="email"
-            value={values.email}
-            handleChange={handleChange}
-          />
-          {errors.email && <p>{errors.email}</p>}
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="email"
+              value={values.email}
+              handleChange={handleChange}
+            />
+            {errors.email && <p>{errors.email}</p>}
+          </div>
           {/* password input */}
-          <FormRow
-            type="password"
-            name="password"
-            value={values.password}
-            handleChange={handleChange}
-          />
-          {errors.password && <p>{errors.password}</p>}
-
+          <div className="input-signup">
+            <FormRow
+              type="password"
+              name="password"
+              value={values.password}
+              handleChange={handleChange}
+            />
+            {errors.password && <p>{errors.password}</p>}
+          </div>
           {/* retype password input */}
-          <FormRow
-            type="password"
-            name="passwordRetype"
-            labelText="Retype password"
-            value={values.retypePassword}
-            handleChange={handleChange}
-          />
-          {errors.passwordRetype && <p>{errors.passwordRetype}</p>}
-
+          <div className="input-signup">
+            <FormRow
+              type="password"
+              name="passwordRetype"
+              labelText="Retype password"
+              value={values.retypePassword}
+              handleChange={handleChange}
+            />
+            {errors.passwordRetype && <p>{errors.passwordRetype}</p>}
+          </div>
           {/* first name input */}
-          <FormRow
-            type="text"
-            name="firstName"
-            labelText="First name"
-            value={values.firstName}
-            handleChange={handleChange}
-          />
-          {errors.firstName && <p>{errors.firstName}</p>}
-
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="firstName"
+              labelText="First name"
+              value={values.firstName}
+              handleChange={handleChange}
+            />
+            {errors.firstName && <p>{errors.firstName}</p>}
+          </div>
           {/* last name input */}
-          <FormRow
-            type="text"
-            name="lastName"
-            labelText="Last name"
-            value={values.lastName}
-            handleChange={handleChange}
-          />
-          {errors.lastName && <p>{errors.lastName}</p>}
-
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="lastName"
+              labelText="Last name"
+              value={values.lastName}
+              handleChange={handleChange}
+            />
+            {errors.lastName && <p>{errors.lastName}</p>}
+          </div>
           {/* date of birth input */}
-          <FormRow
-            type="date"
-            name="dateOfBirth"
-            labelText="Date of birth"
-            value={values.dateOfBirth}
-            handleChange={handleChange}
-          />
-
+          <div className="input-signup">
+            <FormRow
+              type="date"
+              name="dateOfBirth"
+              labelText="Date of birth"
+              value={values.dateOfBirth}
+              handleChange={handleChange}
+            />
+          </div>
           {/* organziation input */}
-          <FormRow
-            type="text"
-            name="organization"
-            value={values.organization}
-            handleChange={handleChange}
-          />
-          {errors.organization && <p>{errors.organization}</p>}
-
-          <FormRow
-            type="text"
-            name="phone"
-            value={values.phone}
-            handleChange={handleChange}
-          />
-          {errors.phone && <p>{errors.phone}</p>}
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="organization"
+              value={values.organization}
+              handleChange={handleChange}
+            />
+            {errors.organization && <p>{errors.organization}</p>}
+          </div>
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="phone"
+              value={values.phone}
+              handleChange={handleChange}
+            />
+            {errors.phone && <p>{errors.phone}</p>}
+          </div>
         </div>
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           Create Account
