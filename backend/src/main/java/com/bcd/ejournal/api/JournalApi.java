@@ -5,8 +5,10 @@ import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.service.JournalService;
-import com.bcd.ejournal.service.PaperService;
+import com.bcd.ejournal.service.PublishService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +22,12 @@ import java.util.List;
 @RequestMapping("/journal")
 public class JournalApi {
     private final JournalService journalService;
-    private final PaperService paperService;
+    private final PublishService publishService;
 
     @Autowired
-    public JournalApi(JournalService journalService, PaperService paperService) {
+    public JournalApi(JournalService journalService, PublishService publishService) {
         this.journalService = journalService;
-        this.paperService = paperService;
+        this.publishService = publishService;
     }
 
     @PostMapping
@@ -41,7 +43,7 @@ public class JournalApi {
     }
 
     @GetMapping
-    public ResponseEntity<JournalResponse> getJournalManager(@AuthenticationPrincipal AccountJWTPayload payload) {
+    public ResponseEntity<JournalResponse> getJournalFromManager(@AuthenticationPrincipal AccountJWTPayload payload) {
         Integer accountId = payload.getAccountId();
         JournalResponse response = journalService.getJournalManager(accountId);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -73,10 +75,9 @@ public class JournalApi {
     }
 
     @GetMapping("/{journalId}/publish")
-    public ResponseEntity<List<PaperResponse>> getAllPaper(@PathVariable Integer journalId) {
-        // TODO: move to publishService
-        List<PaperResponse> papers = paperService.getAllPaperFromJournal(journalId);
-        return new ResponseEntity<>(papers, HttpStatus.OK);
+    public ResponseEntity<List<PublishResponse>> getAllPaper(@PathVariable Integer journalId) {
+        List<PublishResponse> responses = publishService.getPublishFromJournal(journalId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @GetMapping("/paper")

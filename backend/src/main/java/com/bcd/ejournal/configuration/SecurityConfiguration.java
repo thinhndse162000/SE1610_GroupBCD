@@ -61,14 +61,18 @@ public class SecurityConfiguration {
         http.cors();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         http.authorizeRequests()
-            .antMatchers("/auth", "/auth/signup").permitAll()
-            .antMatchers("/journal/paper", "/journal", "/journal/{id}/invitation").hasRole(AccountRole.MANAGER.name())
-            .antMatchers(HttpMethod.POST, "journal/{id}/invitation").hasRole(AccountRole.MANAGER.name())
-            .antMatchers(HttpMethod.PUT, "/journal/{id}").hasRole(AccountRole.ADMIN.name())
-            .antMatchers(HttpMethod.DELETE, "/journal/{id}").hasRole(AccountRole.ADMIN.name())
-            .antMatchers(HttpMethod.POST, "/journal").hasRole(AccountRole.ADMIN.name())
-            .anyRequest().authenticated();
+            .anyRequest().permitAll();
+
+        // http.authorizeRequests()
+        //     .antMatchers("/auth", "/auth/signup").permitAll()
+        //     .antMatchers("/journal/paper", "/journal", "/journal/{id}/invitation").hasRole(AccountRole.MANAGER.name())
+        //     .antMatchers(HttpMethod.POST, "journal/{id}/invitation").hasRole(AccountRole.MANAGER.name())
+        //     .antMatchers(HttpMethod.PUT, "/journal/{id}").hasRole(AccountRole.ADMIN.name())
+        //     .antMatchers(HttpMethod.DELETE, "/journal/{id}").hasRole(AccountRole.ADMIN.name())
+        //     .antMatchers(HttpMethod.POST, "/journal").hasRole(AccountRole.ADMIN.name())
+        //     .anyRequest().authenticated();
 
         return http.build();
     }

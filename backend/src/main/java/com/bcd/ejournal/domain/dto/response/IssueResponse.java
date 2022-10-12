@@ -18,5 +18,6 @@ public class IssueResponse {
     private Date startDate;
     private Date endDate;
     private int numberOfPage;
+    private int numberOfPaper;
     private JournalResponse journal;
 }
