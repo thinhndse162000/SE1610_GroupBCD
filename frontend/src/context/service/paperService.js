@@ -211,7 +211,7 @@ export const downloadFile = (paperId) => async (dispatch) => {
       responseType: "blob",
     });
     dispatch({ type: SUCCESS_NO_MESSAGE });
-    fileDownload(data, "randome.pdf");
+    fileDownload(data, `${paperId}.pdf`)
   } catch (error) {
     if (error.response.status === 401) return;
     dispatch({

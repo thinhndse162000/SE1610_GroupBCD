@@ -88,6 +88,7 @@ function App() {
           }
         >
           <Route index element={<JournalPaper />} />
+          <Route path="paper-detail/:paperId" element={<PaperDetail />} />
           <Route path="send-invitation/:paperId" element={<SendInvitation />} />
           {/* <Route path="invite" element={<ReviewReportDetail />} /> */}
         </Route>

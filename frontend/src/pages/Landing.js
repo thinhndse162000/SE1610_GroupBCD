@@ -12,7 +12,7 @@ const Landing = () => {
         {/* info */}
         <div className="info">
           <h1>
-            job <span>tracking</span> app
+            Online <span>Journal</span> System
           </h1>
           <p>
             I'm baby wayfarers hoodie next level taiyaki brooklyn cliche blue

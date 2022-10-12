@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Loading, Paper, ReviewReport } from "../../../components";
+import { Loading, PaperDetails, ReviewReport } from "../../../components";
 import { getPaperDetail } from "../../../context/service/paperService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 
@@ -26,7 +26,7 @@ const PaperDetail = () => {
         <ContainerWrapper>
           <div className="container">
             <h3>Paper</h3>
-            <Paper paper={paperDetail.paper} />
+            <PaperDetails paper={paperDetail.paper} />
           </div>
         </ContainerWrapper>
         <ContainerWrapper>

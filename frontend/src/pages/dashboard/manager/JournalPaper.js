@@ -1,6 +1,6 @@
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as ItemWrapper } from "../../../assets/wrappers/Item";
-import { Paper } from "../../../components";
+import { Paper, PaperCompact } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import {
@@ -54,7 +54,7 @@ const JournalPaper = () => {
                 className: "btn edit-btn",
                 label: "Detail",
               });
-              return <Paper key={index} paper={paper} action={action} />;
+              return <PaperCompact key={index} paper={paper} action={action} />;
             })}
           </div>
         </ContainerWrapper>

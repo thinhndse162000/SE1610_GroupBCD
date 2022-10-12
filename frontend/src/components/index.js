@@ -22,7 +22,8 @@ import Issue from "./Issue";
 import SentInvitationContainer from "./container/SentInvitationContainer";
 import ReviewerResultContainer from "./container/ReviewerResultContainer";
 import Publish from "./Publish";
-
+import PaperCompact from './PaperCompact'
+import PaperDetails from './PaperDetails'
 export {
   Logo,
   FormRow,
@@ -38,6 +39,8 @@ export {
   FormDropdown,
   Journal,
   Paper,
+  PaperCompact,
+  PaperDetails,
   PaperContainer,
   InvitationContainer,
   ReviewReport,

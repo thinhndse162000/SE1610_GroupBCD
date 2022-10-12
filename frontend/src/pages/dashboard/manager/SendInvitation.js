@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import {
   FormRow,
   Paper,
+  PaperDetails,
   ReviewerResultContainer,
   SentInvitationContainer,
 } from "../../../components";
