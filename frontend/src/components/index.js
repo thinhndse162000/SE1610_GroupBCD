@@ -18,8 +18,10 @@ import ReviewReportContainer from "./container/ReviewReportContainer";
 import ReviewReport from "./ReviewReport";
 import Invitation from "./Invitation";
 import Reviewer from "./Reviewer";
+import Issue from "./Issue";
 import SentInvitationContainer from "./container/SentInvitationContainer";
 import ReviewerResultContainer from "./container/ReviewerResultContainer";
+import Publish from "./Publish";
 
 export {
   Logo,
@@ -44,4 +46,6 @@ export {
   Reviewer,
   SentInvitationContainer,
   ReviewerResultContainer,
+  Issue,
+  Publish,
 };

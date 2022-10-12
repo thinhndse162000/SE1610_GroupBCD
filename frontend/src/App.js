@@ -1,5 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Signup, Landing, Error, ProtectedRoute, Login, ManagerProtectedRoute } from "./pages";
+import {
+  Signup,
+  Landing,
+  Error,
+  ProtectedRoute,
+  Login,
+  ManagerProtectedRoute,
+} from "./pages";
 import {
   SharedLayout,
   AuthorPaper,
@@ -12,6 +19,11 @@ import {
   ReviewReportDetail,
   JournalPaper,
   SendInvitation,
+  MemberJournalDetail,
+  MemberIssues,
+  MemberPublishes,
+  MemberIssueDetail,
+  MemberPublishDetail,
 } from "./pages/dashboard";
 
 function App() {
@@ -22,18 +34,26 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <SharedLayout viewType="member"/>
+              <SharedLayout viewType="member" />
             </ProtectedRoute>
           }
         >
           <Route index element={<MemberSearch />} />
+          <Route path="journal/:journalId" element={<MemberJournalDetail />} />
+          <Route path="journal/:journalId/issue" element={<MemberIssues />} />
+          <Route
+            path="journal/:journalId/publish"
+            element={<MemberPublishes />}
+          />
+          <Route path="issue/:issueId" element={<MemberIssueDetail />} />
+          <Route path="publish/:publishId" element={<MemberPublishDetail />} />
         </Route>
 
         <Route
           path="/author"
           element={
             <ProtectedRoute>
-              <SharedLayout viewType="author"/>
+              <SharedLayout viewType="author" />
             </ProtectedRoute>
           }
         >
@@ -46,13 +66,16 @@ function App() {
           path="/reviewer"
           element={
             <ProtectedRoute>
-              <SharedLayout viewType="reviewer"/>
+              <SharedLayout viewType="reviewer" />
             </ProtectedRoute>
           }
         >
           <Route index element={<AllReviewReport />} />
           <Route path="submit-review" element={<AddReview />} />
-          <Route path="review-detail/:reviewId" element={<ReviewReportDetail />} />
+          <Route
+            path="review-detail/:reviewId"
+            element={<ReviewReportDetail />}
+          />
           <Route path="invitation" element={<ReviewerInvitation />} />
         </Route>
 
@@ -60,7 +83,7 @@ function App() {
           path="/manager"
           element={
             <ManagerProtectedRoute>
-              <SharedLayout viewType="manager"/>
+              <SharedLayout viewType="manager" />
             </ManagerProtectedRoute>
           }
         >

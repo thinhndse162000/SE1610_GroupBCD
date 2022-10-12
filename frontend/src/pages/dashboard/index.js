@@ -1,14 +1,21 @@
 import Profile from "./Profile";
 import SharedLayout from "./SharedLayout";
 import { AddPaper, AuthorPaper, PaperDetail } from "./author";
-import { MemberSearch } from "./member";
+import {
+  MemberSearch,
+  MemberJournalDetail,
+  MemberIssues,
+  MemberPublishes,
+  MemberIssueDetail,
+  MemberPublishDetail,
+} from "./member";
 import {
   AddReview,
   ReviewerInvitation,
   AllReviewReport,
   ReviewReportDetail,
 } from "./reviewer";
-import { JournalPaper, SendInvitation, } from "./manager";
+import { JournalPaper, SendInvitation } from "./manager";
 
 export {
   Profile,
@@ -23,4 +30,9 @@ export {
   ReviewReportDetail,
   JournalPaper,
   SendInvitation,
+  MemberJournalDetail,
+  MemberIssues,
+  MemberPublishes,
+  MemberIssueDetail,
+  MemberPublishDetail,
 };

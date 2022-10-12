@@ -1,4 +1,5 @@
-import Wrapper from "../../../assets/wrappers/Container";
+import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
+import { default as ItemWrapper } from "../../../assets/wrappers/Item";
 import { Paper } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -20,17 +21,22 @@ const JournalPaper = () => {
   return (
     <>
       {journal != null && (
-        <div>
-          <h4>{journal.name}</h4>
-          <div>
+        <ItemWrapper>
+          <header>
+            <div className="info">
+              <h5>{journal.name}</h5>
+            </div>
+          </header>
+          <div className="content">
             <p>
-              Organization: {journal.organization} - ISSN: {journal.issn}
+              <strong>ISSN</strong>: {journal.issn} -{" "}
+              <strong>Organization</strong>: {journal.organization}
             </p>
           </div>
-        </div>
+        </ItemWrapper>
       )}
       {papers.length > 0 && (
-        <Wrapper>
+        <ContainerWrapper>
           <div className="container">
             {papers.map((paper, index) => {
               let action = [];
@@ -51,7 +57,7 @@ const JournalPaper = () => {
               return <Paper key={index} paper={paper} action={action} />;
             })}
           </div>
-        </Wrapper>
+        </ContainerWrapper>
       )}
     </>
   );

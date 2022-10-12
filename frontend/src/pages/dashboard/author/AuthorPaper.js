@@ -15,7 +15,6 @@ const AuthorPaper = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // FIXME: Performance issue when enter this component
     dispatch(getAuthorPaper());
   }, [dispatch]);
 

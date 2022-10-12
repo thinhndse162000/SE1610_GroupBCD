@@ -35,6 +35,9 @@ const member = {
   journalSearchOptions: ["Journal", "Paper"],
   searchResult: [],
   journalDetailId: '',
+  journal: {},
+  issuePublishes: {},
+  publish: null,
 };
 
 const manager = {
@@ -42,7 +45,8 @@ const manager = {
   sentInvitations: [],
   availableReviewers: [],
   paper: {},
-  state: {},
+  journal: {},
+  issues: {},
 }
 
 const base = {
