@@ -13,6 +13,8 @@ import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
 import com.bcd.ejournal.service.InvitationService;
+import com.bcd.ejournal.utils.DTOMapper;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,14 +31,16 @@ public class InvitationServiceImpl implements InvitationService {
     private final PaperRepository paperRepository;
     private final ReviewReportRepository reviewReportRepository;
     private final ModelMapper modelMapper;
+    private final DTOMapper dtoMapper;
 
     @Autowired
-    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, ModelMapper modelMapper) {
+    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
         this.invitationRepository = invitationRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
         this.reviewReportRepository = reviewReportRepository;
         this.modelMapper = modelMapper;
+        this.dtoMapper = dtoMapper;
     }
 
     @Override
@@ -144,21 +148,8 @@ public class InvitationServiceImpl implements InvitationService {
 
     private InvitationReviewerResponse toInvitationReviewerResponse(Invitation invitation) {
         InvitationReviewerResponse response = modelMapper.map(invitation, InvitationReviewerResponse.class);
-        PaperResponse paperResponse = fromPaper(invitation.getPaper());
+        PaperResponse paperResponse = dtoMapper.toPaperResponse(invitation.getPaper());
         response.setPaper(paperResponse);
         return response;
-    }
-
-    private PaperResponse fromPaper(Paper paper) {
-        PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
-        paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
-        paperResponse.setAuthors(fromAuthor(paper.getAuthor()));
-        return paperResponse;
-    }
-
-    private AuthorResponse fromAuthor(Author author) {
-        AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
-        authorResponse.setFullName(author.getAccount().getFullName());
-        return authorResponse;
     }
 }

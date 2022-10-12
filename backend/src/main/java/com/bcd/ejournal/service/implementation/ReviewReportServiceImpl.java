@@ -13,6 +13,8 @@ import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
 import com.bcd.ejournal.service.ReviewReportService;
+import com.bcd.ejournal.utils.DTOMapper;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,16 +32,18 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     private final PaperRepository paperRepository;
     private final RequestMapper reviewMapper;
     private final ModelMapper modelMapper;
+    private final DTOMapper dtoMapper;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
-    public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, RequestMapper reviewMapper, ModelMapper modelMapper) {
+    public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, RequestMapper reviewMapper, ModelMapper modelMapper, DTOMapper dtoMapper) {
         this.reviewreportRepository = reviewreportRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
         this.reviewMapper = reviewMapper;
         this.modelMapper = modelMapper;
+        this.dtoMapper = dtoMapper;
     }
 
     @Override
@@ -75,7 +79,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         Reviewer reviewer = reviewerRepository.findById(reviewerId)
                 .orElseThrow(() -> new NullPointerException("No reviewer found. Id: " + reviewerId));
         return reviewer.getReviewReports().stream()
-                .map(this::fromReviewReport)
+                .map(dtoMapper::toReviewReportDetailResponse)
                 .collect(Collectors.toList());
     }
 

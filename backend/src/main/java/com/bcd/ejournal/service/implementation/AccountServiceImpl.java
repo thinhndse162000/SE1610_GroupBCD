@@ -15,6 +15,8 @@ import com.bcd.ejournal.domain.enums.AccountStatus;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.service.AccountService;
+import com.bcd.ejournal.utils.DTOMapper;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,14 +29,16 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final JWTService jwtService;
+    private final DTOMapper dtoMapper;
 
     @Autowired
     public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
-            ModelMapper modelMapper, JWTService jwtService) {
+            ModelMapper modelMapper, JWTService jwtService, DTOMapper dtoMapper) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.jwtService = jwtService;
+        this.dtoMapper = dtoMapper;
     }
 
     @Override
@@ -133,7 +137,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountProfileResponse getProfile(Integer id) {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
-        return toAccountResponse(acc);
+        return dtoMapper.toAccountProfileResponse(acc);
     }
 
     @Override
@@ -142,9 +146,5 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
         acc.setStatus(AccountStatus.ARCHIVED);
         accountRepository.save(acc);
-    }
-
-    private AccountProfileResponse toAccountResponse(Account acc) {
-        return modelMapper.map(acc, AccountProfileResponse.class);
     }
 }
