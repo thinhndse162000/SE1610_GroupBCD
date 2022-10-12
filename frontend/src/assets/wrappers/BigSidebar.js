@@ -40,14 +40,6 @@ const Wrapper = styled.aside`
       text-transform: capitalize;
       transition: var(--transition);
     }
-    .nav-link:hover {
-      background: var(--grey-50);
-      padding-left: 3rem;
-      color: var(--grey-900);
-    }
-    .nav-link:hover .icon {
-      color: var(--primary-500);
-    }
     .icon {
       font-size: 1.5rem;
       margin-right: 1rem;
@@ -58,8 +50,22 @@ const Wrapper = styled.aside`
     .active {
       color: var(--grey-900);
     }
+    .active:hover{
+      background: var(--grey-50);
+      padding-left: 3rem;
+      color: var(--grey-900);
+    }
     .active .icon {
       color: var(--primary-500);
+    }
+    .active:hover .icon {
+      color: var(--primary-500);
+    }
+    .inactive {
+      color: var(--grey-300);
+    }
+    .inactive:hover {
+      background: var(--grey-50);
     }
   }
 `

@@ -12,16 +12,18 @@ import SmallSidebar from "./layout/SmallSidebar";
 import AuthorPaperContainer from "./container/AuthorPaperContainer";
 import Journal from "./Journal";
 import Paper from "./Paper";
-import JournalContainer from "./container/JournalContainer";
 import PaperContainer from "./container/PaperContainer";
 import InvitationContainer from "./container/InvitationContainer";
 import ReviewReportContainer from "./container/ReviewReportContainer";
 import ReviewReport from "./ReviewReport";
 import Invitation from "./Invitation";
 import Reviewer from "./Reviewer";
+import Issue from "./Issue";
 import SentInvitationContainer from "./container/SentInvitationContainer";
 import ReviewerResultContainer from "./container/ReviewerResultContainer";
-
+import Publish from "./Publish";
+import PaperCompact from './PaperCompact'
+import PaperDetails from './PaperDetails'
 export {
   Logo,
   FormRow,
@@ -37,7 +39,8 @@ export {
   FormDropdown,
   Journal,
   Paper,
-  JournalContainer,
+  PaperCompact,
+  PaperDetails,
   PaperContainer,
   InvitationContainer,
   ReviewReport,
@@ -46,4 +49,6 @@ export {
   Reviewer,
   SentInvitationContainer,
   ReviewerResultContainer,
+  Issue,
+  Publish,
 };

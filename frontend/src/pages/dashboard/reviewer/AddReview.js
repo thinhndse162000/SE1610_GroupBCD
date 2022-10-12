@@ -34,7 +34,7 @@ const AddReview = () => {
     if (!editReviewId) {
       navigate("/reviewer");
     }
-  }, [editReviewId]);
+  }, [editReviewId, navigate]);
 
   const handleInput = (e) => {
     const name = e.target.name;

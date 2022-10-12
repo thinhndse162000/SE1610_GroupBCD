@@ -12,7 +12,7 @@ const SentInvitationContainer = () => {
   console.log(sentInvitations)
   useEffect(() => {
     dispatch(listInvitation(paperId));
-  }, [])
+  }, [dispatch, paperId])
   return (
     <Wrapper>
       <h4>Sent Invitations</h4>

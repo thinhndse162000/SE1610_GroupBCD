@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import {
   FormRow,
   Paper,
+  PaperDetails,
   ReviewerResultContainer,
   SentInvitationContainer,
 } from "../../../components";
@@ -19,7 +20,7 @@ const SendInvitation = () => {
   const [keyword, setKeyword] = useState("");
   useEffect(() => {
     dispatch(getPaper(paperId));
-  }, []);
+  }, [paperId, dispatch]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -51,6 +52,7 @@ const SendInvitation = () => {
             </div>
           </form>
         </SearchWrapper>
+      {/* TODO: Refactor not to use container*/}
         <ReviewerResultContainer />
       </>
     );

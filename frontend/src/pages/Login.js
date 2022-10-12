@@ -38,7 +38,7 @@ const Login = () => {
       if (role === "MANAGER") navigate("/manager");
       else navigate("/author");
     }
-  }, [user, navigate]);
+  }, [user, navigate, role]);
 
   return (
     <Wrapper className="full-page">

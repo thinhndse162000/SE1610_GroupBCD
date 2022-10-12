@@ -1,21 +1,42 @@
-import Wrapper from "../../../assets/wrappers/Container";
-import { Paper } from "../../../components";
+import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
+import { default as ItemWrapper } from "../../../assets/wrappers/Item";
+import { Paper, PaperCompact } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getSentPaper } from "../../../context/service/journalService";
+import {
+  getJournalFromManager,
+  getSentPaper,
+} from "../../../context/service/journalService";
 
 const JournalPaper = () => {
   const dispatch = useDispatch();
-  const { sentPapers: papers } = useSelector((state) => state.manager);
+  const { sentPapers: papers, journal } = useSelector((state) => state.manager);
 
   useEffect(() => {
     dispatch(getSentPaper());
-  }, []);
+    dispatch(getJournalFromManager());
+  }, [dispatch]);
 
+  // TODO: get journal title
   return (
     <>
+      {journal != null && (
+        <ItemWrapper>
+          <header>
+            <div className="info">
+              <h5>{journal.name}</h5>
+            </div>
+          </header>
+          <div className="content">
+            <p>
+              <strong>ISSN</strong>: {journal.issn} -{" "}
+              <strong>Organization</strong>: {journal.organization}
+            </p>
+          </div>
+        </ItemWrapper>
+      )}
       {papers.length > 0 && (
-        <Wrapper>
+        <ContainerWrapper>
           <div className="container">
             {papers.map((paper, index) => {
               let action = [];
@@ -27,10 +48,16 @@ const JournalPaper = () => {
                   label: "Send invitation",
                 });
               }
-              return <Paper key={index} paper={paper} action={action} />;
+              action.push({
+                type: "link",
+                to: `paper-detail/${paper.paperId}`,
+                className: "btn edit-btn",
+                label: "Detail",
+              });
+              return <PaperCompact key={index} paper={paper} action={action} />;
             })}
           </div>
-        </Wrapper>
+        </ContainerWrapper>
       )}
     </>
   );

@@ -1,4 +1,7 @@
 import {
+  LOADING,
+  SUCCESS_NO_MESSAGE,
+  ERROR,
   TOGGLE_SIDEBAR,
   CHANGE_VIEW,
   DISPLAY_ALERT,
@@ -9,7 +12,9 @@ import {
   HANDLE_MEMBER_CHANGE,
   HANDLE_REVIEW_CHANGE,
   HANDLE_INVITATION_CHANGE,
+  HANDLE_MANAGER_CHANGE,
 } from "../actions";
+import authFetch from "../../utils/authFetch";
 
 export const addUserToLocalStorage = ({ user, token, role }) => {
   localStorage.setItem("user", user);
@@ -55,6 +60,9 @@ export const handleChange =
       case "invitation":
         dispatchType = HANDLE_INVITATION_CHANGE;
         break;
+      case "manager":
+        dispatchType = HANDLE_MANAGER_CHANGE;
+        break;
       default:
         dispatchType = HANDLE_CHANGE;
     }
@@ -68,3 +76,21 @@ export const toggleSidebar = () => (dispatch) => {
 export const changePage = (page) => (dispatch) => {
   dispatch({ type: CHANGE_PAGE, payload: { page } });
 };
+
+export const getField = () => async (dispatch) => {
+  dispatch({ type: LOADING });
+  try {
+    const { data } = await authFetch.get("/field");
+    dispatch({ type: SUCCESS_NO_MESSAGE });
+    dispatch(handleChange({ name: "fields", value: data }))
+  } catch (error) {
+    if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
+  }
+  dispatch(clearAlert());
+
+}
+

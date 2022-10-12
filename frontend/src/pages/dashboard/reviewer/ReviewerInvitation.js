@@ -12,13 +12,14 @@ const ReviewerInvitation = () => {
 
   useEffect(() => {
     dispatch(getInvitation());
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) {
     return <Loading center />;
   }
 
   return <>
+    {/* TODO: refactor not to use container */}
   {invitations.length > 0 ? <InvitationContainer /> : <p>No invitation found</p> }
   </>;
 };

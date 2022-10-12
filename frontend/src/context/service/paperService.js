@@ -7,14 +7,11 @@ import {
   ERROR,
   AUTHOR_PAPER,
   SUCCESS_NO_MESSAGE,
-  SEARCH_RESULT,
   PAPER_DETAIL,
-  SENT_INVITATION,
-  PAPER_MANAGER,
 } from "../actions";
-import { clearAlert } from "./utilService";
+import { clearAlert, handleChange } from "./utilService";
 import authFetch from "../../utils/authFetch";
-import fileDownload from 'js-file-download';
+import fileDownload from "js-file-download";
 
 export const setEditPaper = (id) => (dispatch) => {
   dispatch({ type: SET_EDIT_PAPER, payload: { id } });
@@ -69,12 +66,13 @@ export const getPaper = (paperId) => async (dispatch) => {
   try {
     const { data } = await authFetch.get(`/paper/${paperId}`);
     dispatch({ type: SUCCESS_NO_MESSAGE });
-    dispatch({
-      type: PAPER_MANAGER,
-      payload: {
-        paper: data,
-      },
-    });
+    dispatch(
+      handleChange({
+        name: "paper",
+        value: data,
+        type: "manager",
+      })
+    );
   } catch (error) {
     if (error.response.status === 401) return;
     dispatch({
@@ -88,13 +86,23 @@ export const getPaper = (paperId) => async (dispatch) => {
 export const createPaper = (paper) => async (dispatch) => {
   dispatch({ type: LOADING_ALERT });
   try {
-    const { paperTitle, paperSummary, paperJournal, paperPdfFile } = paper;
+    const {
+      paperTitle,
+      paperSummary,
+      paperJournal,
+      paperPdfFile,
+      paperFields,
+    } = paper;
     let formData = new FormData();
 
     formData.append("file", paperPdfFile.file);
     formData.append("title", paperTitle);
     formData.append("summary", paperSummary);
     formData.append("journalId", paperJournal.journalId);
+    formData.append(
+      "fieldId",
+      paperFields.map((f) => f.fieldId)
+    );
 
     await authFetch.post("/paper", formData, {
       headers: {
@@ -168,12 +176,7 @@ export const search =
       dispatch({
         type: SUCCESS_NO_MESSAGE,
       });
-      dispatch({
-        type: SEARCH_RESULT,
-        payload: {
-          searchResult: data.data,
-        },
-      });
+      dispatch(handleChange({ name: "searchResult", value: data.data, type: "member" }))
     } catch (error) {
       dispatch({
         type: ERROR,
@@ -188,12 +191,9 @@ export const listInvitation = (paperId) => async (dispatch) => {
   try {
     const { data } = await authFetch.get(`/paper/${paperId}/invitation`);
     dispatch({ type: SUCCESS_NO_MESSAGE });
-    dispatch({
-      type: SENT_INVITATION,
-      payload: {
-        sentInvitations: data,
-      },
-    });
+    dispatch(
+      handleChange({ name: "sentInvitations", value: data, type: "manager" })
+    );
   } catch (error) {
     if (error.response.status === 401) return;
     dispatch({
@@ -211,7 +211,7 @@ export const downloadFile = (paperId) => async (dispatch) => {
       responseType: "blob",
     });
     dispatch({ type: SUCCESS_NO_MESSAGE });
-    fileDownload(data, "randome.pdf")
+    fileDownload(data, `${paperId}.pdf`)
   } catch (error) {
     if (error.response.status === 401) return;
     dispatch({
