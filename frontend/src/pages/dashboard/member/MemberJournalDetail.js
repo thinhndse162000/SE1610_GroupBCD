@@ -6,16 +6,16 @@ import { default as ItemWrapper } from "../../../assets/wrappers/Item";
 import { MEMBER_JOURNAL_ID } from "../../../context/actions";
 
 const MemberJournalDetail = () => {
-  const { journalId } = useParams();
+  const { slug } = useParams();
   const dispatch = useDispatch();
   const {
     member: { journal },
   } = useSelector((state) => state);
 
   useEffect(() => {
-    dispatch({ type: MEMBER_JOURNAL_ID, payload: { journalId } })
-    dispatch(getJournalFromMember({ journalId }));
-  }, [dispatch, journalId]);
+    dispatch({ type: MEMBER_JOURNAL_ID, payload: { slug } })
+    dispatch(getJournalFromMember({ slug }));
+  }, [dispatch, slug]);
 
   return (
     <ItemWrapper>

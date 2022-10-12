@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
+import { Loading } from "../../../components";
 import {
-  SearchContainer,
-  Loading,
-  AuthorPaperContainer,
-} from "../../../components";
-import { getAuthorPaper } from "../../../context/service/paperService";
+  getAuthorPaper,
+  setEditPaper,
+  deletePaper,
+} from "../../../context/service/paperService";
+import { Paper, SearchAuthorPaperContainer } from "../../../components";
 
 const AuthorPaper = () => {
   const {
@@ -15,7 +17,7 @@ const AuthorPaper = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAuthorPaper());
+    dispatch(getAuthorPaper({}));
   }, [dispatch]);
 
   if (isLoading) {
@@ -24,9 +26,39 @@ const AuthorPaper = () => {
 
   return (
     <>
-      {/* <SearchContainer />
-        TODO: Refoctor to not use container */}
-      {papers.length > 0 ? <AuthorPaperContainer /> : <p>No submitted paper yet</p>}
+      <SearchAuthorPaperContainer />
+      <ContainerWrapper>
+        <h3>All Papers</h3>
+        <div className="container">
+          {papers.map((paper, index) => {
+            let action = [];
+            if (paper.status === "PENDING") {
+              action.push({
+                type: "link",
+                to: "submit-paper",
+                className: "btn edit-btn",
+                label: "Edit",
+                onClick: () => dispatch(setEditPaper(paper.paperId)),
+              });
+              // TODO: deletePaper
+              action.push({
+                type: "button",
+                className: "btn delete-btn",
+                label: "Delete",
+                onClick: () => dispatch(deletePaper(paper.paperId)),
+              });
+            }
+            return (
+              <Paper
+                key={index}
+                paper={paper}
+                link={`paper-detail/${paper.paperId}`}
+                action={action}
+              />
+            );
+          })}
+        </div>
+      </ContainerWrapper>
     </>
   );
 };

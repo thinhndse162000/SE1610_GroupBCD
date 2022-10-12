@@ -17,9 +17,9 @@ const Publish = ({ publish, type = "compact", link, action = [] }) => {
           ) : (
             <h5>{paper.title}</h5>
           )}
-          <p>Author: {paper.authors.fullName}</p>
+          <Link to={`/author-profile/${paper.authors.slug}`}><p>Author: {paper.authors.fullName}</p></Link>
           <p>
-            {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} -
+            {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} -{" "}
             <span>Access Level: {publish.accessLevel}</span>
           </p>
         </div>

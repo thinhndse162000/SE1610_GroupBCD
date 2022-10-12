@@ -1,6 +1,6 @@
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as ItemWrapper } from "../../../assets/wrappers/Item";
-import { Paper, PaperCompact } from "../../../components";
+import { Paper } from "../../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import {
@@ -8,7 +8,7 @@ import {
   getSentPaper,
 } from "../../../context/service/journalService";
 
-const JournalPaper = () => {
+const ManagerPaper = () => {
   const dispatch = useDispatch();
   const { sentPapers: papers, journal } = useSelector((state) => state.manager);
 
@@ -17,7 +17,6 @@ const JournalPaper = () => {
     dispatch(getJournalFromManager());
   }, [dispatch]);
 
-  // TODO: get journal title
   return (
     <>
       {journal != null && (
@@ -48,13 +47,7 @@ const JournalPaper = () => {
                   label: "Send invitation",
                 });
               }
-              action.push({
-                type: "link",
-                to: `paper-detail/${paper.paperId}`,
-                className: "btn edit-btn",
-                label: "Detail",
-              });
-              return <PaperCompact key={index} paper={paper} action={action} />;
+              return <Paper key={index} paper={paper} link={ `paper-detail/${paper.paperId}`} action={action} />;
             })}
           </div>
         </ContainerWrapper>
@@ -63,4 +56,4 @@ const JournalPaper = () => {
   );
 };
 
-export default JournalPaper;
+export default ManagerPaper;

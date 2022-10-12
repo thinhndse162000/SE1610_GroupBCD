@@ -19,7 +19,7 @@ import {
 } from "../../../context/service/utilService";
 import { useNavigate } from "react-router-dom";
 
-const AddPaper = () => {
+const AuthorAddPaper = () => {
   const { base, author } = useSelector((state) => state);
   const {
     editPaperId,
@@ -226,4 +226,4 @@ const AddPaper = () => {
   );
 };
 
-export default AddPaper;
+export default AuthorAddPaper;

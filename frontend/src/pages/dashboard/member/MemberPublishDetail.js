@@ -23,7 +23,7 @@ const MemberPublishDetail = () => {
     if (publish != null) {
       dispatch({
         type: MEMBER_JOURNAL_ID,
-        payload: { journalId: publish.issue.journal.journalId },
+        payload: { slug: publish.issue.journal.slug },
       });
     }
   }, [dispatch, publish]);

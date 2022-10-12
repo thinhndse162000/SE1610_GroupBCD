@@ -8,8 +8,8 @@ import Loading from "./layout/Loading";
 import Logo from "./layout/Logo";
 import Navbar from "./layout/Navbar";
 import SearchContainer from "./container/SearchContainer";
+import SearchAuthorPaperContainer from "./container/SearchAuthorPaperContainer";
 import SmallSidebar from "./layout/SmallSidebar";
-import AuthorPaperContainer from "./container/AuthorPaperContainer";
 import Journal from "./Journal";
 import Paper from "./Paper";
 import PaperContainer from "./container/PaperContainer";
@@ -22,8 +22,6 @@ import Issue from "./Issue";
 import SentInvitationContainer from "./container/SentInvitationContainer";
 import ReviewerResultContainer from "./container/ReviewerResultContainer";
 import Publish from "./Publish";
-import PaperCompact from './PaperCompact'
-import PaperDetails from './PaperDetails'
 export {
   Logo,
   FormRow,
@@ -35,12 +33,9 @@ export {
   FormTextArea,
   SearchContainer,
   Loading,
-  AuthorPaperContainer,
   FormDropdown,
   Journal,
   Paper,
-  PaperCompact,
-  PaperDetails,
   PaperContainer,
   InvitationContainer,
   ReviewReport,
@@ -51,4 +46,5 @@ export {
   ReviewerResultContainer,
   Issue,
   Publish,
+  SearchAuthorPaperContainer,
 };
