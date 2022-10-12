@@ -42,6 +42,12 @@ public class JournalApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<JournalResponse> getJournalFromSlug(@PathVariable String slug) {
+        JournalResponse response = journalService.getJournal(slug);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<JournalResponse> getJournalFromManager(@AuthenticationPrincipal AccountJWTPayload payload) {
         Integer accountId = payload.getAccountId();
@@ -68,6 +74,12 @@ public class JournalApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/slug/{slug}/issue")
+    public ResponseEntity<List<IssueResponse>> getAllIssuesFromSlug(@PathVariable String slug) {
+        List<IssueResponse> response = journalService.listAllIssues(slug);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{journalId}")
     public ResponseEntity<Void> archiveJournal(@PathVariable Integer journalId) {
         journalService.archiveJournal(journalId);
@@ -77,6 +89,12 @@ public class JournalApi {
     @GetMapping("/{journalId}/publish")
     public ResponseEntity<List<PublishResponse>> getAllPaper(@PathVariable Integer journalId) {
         List<PublishResponse> responses = publishService.getPublishFromJournal(journalId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @GetMapping("/slug/{slug}/publish")
+    public ResponseEntity<List<PublishResponse>> getAllPublish(@PathVariable String slug) {
+        List<PublishResponse> responses = publishService.getPublishFromJournal(slug);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 

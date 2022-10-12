@@ -24,6 +24,7 @@ public class Journal {
     private String issn;
     @Enumerated(EnumType.STRING)
     private JournalStatus status;
+    private String slug;
 
     @ManyToMany
     @JoinTable(name = "JournalField", joinColumns = @JoinColumn(name = "JournalId", referencedColumnName = "JournalId"), inverseJoinColumns = @JoinColumn(name = "FieldId", referencedColumnName = "FieldId"))

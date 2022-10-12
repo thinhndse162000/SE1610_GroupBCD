@@ -12,11 +12,15 @@ public interface JournalService {
 
     JournalResponse getJournal(Integer journalId);
 
+    JournalResponse getJournal(String slug);
+
     JournalResponse getJournalManager(Integer accountId);
 
     List<JournalResponse> search(String name);
 
     List<IssueResponse> listAllIssues(Integer journalId);
+
+    List<IssueResponse> listAllIssues(String slug);
 
     JournalResponse updateJournal(Integer journalId, JournalCreateRequest request);
 

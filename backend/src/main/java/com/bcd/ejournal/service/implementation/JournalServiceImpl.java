@@ -67,6 +67,13 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
+    public JournalResponse getJournal(String slug) {
+        Journal journal = journalRepository.findBySlug(slug)
+            .orElseThrow(() -> new NullPointerException("Journal not found. Slug: " + slug));
+        return modelMapper.map(journal, JournalResponse.class);
+    }
+
+    @Override
     public JournalResponse getJournalManager(Integer accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
@@ -86,6 +93,14 @@ public class JournalServiceImpl implements JournalService {
     @Override
     public List<IssueResponse> listAllIssues(Integer journalId) {
         Iterable<Issue> issues = issueRepository.findAllByJournalId(journalId);
+        return StreamSupport.stream(issues.spliterator(), false)
+                .map(dtoMapper::toIssueResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<IssueResponse> listAllIssues(String slug) {
+        Iterable<Issue> issues = issueRepository.findAllByJournalSlug(slug);
         return StreamSupport.stream(issues.spliterator(), false)
                 .map(dtoMapper::toIssueResponse)
                 .collect(Collectors.toList());

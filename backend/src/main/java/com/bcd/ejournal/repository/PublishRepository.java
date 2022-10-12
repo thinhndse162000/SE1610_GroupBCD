@@ -11,6 +11,9 @@ public interface PublishRepository extends CrudRepository<Publish, Integer> {
     @Query(value = "SELECT b FROM Publish b INNER JOIN b.paper p INNER JOIN p.journal j WHERE j.journalId = :journalId")
     List<Publish> findByJournalId(Integer journalId);
 
+    @Query(value = "SELECT b FROM Publish b INNER JOIN b.paper p INNER JOIN p.journal j WHERE j.slug = :slug")
+    List<Publish> findByJournalSlug(String slug);
+
     @Query("SELECT b FROM Publish b INNER JOIN b.paper p INNER JOIN p.author a WHERE a.authorId = :authorId")
     List<Publish> findByAuthorId(Integer authorId);
 
