@@ -16,7 +16,7 @@ import java.util.List;
 public class Reviewer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ReviewerId;
+    private Integer reviewerId;
     private boolean invitable;
 
     @ManyToMany

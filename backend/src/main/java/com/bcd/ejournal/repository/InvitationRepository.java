@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InvitationRepository extends CrudRepository<Invitation, Integer> {
-    @Query(value = "SELECT * FROM Invitation i WHERE i.InvitationId = :Id AND i.ReviewerId = :reviewerId", nativeQuery = true)
-    Optional<Invitation> findByIdAndReviewerId(Integer Id, Integer reviewerId);
+    @Query(value = "SELECT i FROM Invitation i INNER JOIN i.reviewer r WHERE i.invitationId = :id AND r.reviewerId = :reviewerId")
+    Optional<Invitation> findByIdAndReviewerId(Integer id, Integer reviewerId);
 
-    @Query(value = "SELECT * FROM Invitation i WHERE i.paperId = :paperId AND i.status = :#{#status.name()}", nativeQuery = true)
+    @Query(value = "SELECT i FROM Invitation i INNER JOIN i.paper p WHERE p.paperId = :paperId AND i.status = :#{#status.name()}")
     List<Invitation> findByPaperIdAndStatus(Integer paperId, InvitationStatus status);
 
     @Modifying(clearAutomatically = true)
