@@ -152,7 +152,7 @@ public class PaperServiceImpl implements PaperService {
         Iterable<Paper> papers = paperRepository.searchByTitle(request.getTitle());
 
         return StreamSupport.stream(papers.spliterator(), false)
-                .map(this::fromPaper)
+                .map(dtoMapper::toPaperResponse)
                 .collect(Collectors.toList());
     }
 
@@ -164,7 +164,7 @@ public class PaperServiceImpl implements PaperService {
 
         List<Paper> papers = author.getPapers();
         return papers.stream()
-                .map(this::fromPaper)
+                .map(dtoMapper::toPaperResponse)
                 .collect(Collectors.toList());
     }
 
@@ -175,7 +175,7 @@ public class PaperServiceImpl implements PaperService {
 
         List<Paper> papers = journal.getPapers();
         return papers.stream()
-                .map(this::fromPaper)
+                .map(dtoMapper::toPaperResponse)
                 .collect(Collectors.toList());
     }
 
@@ -189,7 +189,7 @@ public class PaperServiceImpl implements PaperService {
                 .map(dtoMapper::toReviewReportResponse)
                 .collect(Collectors.toList());
 
-        response.setPaper(fromPaper(paper));
+        response.setPaper(dtoMapper.toPaperResponse(paper));
         response.setReviews(reviewReports);
         return response;
     }
@@ -203,18 +203,5 @@ public class PaperServiceImpl implements PaperService {
         // TODO: verify author
         // TODO: verify manager
         return FileUtils.load(uploadDir, fileName.trim());
-    }
-
-    private PaperResponse fromPaper(Paper paper) {
-        PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
-        paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
-        paperResponse.setAuthors(fromAuthor(paper.getAuthor()));
-        return paperResponse;
-    }
-
-    private AuthorResponse fromAuthor(Author author) {
-        AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
-        authorResponse.setFullName(author.getAccount().getFullName());
-        return authorResponse;
     }
 }

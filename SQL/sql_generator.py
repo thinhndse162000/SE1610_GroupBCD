@@ -94,7 +94,8 @@ class AccountSql(SqlTemplate):
             phone = self.phone
             self.phone += 1
 
-            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MEMBER', 'OPEN')")
+            slug = (first_name + '-' + last_name).lower()
+            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MEMBER', 'OPEN', '{slug}')")
             self.author.insert(f"{first_name} {last_name}")
             self.reviewer.insert_account()
 
@@ -107,7 +108,8 @@ class AccountSql(SqlTemplate):
             phone = self.phone
             self.phone += 1
 
-            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MANAGER', 'OPEN')")
+            slug = (first_name + '-' + last_name).lower()
+            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MANAGER', 'OPEN', '{slug}')")
             self.author.insert(f"{first_name} {last_name}")
             self.reviewer.insert_manager()
 
@@ -148,7 +150,8 @@ class JournalSql(SqlTemplate):
                 id = i * len(self.journal_name_tmpl) + j + 1
 
                 self.issn += 1
-                super().insert(f"('{name.format(field_name)}', 'This is {name.format(field_name)}', 'FPT', '123-{self.issn}', 'OPEN')")
+                slug = '-'.join(name.format(field_name).lower().split())
+                super().insert(f"('{name.format(field_name)}', 'This is {name.format(field_name)}', 'FPT', '123-{self.issn}', 'OPEN', '{slug}')")
 
                 self.journal_field.insert(id, random.choice(list(range(1,i+1)) + list(range(i+2, len(fields)))))
                 self.journal_field.insert(id, i+1)

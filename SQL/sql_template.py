@@ -1,5 +1,5 @@
 account_sql = """INSERT INTO Account
-  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status)
+  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status, slug)
 VALUES
   """ 
 
@@ -19,7 +19,7 @@ VALUES
   """
 
 journal_sql = """INSERT INTO Journal
-  (name, Introduction, organization, issn, status)
+  (name, Introduction, organization, issn, status, slug)
 VALUES
   """
 

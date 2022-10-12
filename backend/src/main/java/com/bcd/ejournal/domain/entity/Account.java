@@ -36,6 +36,7 @@ public class Account implements UserDetails {
     private AccountRole role;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
+    private String slug;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -52,7 +53,7 @@ public class Account implements UserDetails {
     private Journal journal;
 
     public String getFullName() {
-        return lastName + " " + firstName;
+        return firstName + " " + lastName;
     }
 
     @Override

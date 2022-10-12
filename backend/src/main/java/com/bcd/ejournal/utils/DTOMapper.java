@@ -44,6 +44,7 @@ public class DTOMapper {
     public AuthorResponse toAuthorResponse(Author author) {
         AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
         authorResponse.setFullName(author.getAccount().getFullName());
+        authorResponse.setSlug(author.getAccount().getSlug());
         return authorResponse;
     }
 

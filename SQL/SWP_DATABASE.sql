@@ -15,7 +15,8 @@ CREATE TABLE Account(
 	Organization NVARCHAR(150) not null,
 	DateOfBirth DATE,
   role varchar(10) not null,
-  [status] varchar(10) not null
+  [status] varchar(10) not null,
+  slug nvarchar(300) not null,
 )
 
 go
@@ -85,7 +86,8 @@ CREATE TABLE Journal(
 	Introduction text not null,
 	Organization NVARCHAR(255) not null,
 	ISSN char(8) not null UNIQUE,
-	[status] varchar(10) not null
+	[status] varchar(10) not null,
+  slug nvarchar(255) not null UNIQUE,
 )
 go 
 CREATE TABLE Invoice(

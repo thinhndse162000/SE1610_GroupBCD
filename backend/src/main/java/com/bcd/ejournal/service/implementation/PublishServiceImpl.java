@@ -39,10 +39,25 @@ public class PublishServiceImpl implements PublishService {
 
     @Override
     public List<PublishResponse> getPublishFromJournal(Integer journalId) {
-        // TODO: from publish -> paper -> journal
-        // Journal journal = journalRepository.findById(journalId)
-        //     .orElseThrow(() -> new NullPointerException("Journal not found. Id: " + journalId));
         List<Publish> publishes = publishRepository.findByJournalId(journalId);
+
+        return publishes.stream()
+            .map(dtoMapper::toPublishResponse)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PublishResponse> getPublishFromAuthor(Integer authorId) {
+        List<Publish> publishes = publishRepository.findByAuthorId(authorId);
+
+        return publishes.stream()
+            .map(dtoMapper::toPublishResponse)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PublishResponse> getPublishFromAuthor(String slug) {
+        List<Publish> publishes = publishRepository.findByAuthorSlug(slug);
 
         return publishes.stream()
             .map(dtoMapper::toPublishResponse)

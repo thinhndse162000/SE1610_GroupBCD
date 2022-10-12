@@ -1,10 +1,14 @@
 package com.bcd.ejournal.api;
 
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
+import com.bcd.ejournal.domain.dto.response.AuthorResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.service.AccountService;
 import com.bcd.ejournal.service.PaperService;
+import com.bcd.ejournal.service.PublishService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +25,31 @@ import java.util.List;
 public class AuthorApi {
     private final AccountService accountService;
     private final PaperService paperService;
+    private final PublishService publishService;
 
     @Autowired
-    public AuthorApi(AccountService accountService, PaperService paperService) {
+    public AuthorApi(AccountService accountService, PaperService paperService, PublishService publishService) {
         this.accountService = accountService;
         this.paperService = paperService;
+        this.publishService = publishService;
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<AuthorResponse> getAuthorFromSlug(@PathVariable String slug) {
+        AuthorResponse response = accountService.getAuthorFromSlug(slug);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/publish")
+    public ResponseEntity<List<PublishResponse>> getPublish(@PathVariable Integer id) {
+        List<PublishResponse> responses = publishService.getPublishFromAuthor(id);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @GetMapping("/slug/{slug}/publish")
+    public ResponseEntity<List<PublishResponse>> getPublishFromSlug(@PathVariable String slug) {
+        List<PublishResponse> responses = publishService.getPublishFromAuthor(slug);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @GetMapping("/paper")

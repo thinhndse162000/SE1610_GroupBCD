@@ -7,6 +7,7 @@ import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
+import com.bcd.ejournal.domain.dto.response.AuthorResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Reviewer;
@@ -78,6 +79,8 @@ public class AccountServiceImpl implements AccountService {
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
         acc.setRole(AccountRole.MEMBER);
         acc.setStatus(AccountStatus.OPEN);
+        String slug = req.getFirstName() + "-" + req.getLastName();
+        acc.setSlug(slug.toLowerCase());
 
         Author author = new Author();
         author.setAccount(acc);
@@ -129,6 +132,9 @@ public class AccountServiceImpl implements AccountService {
 
         // TODO: validate date of birth
         modelMapper.map(req, acc);
+        String slug = req.getFirstName() + "-" + req.getLastName();
+        acc.setSlug(slug.toLowerCase());
+
         acc = accountRepository.save(acc);
         return modelMapper.map(acc, AccountProfileResponse.class);
     }
@@ -146,5 +152,12 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
         acc.setStatus(AccountStatus.ARCHIVED);
         accountRepository.save(acc);
+    }
+
+    @Override
+    public AuthorResponse getAuthorFromSlug(String slug) {
+        Account acc = accountRepository.findBySlug(slug)
+            .orElseThrow(() -> new NullPointerException("No author found. Slug: " + slug));
+        return dtoMapper.toAuthorResponse(acc.getAuthor());
     }
 }

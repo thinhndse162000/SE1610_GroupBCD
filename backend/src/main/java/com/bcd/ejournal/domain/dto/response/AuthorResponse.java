@@ -15,4 +15,5 @@ public class AuthorResponse {
     private String introduction;
     private String education;
     private String address;
+    private String slug;
 }

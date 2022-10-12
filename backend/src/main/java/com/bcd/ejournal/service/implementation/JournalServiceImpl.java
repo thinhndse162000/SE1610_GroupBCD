@@ -54,6 +54,7 @@ public class JournalServiceImpl implements JournalService {
         journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
         journal = journalRepository.save(journal);
+        journal.setSlug(request.getName().toLowerCase());
         return modelMapper.map(journal, JournalResponse.class);
     }
 
@@ -95,6 +96,7 @@ public class JournalServiceImpl implements JournalService {
         Journal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
         modelMapper.map(request, journal);
+        journal.setSlug(request.getName().toLowerCase());
         journal = journalRepository.save(journal);
         return modelMapper.map(journal, JournalResponse.class);
     }
