@@ -18,8 +18,9 @@ import {
   handleChange,
 } from "../../../context/service/utilService";
 import { useNavigate } from "react-router-dom";
+import authFetch from "../../../utils/authFetch";
 
-const AddPaper = () => {
+const AuthorAddPaper = () => {
   const { base, author } = useSelector((state) => state);
   const {
     editPaperId,
@@ -121,9 +122,10 @@ const AddPaper = () => {
     // {label: journalName, value: journalId}
     let requestResults = "";
     try {
-      const { data } = await axios.get(
-        `http://localhost:8080/journal/search?name=${inputValue}`
-      );
+      const { data } = await authFetch.post("/journal/search", {
+        name: inputValue,
+      });
+      console.log(data);
       requestResults = data.map((journal) => ({
         label: journal.name,
         value: journal.journalId,
@@ -226,4 +228,4 @@ const AddPaper = () => {
   );
 };
 
-export default AddPaper;
+export default AuthorAddPaper;

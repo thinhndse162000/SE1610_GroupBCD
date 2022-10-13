@@ -7,27 +7,38 @@ import { MEMBER_JOURNAL_ID } from "../../../context/actions";
 import { Issue } from "../../../components";
 
 const MemberIssues = () => {
-  const { journalId } = useParams();
+  const { slug } = useParams();
   const dispatch = useDispatch();
   const {
     member: { issues },
   } = useSelector((state) => state);
 
   useEffect(() => {
-    dispatch({ type: MEMBER_JOURNAL_ID, payload: { journalId } });
-    dispatch(getJournalIssues({ journalId }));
-  }, [dispatch, journalId]);
+    dispatch({ type: MEMBER_JOURNAL_ID, payload: { slug } });
+    dispatch(getJournalIssues({ slug }));
+  }, [dispatch, slug]);
+
+  if (issues == null) {
+    return <></>;
+  }
 
   return (
     <ContainerWrapper>
       <div className="container">
         <h3>All Issues</h3>
-        {issues != null &&
+        {issues.length > 0 ? (
           issues.map((issue, index) => {
             return (
-              <Issue key={index} issue={issue} link={`/issue/${issue.issueId}`} />
+              <Issue
+                key={index}
+                issue={issue}
+                link={`/issue/${issue.issueId}`}
+              />
             );
-          })}
+          })
+        ) : (
+          <p>This journal has no issue</p>
+        )}
       </div>
     </ContainerWrapper>
   );

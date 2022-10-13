@@ -4,7 +4,6 @@ import Wrapper from "../assets/wrappers/RegisterPage";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../context/service/authService";
-import { displayAlert } from "../context/service/utilService";
 import ValidateInfo from "../components/container/ValidateInfo";
 
 const initialState = {
@@ -27,54 +26,18 @@ const Signup = () => {
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({ notEmpty: true });
   const onSubmit = (e) => {
     e.preventDefault();
-    const {
-      firstName,
-      lastName,
-      phone,
-      organization,
-      dateOfBirth,
-      profileImage,
-      email,
-      password,
-      passwordRetype,
-    } = values;
-    if (
-      !(
-        email &&
-        password &&
-        firstName &&
-        lastName &&
-        phone &&
-        organization &&
-        dateOfBirth &&
-        passwordRetype
-      )
-    ) {
-      dispatch(displayAlert());
-      return;
-    }
-    const currentUser = {
-      firstName,
-      lastName,
-      phone,
-      organization,
-      dateOfBirth,
-      profileImage,
-      email,
-      password,
-      passwordRetype,
-    };
     setErrors(ValidateInfo(values));
-    if (Object.getOwnPropertyNames(errors).length === 0 ) {
-      return
-    } else {
-      dispatch(signup({ currentUser }));
-    }
-    
   };
+
+  useEffect(() => {
+    if (Object.getOwnPropertyNames(errors).length === 0) {
+      dispatch(signup({ currentUser: values }))
+    }
+    // eslint-disable-next-line
+  }, [dispatch, errors])
 
   useEffect(() => {
     if (user) {

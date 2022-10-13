@@ -10,20 +10,21 @@ import {
 import {
   SharedLayout,
   AuthorPaper,
-  AddPaper,
+  AuthorAddPaper,
   MemberSearch,
   AddReview,
   ReviewerInvitation,
-  PaperDetail,
+  AuthorPaperDetail,
   AllReviewReport,
   ReviewReportDetail,
-  JournalPaper,
+  ManagerPaper,
   SendInvitation,
   MemberJournalDetail,
   MemberIssues,
   MemberPublishes,
   MemberIssueDetail,
   MemberPublishDetail,
+  MemberAuthorProfile,
 } from "./pages/dashboard";
 
 function App() {
@@ -39,14 +40,15 @@ function App() {
           }
         >
           <Route index element={<MemberSearch />} />
-          <Route path="journal/:journalId" element={<MemberJournalDetail />} />
-          <Route path="journal/:journalId/issue" element={<MemberIssues />} />
+          <Route path="journal/:slug" element={<MemberJournalDetail />} />
+          <Route path="journal/:slug/issue" element={<MemberIssues />} />
           <Route
-            path="journal/:journalId/publish"
+            path="journal/:slug/publish"
             element={<MemberPublishes />}
           />
           <Route path="issue/:issueId" element={<MemberIssueDetail />} />
           <Route path="publish/:publishId" element={<MemberPublishDetail />} />
+          <Route path="author-profile/:slug" element={<MemberAuthorProfile />} />
         </Route>
 
         <Route
@@ -58,8 +60,8 @@ function App() {
           }
         >
           <Route index element={<AuthorPaper />} />
-          <Route path="paper-detail/:paperId" element={<PaperDetail />} />
-          <Route path="submit-paper" element={<AddPaper />} />
+          <Route path="paper-detail/:paperId" element={<AuthorPaperDetail />} />
+          <Route path="submit-paper" element={<AuthorAddPaper />} />
         </Route>
 
         <Route
@@ -87,8 +89,8 @@ function App() {
             </ManagerProtectedRoute>
           }
         >
-          <Route index element={<JournalPaper />} />
-          <Route path="paper-detail/:paperId" element={<PaperDetail />} />
+          <Route index element={<ManagerPaper />} />
+          <Route path="paper-detail/:paperId" element={<AuthorPaperDetail />} />
           <Route path="send-invitation/:paperId" element={<SendInvitation />} />
           {/* <Route path="invite" element={<ReviewReportDetail />} /> */}
         </Route>

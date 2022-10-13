@@ -24,7 +24,7 @@ const MemberIssueDetail = () => {
     if (issue != null) {
       dispatch({
         type: MEMBER_JOURNAL_ID,
-        payload: { journalId: issue.journal.journalId },
+        payload: { slug: issue.journal.slug },
       });
     }
   }, [dispatch, issue]);

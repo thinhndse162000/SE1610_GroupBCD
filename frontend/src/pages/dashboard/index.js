@@ -1,6 +1,6 @@
 import Profile from "./Profile";
 import SharedLayout from "./SharedLayout";
-import { AddPaper, AuthorPaper, PaperDetail } from "./author";
+import { AuthorAddPaper, AuthorPaper, AuthorPaperDetail } from "./author";
 import {
   MemberSearch,
   MemberJournalDetail,
@@ -8,6 +8,7 @@ import {
   MemberPublishes,
   MemberIssueDetail,
   MemberPublishDetail,
+  MemberAuthorProfile,
 } from "./member";
 import {
   AddReview,
@@ -15,24 +16,25 @@ import {
   AllReviewReport,
   ReviewReportDetail,
 } from "./reviewer";
-import { JournalPaper, SendInvitation } from "./manager";
+import { ManagerPaper, SendInvitation } from "./manager";
 
 export {
   Profile,
   SharedLayout,
   AuthorPaper,
-  AddPaper,
-  PaperDetail,
+  AuthorAddPaper,
+  AuthorPaperDetail,
   MemberSearch,
   AddReview,
   ReviewerInvitation,
   AllReviewReport,
   ReviewReportDetail,
-  JournalPaper,
+  ManagerPaper,
   SendInvitation,
   MemberJournalDetail,
   MemberIssues,
   MemberPublishes,
   MemberIssueDetail,
   MemberPublishDetail,
+  MemberAuthorProfile,
 };

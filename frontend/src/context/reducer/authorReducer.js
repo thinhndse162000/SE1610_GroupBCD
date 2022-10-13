@@ -4,6 +4,7 @@ import {
   SET_EDIT_PAPER,
   HANDLE_AUTHOR_CHANGE,
   PAPER_DETAIL,
+  HANDLE_AUTHOR_SEARCH_CHANGE,
 } from "../actions";
 import { author } from "../state";
 
@@ -31,6 +32,14 @@ const authorReducer = (state = author, action) => {
         ...state,
         newPaper: {
           ...state.newPaper,
+          [action.payload.name]: action.payload.value,
+        }
+      }
+    case HANDLE_AUTHOR_SEARCH_CHANGE:
+      return {
+        ...state,
+        search: {
+          ...state.search,
           [action.payload.name]: action.payload.value,
         }
       }

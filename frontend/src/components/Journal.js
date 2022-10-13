@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 
 const Journal = ({ journal, type = "compact" }) => {
-  const { journalId, name, introduction, organization, issn } = journal;
+  const { name, introduction, organization, issn, slug } = journal;
   /*
         {
         "journalId": "2",
@@ -15,7 +15,7 @@ const Journal = ({ journal, type = "compact" }) => {
     <Wrapper>
       <header>
         <div className="info">
-          <Link to={`/journal/${journalId}`}>
+          <Link to={`/journal/${slug}`}>
             <h3>{name}</h3>
           </Link>
           <p>

@@ -7,7 +7,7 @@ import { FaWpforms } from "react-icons/fa";
 
 const NavLinks = ({ toggleSidebar }) => {
   const {
-    member: { journalDetailId: journalId },
+    member: { journalSlug: slug },
   } = useSelector((state) => state);
 
   const links = {
@@ -28,23 +28,23 @@ const NavLinks = ({ toggleSidebar }) => {
       {
         id: 2,
         text: "journal",
-        path: `journal/${journalId}`,
+        path: `journal/${slug}`,
         icon: <IoBarChartSharp />,
-        isActive: journalId === "" ? false : true,
+        isActive: slug === "" ? false : true,
       },
       {
         id: 3,
         text: "issues",
-        path: `journal/${journalId}/issue`,
+        path: `journal/${slug}/issue`,
         icon: <IoBarChartSharp />,
-        isActive: journalId === "" ? false : true,
+        isActive: slug === "" ? false : true,
       },
       {
         id: 4,
         text: "publications",
-        path: `journal/${journalId}/publish`,
+        path: `journal/${slug}/publish`,
         icon: <IoBarChartSharp />,
-        isActive: journalId === "" ? false : true,
+        isActive: slug === "" ? false : true,
       },
     ],
 

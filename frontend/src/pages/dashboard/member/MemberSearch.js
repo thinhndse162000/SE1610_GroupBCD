@@ -1,22 +1,32 @@
-import { FormRow, FormRowSelect, PaperContainer } from "../../../components";
+import {
+  FormDropdown,
+  FormRow,
+  FormRowSelect,
+  Loading,
+  PaperContainer,
+} from "../../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
 import { search } from "../../../context/service/paperService";
 import { handleChange } from "../../../context/service/utilService";
-import { Journal } from "../../../components"
+import { Journal, PageBtnContainer } from "../../../components";
+import { useEffect } from "react";
 
 const MemberSearch = () => {
   const {
     isLoading,
     member: {
-      searchKeyword,
-      searchResult,
-      searchJournalType,
-      journalSearchOptions,
+      search: { keyword, result, type, fields, options, page, numOfPage },
     },
+    base: { fields: fieldOptions },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
+
+  const selectFieldOptions = fieldOptions.map((field) => ({
+    label: field.fieldName,
+    value: field.fieldId,
+  }));
 
   const handleInputChange = (e) => {
     if (isLoading) return;
@@ -24,14 +34,25 @@ const MemberSearch = () => {
       handleChange({
         name: e.target.name,
         value: e.target.value,
-        type: "member",
+        type: "member_search",
       })
     );
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    dispatch(search({ keyword: searchKeyword, type: searchJournalType }));
+    dispatch(search({ keyword, type, fields }));
+  };
+
+  useEffect(() => {
+    dispatch(search({ keyword, type, fields, page }));
+    // eslint-disable-next-line
+  }, [dispatch, page]);
+
+  const handlePageChange = (page) => {
+    dispatch(
+      handleChange({ name: "page", value: page, type: "member_search" })
+    );
   };
 
   return (
@@ -42,16 +63,40 @@ const MemberSearch = () => {
             <FormRow
               labelText="Keyword"
               type="text"
-              name="searchKeyword"
-              value={searchKeyword}
+              name="keyword"
+              value={keyword}
               handleChange={handleInputChange}
             />
             <FormRowSelect
               labelText="Type"
-              name="searchJournalType"
-              value={searchJournalType}
+              name="type"
+              value={type}
               handleChange={handleInputChange}
-              list={[...journalSearchOptions]}
+              list={[...options]}
+            />
+
+            <FormDropdown
+              labelText="Field"
+              value={fields.map((field) => ({
+                label: field.fieldName,
+                value: field.fieldId,
+              }))}
+              isMulti={true}
+              options={selectFieldOptions}
+              handleChange={(e) => {
+                const tmp = e.map((x) => ({
+                  fieldId: x.value,
+                  fieldName: x.label,
+                }));
+                dispatch(
+                  handleChange({
+                    name: "fields",
+                    value: tmp,
+                    type: "member_search",
+                  })
+                );
+              }}
+              type="select"
             />
             <button className="btn" disabled={isLoading} onClick={handleSearch}>
               Search
@@ -59,18 +104,33 @@ const MemberSearch = () => {
           </div>
         </form>
       </SearchWrapper>
-      {/* TODO: refactor not to use container */}
-      {searchJournalType === "Journal" ? (
-        <ContainerWrapper>
-          <div className="container">
-            {searchResult.map((journal, index) => {
-              return <Journal key={index} journal={journal} />;
-            })}
-          </div>
-        </ContainerWrapper>
-      ) : (
-        <PaperContainer />
-      )}
+      <PageBtnContainer
+        page={page}
+        numOfPage={numOfPage}
+        changePage={handlePageChange}
+      />
+      {isLoading ? (
+        <Loading center />
+      ) : result.length > 0 ? (
+        <>
+          {type === "Journal" ? (
+            <ContainerWrapper>
+              <div className="container">
+                {result.map((journal, index) => {
+                  return <Journal key={index} journal={journal} />;
+                })}
+              </div>
+            </ContainerWrapper>
+          ) : (
+            <PaperContainer />
+          )}
+          <PageBtnContainer
+            page={page}
+            numOfPage={numOfPage}
+            changePage={handlePageChange}
+          />
+        </>
+      ) : <p>No result found</p>}
     </div>
   );
 };

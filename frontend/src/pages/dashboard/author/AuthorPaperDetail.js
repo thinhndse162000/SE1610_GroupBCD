@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Loading, PaperDetails, ReviewReport } from "../../../components";
+import { Loading, ReviewReport, Paper } from "../../../components";
 import { getPaperDetail } from "../../../context/service/paperService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 
-const PaperDetail = () => {
+const AuthorPaperDetail = () => {
   const { paperId } = useParams();
   const {
     base: { isLoading },
@@ -26,7 +26,7 @@ const PaperDetail = () => {
         <ContainerWrapper>
           <div className="container">
             <h3>Paper</h3>
-            <PaperDetails paper={paperDetail.paper} />
+            <Paper type="full" paper={paperDetail.paper} />
           </div>
         </ContainerWrapper>
         <ContainerWrapper>
@@ -47,4 +47,4 @@ const PaperDetail = () => {
   );
 };
 
-export default PaperDetail;
+export default AuthorPaperDetail;

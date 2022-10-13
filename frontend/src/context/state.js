@@ -13,7 +13,17 @@ const author = {
     paperPdfFile: { fileName: "", file: "" },
     paperFields: [],
   },
-  paperStatusOptions: ["pending", "accepted", "rejected"],
+  search: {
+    keyword: "",
+    startDate: "",
+    endDate: "",
+    status: "ALL",
+    page: 1,
+    numOfPage: 10,
+    fields: [],
+    result: [],
+  },
+  paperStatusOptions: ["PENDING", "REVIEWING", "ACCEPTED", "REJECTED", "PUBLISH"],
 };
 
 const reviewer = {
@@ -30,14 +40,22 @@ const reviewer = {
 }
 
 const member = {
-  searchKeyword: "",
-  searchJournalType: "Journal",
-  journalSearchOptions: ["Journal", "Paper"],
-  searchResult: [],
+  search: {
+    keyword: "",
+    type: "Journal",
+    options: ["Journal", "Paper"],
+    fields: [],
+    result: [],
+    page: 1,
+    numOfPage: 1,
+  },
   journalDetailId: '',
+  journalSlug: '',
   journal: {},
   issuePublishes: {},
   publish: null,
+  authorProfile: null,
+  authorPublish: [],
 };
 
 const manager = {
