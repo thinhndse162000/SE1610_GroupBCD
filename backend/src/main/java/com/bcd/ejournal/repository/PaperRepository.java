@@ -3,8 +3,7 @@ package com.bcd.ejournal.repository;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.entity.Paper;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -16,10 +15,10 @@ public interface PaperRepository extends CrudRepository<Paper, Integer> {
     Iterable<Paper> searchByTitle(String title);
 
     @Query("SELECT p FROM Paper p JOIN p.journal j JOIN p.author a "
-            + "WHERE (:#{#req.title} IS NULL OR p.title LIKE %:#{#req.title}%)"
+            + "WHERE (:#{#req.title} IS NULL OR lower(p.title) LIKE lower(CONCAT('%', :#{#req.title}, '%')))"
             + "AND (:#{#req.journalId} IS NULL OR j.journalId = :#{#req.journalId})"
             + "AND (:#{#req.authorId} IS NULL OR a.authorId = :#{#req.authorId})"
             + "AND (:#{#req.startDate} IS NULL OR p.submitTime > :#{#req.startDate})"
             + "AND (:#{#req.status} IS NULL OR p.status = :#{#req.status})")
-    List<Paper> searchAndFilter(PaperSearchRequest req, Pageable page);
+    Page<Paper> searchAndFilter(PaperSearchRequest req, Pageable page);
 }
