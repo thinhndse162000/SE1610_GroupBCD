@@ -32,7 +32,6 @@ public class Author implements Serializable {
     private String introduction;
     private String education;
     private String address;
-    private String profileImage;
 
     @OneToOne
     @MapsId

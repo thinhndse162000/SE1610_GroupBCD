@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -129,13 +130,14 @@ public class PaperServiceImpl implements PaperService {
 	@Override
 	public List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest) {
 		// TODO: verify manager
-		Pageable pageable = PageRequest.of(1, 2); 
+		int pageNum= paperSearchRequest.getPage() != null ? paperSearchRequest.getPage() - 1 : 0;
+		Pageable page = PageRequest.of(pageNum, 10, Sort.by("submitTime").descending());
 		 /** Iterable<Paper> papers =
 		 * paperRepository.searchByTitle(paperSearchRequest.getTitle() , pageable );
 		 * return StreamSupport.stream(papers.spliterator(), false)
 		 * .map(this::fromPaper) .collect(Collectors.toList());
 		 */
-		List<Paper> paper = paperRepository.searchByRequest(paperSearchRequest, pageable);
+		List<Paper> paper = paperRepository.searchByRequest(paperSearchRequest, page);
 		return paper.stream().map(this::fromPaper).collect(Collectors.toList());
 	}
 

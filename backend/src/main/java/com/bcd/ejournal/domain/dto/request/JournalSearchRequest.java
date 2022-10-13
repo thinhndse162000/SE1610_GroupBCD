@@ -1,5 +1,4 @@
 package com.bcd.ejournal.domain.dto.request;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +6,10 @@ import lombok.Setter;
 @Setter
 public class JournalSearchRequest {
 	private String name;
-	private int journalId;
-	private int paperId;
-	private int issueId;
+	private String introduction;
+    private String organization;
+    private String issn;
+    private int journalId;
+    private Integer page;
 	
 }

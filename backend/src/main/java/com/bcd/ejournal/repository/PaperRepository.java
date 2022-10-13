@@ -24,9 +24,11 @@ public interface PaperRepository extends CrudRepository<Paper, Integer> {
     @Query("SELECT p FROM Paper p "
             + "JOIN p.journal ti "
             + "JOIN p.author au " 
-            + "WHERE p.paperId = :#{#req.paperId}  "
+            + "WHERE (:#{#req.title} is null OR p.title like %:#{#req.title}%) "
             + "AND (:#{#req.authorId} is null OR au.authorID = :#{#req.authorId})"
             + "AND (:#{#req.journalId} is null OR ti.journalID = :#{#req.journalId})"
+            + "AND (:#{#req.submitTime} is null OR p.submitTime > :#{#req.submitTime})"
+            + "AND (:#{#req.status} is null OR p.status = :#{#req.status})"
             )
     List<Paper> searchByRequest(@Param(value = "req") PaperSearchRequest req, Pageable pageable);
 }

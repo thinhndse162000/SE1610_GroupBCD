@@ -44,7 +44,6 @@ public class Account implements UserDetails, Serializable {
     private String lastName;
     private String organization;
     private Date dateOfBirth;
-    private String profileImage;
     @Enumerated(EnumType.STRING)
     private AccountRole role;
     @Enumerated(EnumType.STRING)
