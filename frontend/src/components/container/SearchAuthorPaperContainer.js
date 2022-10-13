@@ -7,7 +7,7 @@ import { handleChange } from "../../context/service/utilService";
 const SearchAuthorPaperContainer = () => {
   const {
     base: { isLoading, fields: fieldOptions },
-    author: { paperStatusOptions, search: { keyword, startDate, endDate, status, fields } }
+    author: { paperStatusOptions, search: { keyword, startDate, endDate, status, fields, page } }
   } = useSelector((state) => state);
 
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const SearchAuthorPaperContainer = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    dispatch(getAuthorPaper({ keyword, startDate, endDate, status, fields }));
+    dispatch(getAuthorPaper({ keyword, startDate, endDate, status: status === "ALL" ? null : status, fields, page }));
   }
 
   return (
@@ -49,7 +49,7 @@ const SearchAuthorPaperContainer = () => {
               name="status"
               value={status}
               handleChange={handleInputChange}
-              list={[...paperStatusOptions]}
+              list={[...paperStatusOptions, "ALL"]}
             />
 
           <FormDropdown

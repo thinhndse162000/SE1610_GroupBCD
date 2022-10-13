@@ -25,7 +25,7 @@ const Issue = ({ issue, link }) => {
             {issue.numberOfPaper} papers
           </p>
           <p>
-            From: {issue.startDate} - {issue.endDate}
+            From: {issue.startDate} - To: {issue.endDate}
           </p>
         </div>
       </header>

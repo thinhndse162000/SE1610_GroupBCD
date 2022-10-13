@@ -1,16 +1,15 @@
-import { useSelector } from "react-redux";
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi'
 import Wrapper from '../../assets/wrappers/PageBtnContainer'
 
-const PageBtnContainer = () => {
-  const { numOfPages, page, changePage } = useAppContext()
+const PageBtnContainer = ({ page, numOfPage, changePage }) => {
 
-  const pages = Array.from({ length: numOfPages }, (_, index) => {
+  const pages = Array.from({ length: numOfPage }, (_, index) => {
     return index + 1
   })
+  // TODO: remove cycle page
   const nextPage = () => {
     let newPage = page + 1
-    if (newPage > numOfPages) {
+    if (newPage > numOfPage) {
       newPage = 1
     }
     changePage(newPage)
@@ -18,10 +17,11 @@ const PageBtnContainer = () => {
   const prevPage = () => {
     let newPage = page - 1
     if (newPage < 1) {
-      newPage = numOfPages
+      newPage = numOfPage
     }
     changePage(newPage)
   }
+
   return (
     <Wrapper>
       <button className='prev-btn' onClick={prevPage}>

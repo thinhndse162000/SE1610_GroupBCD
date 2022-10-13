@@ -52,7 +52,7 @@ const MemberAuthorProfile = () => {
         <ContainerWrapper>
           <div className="container">
             {authorPublish.map((publish, index) => {
-              return <Publish key={index} publish={publish} link={`/publish/${publish.publishId}`}/>;
+              return <Publish key={index} publish={publish} link={`/publish/${publish.publishId}`} download={false}/>;
             })}
           </div>
         </ContainerWrapper>

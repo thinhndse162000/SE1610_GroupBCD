@@ -17,11 +17,13 @@ const author = {
     keyword: "",
     startDate: "",
     endDate: "",
-    status: "",
+    status: "ALL",
+    page: 1,
+    numOfPage: 10,
     fields: [],
     result: [],
   },
-  paperStatusOptions: ["pending", "reviewing", "accepted", "rejected", "publish"],
+  paperStatusOptions: ["PENDING", "REVIEWING", "ACCEPTED", "REJECTED", "PUBLISH"],
 };
 
 const reviewer = {
@@ -44,6 +46,8 @@ const member = {
     options: ["Journal", "Paper"],
     fields: [],
     result: [],
+    page: 1,
+    numOfPage: 1,
   },
   journalDetailId: '',
   journalSlug: '',

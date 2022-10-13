@@ -22,6 +22,8 @@ import Issue from "./Issue";
 import SentInvitationContainer from "./container/SentInvitationContainer";
 import ReviewerResultContainer from "./container/ReviewerResultContainer";
 import Publish from "./Publish";
+import PageBtnContainer from "./container/PageBtnContainer";
+
 export {
   Logo,
   FormRow,
@@ -47,4 +49,5 @@ export {
   Issue,
   Publish,
   SearchAuthorPaperContainer,
+  PageBtnContainer,
 };

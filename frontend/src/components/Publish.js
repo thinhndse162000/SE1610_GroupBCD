@@ -3,8 +3,15 @@ import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 import { downloadFile } from "../context/service/paperService";
 
-const Publish = ({ publish, type = "compact", link, action = [] }) => {
+const Publish = ({
+  publish,
+  type = "compact",
+  link,
+  download = true,
+  action = [],
+}) => {
   const { paper } = publish;
+  const body = action.length > 0 || download || type === "full";
   const dispatch = useDispatch();
   return (
     <Wrapper>
@@ -17,53 +24,63 @@ const Publish = ({ publish, type = "compact", link, action = [] }) => {
           ) : (
             <h5>{paper.title}</h5>
           )}
-          <Link to={`/author-profile/${paper.authors.slug}`}><p>Author: {paper.authors.fullName}</p></Link>
+          <Link to={`/author-profile/${paper.authors.slug}`}>
+            <p>Author: {paper.authors.fullName}</p>
+          </Link>
           <p>
             {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} -{" "}
             <span>Access Level: {publish.accessLevel}</span>
           </p>
         </div>
       </header>
-      <div className="content">
-        {type === "full" && (
-          <div className="content-center">
-            <h5>Abstract</h5>
-            <p>{paper.summary}</p>
-          </div>
-        )}
-        <footer>
-          <div className="actions">
-            {action.map((act, index) => {
-              return act.type === "link" ? (
-                <Link
-                  key={index}
-                  to={act.to}
-                  className={act.className}
-                  onClick={act.onClick}
-                >
-                  {act.label}
-                </Link>
-              ) : (
+      {body && (
+        <div className="content">
+
+          {type === "full" && (
+            <div className="content-center">
+              <h5>Abstract</h5>
+              <p>{paper.summary}</p>
+            </div>
+          )}
+
+          <footer>
+            <div className="actions">
+              {action.map((act, index) => {
+                return act.type === "link" ? (
+                  <Link
+                    key={index}
+                    to={act.to}
+                    className={act.className}
+                    onClick={act.onClick}
+                  >
+                    {act.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={index}
+                    type="button"
+                    className={act.className}
+                    onClick={act.onClick}
+                  >
+                    {act.label}
+                  </button>
+                );
+              })}
+
+              {download && (
                 <button
-                  key={index}
                   type="button"
-                  className={act.className}
-                  onClick={act.onClick}
+                  className="btn edit-btn"
+                  onClick={() => dispatch(downloadFile(paper.paperId))}
                 >
-                  {act.label}
+                  Download PDF
                 </button>
-              );
-            })}
-            <button
-              type="button"
-              className="btn edit-btn"
-              onClick={() => dispatch(downloadFile(paper.paperId))}
-            >
-              Download PDF
-            </button>
-          </div>
-        </footer>
-      </div>
+              )}
+            </div>
+
+          </footer>
+        </div>
+      )}
     </Wrapper>
   );
 };

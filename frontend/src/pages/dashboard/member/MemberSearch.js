@@ -2,6 +2,7 @@ import {
   FormDropdown,
   FormRow,
   FormRowSelect,
+  Loading,
   PaperContainer,
 } from "../../../components";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,13 +10,14 @@ import { default as ContainerWrapper } from "../../../assets/wrappers/Container"
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
 import { search } from "../../../context/service/paperService";
 import { handleChange } from "../../../context/service/utilService";
-import { Journal } from "../../../components";
+import { Journal, PageBtnContainer } from "../../../components";
+import { useEffect } from "react";
 
 const MemberSearch = () => {
   const {
     isLoading,
     member: {
-      search: { keyword, result, type, fields, options },
+      search: { keyword, result, type, fields, options, page, numOfPage },
     },
     base: { fields: fieldOptions },
   } = useSelector((state) => state);
@@ -40,6 +42,17 @@ const MemberSearch = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     dispatch(search({ keyword, type, fields }));
+  };
+
+  useEffect(() => {
+    dispatch(search({ keyword, type, fields, page }));
+    // eslint-disable-next-line
+  }, [dispatch, page]);
+
+  const handlePageChange = (page) => {
+    dispatch(
+      handleChange({ name: "page", value: page, type: "member_search" })
+    );
   };
 
   return (
@@ -91,19 +104,33 @@ const MemberSearch = () => {
           </div>
         </form>
       </SearchWrapper>
-
-      {/* TODO: refactor not to use container */}
-      {type === "Journal" ? (
-        <ContainerWrapper>
-          <div className="container">
-            {result.map((journal, index) => {
-              return <Journal key={index} journal={journal} />;
-            })}
-          </div>
-        </ContainerWrapper>
-      ) : (
-        <PaperContainer />
-      )}
+      <PageBtnContainer
+        page={page}
+        numOfPage={numOfPage}
+        changePage={handlePageChange}
+      />
+      {isLoading ? (
+        <Loading center />
+      ) : result.length > 0 ? (
+        <>
+          {type === "Journal" ? (
+            <ContainerWrapper>
+              <div className="container">
+                {result.map((journal, index) => {
+                  return <Journal key={index} journal={journal} />;
+                })}
+              </div>
+            </ContainerWrapper>
+          ) : (
+            <PaperContainer />
+          )}
+          <PageBtnContainer
+            page={page}
+            numOfPage={numOfPage}
+            changePage={handlePageChange}
+          />
+        </>
+      ) : <p>No result found</p>}
     </div>
   );
 };

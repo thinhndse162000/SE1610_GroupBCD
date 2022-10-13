@@ -20,16 +20,17 @@ export const setEditPaper = (id) => (dispatch) => {
 export const deletePaper = (id) => {};
 
 export const getAuthorPaper =
-  ({ keyword, startDate, endDate, status, fields }) =>
+  ({ keyword: title, startDate, endDate, status, fields, page }) =>
   async (dispatch) => {
     dispatch({ type: LOADING });
     try {
-      const { data } = await authFetch.get("/author/paper", {
-        keyword,
+      const { data } = await authFetch.post("/author/paper/search", {
+        title,
         startDate,
         endDate,
         status,
         fields,
+        page,
       });
       dispatch({ type: SUCCESS_NO_MESSAGE });
       dispatch({
@@ -200,13 +201,9 @@ export const search =
       // search
       let data = {};
       if (type === "Journal") {
-        data = await authFetch.get("/journal/search", {
-          params: { name: keyword },
-        });
+        data = await authFetch.post("/journal/search", { name: keyword });
       } else {
-        data = await authFetch.post("/paper/search", {
-          params: { title: keyword },
-        });
+        data = await authFetch.post("/paper/search", { title: keyword });
       }
       dispatch({
         type: SUCCESS_NO_MESSAGE,
