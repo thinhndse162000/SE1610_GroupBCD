@@ -17,6 +17,7 @@ public class IssueResponse {
     private String issue;
     private Date startDate;
     private Date endDate;
-    private int numberOfPages;
+    private int numberOfPage;
+    private int numberOfPaper;
     private JournalResponse journal;
 }

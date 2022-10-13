@@ -1,5 +1,7 @@
 package com.bcd.ejournal.service;
 
+import java.util.List;
+
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
@@ -10,15 +12,14 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.util.List;
 
-
 public interface PaperService {
     void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest);
 
-    void updatePaper(Integer paperId, PaperUpdateRequest request);
+    void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request);
 
     void deleteById(Integer paperId);
 
-    List<PaperResponse> searchByRequest(PaperSearchRequest paperSearchRequest);
+    List<PaperResponse> searchByRequest(PaperSearchRequest request);
 
     List<PaperResponse> getAllPaperFromAuthor(Integer authorId);
 

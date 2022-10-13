@@ -1,0 +1,29 @@
+package com.bcd.ejournal.api;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.bcd.ejournal.domain.dto.response.PublishResponse;
+import com.bcd.ejournal.service.PublishService;
+
+@RestController
+@RequestMapping("/publish")
+public class PublishApi {
+    private final PublishService publishService;
+
+    @Autowired
+    public PublishApi(PublishService publishService) {
+        this.publishService = publishService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PublishResponse> getPublish(@PathVariable("id") Integer publishId) {
+        PublishResponse response = publishService.getPublish(publishId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+}

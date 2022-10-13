@@ -1,20 +1,34 @@
 package com.bcd.ejournal.domain.entity;
 
-import com.bcd.ejournal.domain.enums.AccountRole;
-import com.bcd.ejournal.domain.enums.AccountStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.bcd.ejournal.domain.enums.AccountRole;
+import com.bcd.ejournal.domain.enums.AccountStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -36,6 +50,7 @@ public class Account implements UserDetails {
     private AccountRole role;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
+    private String slug;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -52,7 +67,7 @@ public class Account implements UserDetails {
     private Journal journal;
 
     public String getFullName() {
-        return lastName + " " + firstName;
+        return firstName + " " + lastName;
     }
 
     @Override

@@ -20,7 +20,6 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = {NullPointerException.class})
     public ResponseEntity<Object> handleNotFound(NullPointerException ex) {
-        // TODO: logger
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", ex.getMessage());
@@ -30,7 +29,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {DataIntegrityViolationException.class})
     public ResponseEntity<Object> handleConflict(DataIntegrityViolationException ex) {
-        // TODO: logger
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", ex.getMessage());

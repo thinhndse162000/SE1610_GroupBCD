@@ -8,11 +8,11 @@ import com.bcd.ejournal.domain.enums.InvitationStatus;
 import java.util.List;
 
 public interface InvitationService {
-    InvitationPaperResponse sendInvitation(Integer reviewerId, ReviewerInvitationRequest request);
+    InvitationPaperResponse sendInvitation(Integer accountId, Integer reviewerId, ReviewerInvitationRequest request);
 
     List<InvitationReviewerResponse> listInvitationFromReviewer(Integer reviewerId);
 
-    List<InvitationPaperResponse> listInvitationFromPaper(Integer paperId);
+    List<InvitationPaperResponse> listInvitationFromPaper(Integer accountId, Integer paperId);
 
     void updateStatus(Integer reviewerId, Integer invitationId, InvitationStatus status);
 }

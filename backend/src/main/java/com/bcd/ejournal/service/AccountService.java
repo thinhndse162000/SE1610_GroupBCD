@@ -6,6 +6,7 @@ import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
+import com.bcd.ejournal.domain.dto.response.AuthorResponse;
 
 public interface AccountService {
     AccountTokenResponse login(AccountLoginRequest req);
@@ -19,4 +20,6 @@ public interface AccountService {
     AccountProfileResponse getProfile(Integer id);
 
     void archiveAccount(Integer id);
+
+    AuthorResponse getAuthorFromSlug(String slug);
 }
