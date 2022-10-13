@@ -11,6 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
-import com.bcd.ejournal.domain.dto.response.AuthorResponse;
-import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
@@ -105,7 +106,7 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request) {
-        // trim whitespace 
+        // trim whitespace
         request.setTitle(request.getTitle().trim());
         request.setSummary(request.getSummary().trim());
 
@@ -148,10 +149,11 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public List<PaperResponse> searchByRequest(PaperSearchRequest request) {
-        // TODO: verify manager
-        Iterable<Paper> papers = paperRepository.searchByTitle(request.getTitle());
+        int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
+        Pageable page = PageRequest.of(pageNum, 10, Sort.by("submitTime").descending());
 
-        return StreamSupport.stream(papers.spliterator(), false)
+        List<Paper> papers = paperRepository.searchAndFilter(request, page);
+        return papers.stream()
                 .map(dtoMapper::toPaperResponse)
                 .collect(Collectors.toList());
     }
