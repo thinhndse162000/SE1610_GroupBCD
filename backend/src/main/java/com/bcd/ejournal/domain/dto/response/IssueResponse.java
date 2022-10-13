@@ -12,7 +12,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IssueResponse {
-    private Integer issueID;
+    private Integer issueId;
     private String volume;
     private String issue;
     private Date startDate;

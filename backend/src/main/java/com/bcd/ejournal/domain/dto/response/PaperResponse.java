@@ -19,8 +19,8 @@ public class PaperResponse {
     private Timestamp submitTime;
     private String linkPDF;
     private int numberOfPage;
+    private int grade;
     private PaperStatus status;
     private AuthorResponse authors;
     private JournalResponse journal;
-    // TODO: review report for detail
 }

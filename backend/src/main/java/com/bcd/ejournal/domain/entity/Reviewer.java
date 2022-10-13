@@ -24,14 +24,22 @@ import lombok.Setter;
 public class Reviewer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ReviewerID;
+    private Integer ReviewerId;
     private boolean invitable;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "ReviewerID")
+    @JoinColumn(name = "ReviewerId")
     private Account account;
     
 	 @OneToMany(mappedBy = "reviewer") private List<Invitation> invitations;
 
+<<<<<<< HEAD
+=======
+    @OneToMany(mappedBy = "reviewer")
+    private List<Invitation> invitations;
+
+    @OneToMany(mappedBy = "reviewer")
+    private List<ReviewReport> reviewReports;
+>>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
 }

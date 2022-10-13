@@ -27,7 +27,7 @@ import lombok.Setter;
 public class Journal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer journalID;
+    private Integer journalId;
     private String name;
     private String introduction;
     private String organization;
@@ -35,6 +35,9 @@ public class Journal implements Serializable {
     
     @Enumerated(EnumType.STRING)
     private JournalStatus status;
+
+    @OneToOne(mappedBy = "journal")
+    private Account manager;
 
     @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
     private List<Issue> issues;

@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JournalResponse {
-    private String journalID;
+    private String journalId;
     private String name;
     private String introduction;
     private String organization;

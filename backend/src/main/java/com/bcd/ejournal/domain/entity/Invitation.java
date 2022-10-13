@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -18,17 +17,16 @@ import java.sql.Date;
 public class Invitation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer invitationID;
-    @CreatedDate
+    private Integer invitationId;
     private Date inviteDate;
     @Enumerated(EnumType.STRING)
     private InvitationStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "ReviewerID", nullable = false)
+    @JoinColumn(name = "ReviewerId", nullable = false)
     private Reviewer reviewer;
 
     @ManyToOne
-    @JoinColumn(name = "PaperID", nullable = false)
+    @JoinColumn(name = "PaperId", nullable = false)
     private Paper paper;
 }

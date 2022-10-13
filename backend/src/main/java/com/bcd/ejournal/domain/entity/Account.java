@@ -36,7 +36,7 @@ import lombok.Setter;
 public class Account implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer accountID;
+    private Integer accountId;
     private String email;
     private String password;
     private String phone;
@@ -56,6 +56,12 @@ public class Account implements UserDetails, Serializable {
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Reviewer reviewer;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "Manager",
+            joinColumns = @JoinColumn(name = "accountId", referencedColumnName = "accountId"),
+            inverseJoinColumns = @JoinColumn(name = "journalId", referencedColumnName = "journalId"))
+    private Journal journal;
 
     public String getFullName() {
         return lastName + " " + firstName;

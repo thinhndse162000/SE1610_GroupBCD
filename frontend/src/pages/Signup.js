@@ -1,140 +1,182 @@
-import { useState, useEffect } from 'react'
-import { Logo, FormRow, Alert } from '../components'
-import Wrapper from '../assets/wrappers/RegisterPage'
-import { useAppContext } from '../context/appContext'
-import { useNavigate } from 'react-router-dom'
-const initialState = {
-  firstName: '',
-  lastName: '',
-  phone: '',
-  organization: '',
-  dateOfBirth: '',
-  profileImage: '',
-  email: '',
-  password: '',
-  passwordRetype: '',
-}
+import { useState, useEffect } from "react";
+import { Logo, FormRow, Alert } from "../components";
+import Wrapper from "../assets/wrappers/RegisterPage";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { signup } from "../context/service/authService";
+import { displayAlert } from "../context/service/utilService";
+import ValidateInfo from "../components/container/ValidateInfo";
 
+const initialState = {
+  firstName: "",
+  lastName: "",
+  phone: "",
+  organization: "",
+  dateOfBirth: "",
+  profileImage: "",
+  email: "",
+  password: "",
+  passwordRetype: "",
+};
 const Signup = () => {
-  const navigate = useNavigate()
-  const [values, setValues] = useState(initialState)
-  const { user, isLoading, showAlert, displayAlert, signup } =
-    useAppContext()
+  const navigate = useNavigate();
+  const [values, setValues] = useState(initialState);
+  const { user, isLoading, showAlert } = useSelector((state) => state.base);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value })
-  }
-  const handleFileInput = (e) => {
-    setValues({ ...values, [e.target.name]: URL.createObjectURL(e.target.files[0]) })
-  }
-
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+  const [errors, setErrors] = useState({});
   const onSubmit = (e) => {
-    e.preventDefault()
-    const { firstName, lastName, phone, organization, dateOfBirth, profileImage, email, password, passwordRetype } = values
-    if (!(email && password && firstName && lastName && phone && organization && dateOfBirth && passwordRetype)) {
-      displayAlert()
-      return
+    e.preventDefault();
+    const {
+      firstName,
+      lastName,
+      phone,
+      organization,
+      dateOfBirth,
+      profileImage,
+      email,
+      password,
+      passwordRetype,
+    } = values;
+    if (
+      !(
+        email &&
+        password &&
+        firstName &&
+        lastName &&
+        phone &&
+        organization &&
+        dateOfBirth &&
+        passwordRetype
+      )
+    ) {
+      dispatch(displayAlert());
+      return;
     }
-    const currentUser = { firstName, lastName, phone, organization, dateOfBirth, profileImage, email, password, passwordRetype }
-
-    signup({ currentUser })
-  }
+    const currentUser = {
+      firstName,
+      lastName,
+      phone,
+      organization,
+      dateOfBirth,
+      profileImage,
+      email,
+      password,
+      passwordRetype,
+    };
+    setErrors(ValidateInfo(values));
+    if (Object.getOwnPropertyNames(errors).length === 0 ) {
+      return
+    } else {
+      dispatch(signup({ currentUser }));
+    }
+    
+  };
 
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate('/author')
-      }, 1000)
+        navigate("/author");
+      }, 1000);
     }
-  }, [user, navigate])
+  }, [user, navigate]);
 
   return (
     <Wrapper className="full-page">
-      <form className="form" onSubmit={onSubmit}>
+      <form className="form form-signup" onSubmit={onSubmit}>
         <Logo />
         <h3>Signup</h3>
         {showAlert && <Alert />}
 
-        {/* email input */}
-        <FormRow
-          type="email"
-          name="email"
-          value={values.email}
-          handleChange={handleChange}
-        />
-
-        {/* password input */}
-        <FormRow
-          type="password"
-          name="password"
-          value={values.password}
-          handleChange={handleChange}
-        />
-
-        {/* retype password input */}
-        <FormRow
-          type="password"
-          name="passwordRetype"
-          labelText="Retype password"
-          value={values.retypePassword}
-          handleChange={handleChange}
-        />
-
-        {/* first name input */}
-        <FormRow
-          type="text"
-          name="firstName"
-          labelText="First name"
-          value={values.firstName}
-          handleChange={handleChange}
-        />
-
-        {/* last name input */}
-        <FormRow
-          type="text"
-          name="lastName"
-          labelText="Last name"
-          value={values.lastName}
-          handleChange={handleChange}
-        />
-
-        {/* date of birth input */}
-        <FormRow
-          type="date"
-          name="dateOfBirth"
-          labelText="Date of birth"
-          value={values.dateOfBirth}
-          handleChange={handleChange}
-        />
-
+        <div className="signup">
+          {/* email input */}
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="email"
+              value={values.email}
+              handleChange={handleChange}
+            />
+            {errors.email && <p>{errors.email}</p>}
+          </div>
+          {/* password input */}
+          <div className="input-signup">
+            <FormRow
+              type="password"
+              name="password"
+              value={values.password}
+              handleChange={handleChange}
+            />
+            {errors.password && <p>{errors.password}</p>}
+          </div>
+          {/* retype password input */}
+          <div className="input-signup">
+            <FormRow
+              type="password"
+              name="passwordRetype"
+              labelText="Retype password"
+              value={values.retypePassword}
+              handleChange={handleChange}
+            />
+            {errors.passwordRetype && <p>{errors.passwordRetype}</p>}
+          </div>
+          {/* first name input */}
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="firstName"
+              labelText="First name"
+              value={values.firstName}
+              handleChange={handleChange}
+            />
+            {errors.firstName && <p>{errors.firstName}</p>}
+          </div>
+          {/* last name input */}
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="lastName"
+              labelText="Last name"
+              value={values.lastName}
+              handleChange={handleChange}
+            />
+            {errors.lastName && <p>{errors.lastName}</p>}
+          </div>
+          {/* date of birth input */}
+          <div className="input-signup">
+            <FormRow
+              type="date"
+              name="dateOfBirth"
+              labelText="Date of birth"
+              value={values.dateOfBirth}
+              handleChange={handleChange}
+            />
+          </div>
           {/* organziation input */}
-        <FormRow
-          type="text"
-          name="organization"
-          value={values.organization}
-          handleChange={handleChange}
-        />
-        
-        <FormRow
-          type="text"
-          name="phone"
-          value={values.phone}
-          handleChange={handleChange}
-        />
-
-        {/* profile image input */}
-        <FormRow
-          type="file"
-          name="profileImage"
-          labelText="Profile image"
-          accept="image/*"
-          handleChange={handleFileInput}
-          require={false}
-        />
-        {values.profileImage && <img width='100%' src={values.profileImage} alt="Profile" />}
-
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="organization"
+              value={values.organization}
+              handleChange={handleChange}
+            />
+            {errors.organization && <p>{errors.organization}</p>}
+          </div>
+          <div className="input-signup">
+            <FormRow
+              type="text"
+              name="phone"
+              value={values.phone}
+              handleChange={handleChange}
+            />
+            {errors.phone && <p>{errors.phone}</p>}
+          </div>
+        </div>
         <button type="submit" className="btn btn-block" disabled={isLoading}>
-          Signup
+          Create Account
         </button>
         <p>
           Already a member?
@@ -149,5 +191,5 @@ const Signup = () => {
       </form>
     </Wrapper>
   );
-}
-export default Signup
+};
+export default Signup;

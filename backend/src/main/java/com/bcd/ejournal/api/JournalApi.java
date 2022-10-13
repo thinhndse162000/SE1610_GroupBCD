@@ -45,9 +45,9 @@ public class JournalApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{journalID}")
-    public ResponseEntity<JournalResponse> getJournal(@Valid @PathVariable Integer journalID) {
-        JournalResponse response = journalService.getJournal(journalID);
+    @GetMapping("/{journalId}")
+    public ResponseEntity<JournalResponse> getJournal(@Valid @PathVariable Integer journalId) {
+        JournalResponse response = journalService.getJournal(journalId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -58,37 +58,38 @@ public class JournalApi {
     }
 
     // TODO: admin authorization
-    @PutMapping("/{journalID}")
-    public ResponseEntity<JournalResponse> updateJournal(@PathVariable Integer journalID, @Valid @RequestBody JournalCreateRequest request) {
-        JournalResponse response = journalService.updateJournal(journalID, request);
+    @PutMapping("/{journalId}")
+    public ResponseEntity<JournalResponse> updateJournal(@PathVariable Integer journalId, @Valid @RequestBody JournalCreateRequest request) {
+        JournalResponse response = journalService.updateJournal(journalId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{journalID}/issue")
-    public ResponseEntity<List<IssueResponse>> getAllIssues(@PathVariable Integer journalID) {
-        List<IssueResponse> response = journalService.listAllIssues(journalID);
+    @GetMapping("/{journalId}/issue")
+    public ResponseEntity<List<IssueResponse>> getAllIssues(@PathVariable Integer journalId) {
+        List<IssueResponse> response = journalService.listAllIssues(journalId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // TODO: admin authorization
-    @DeleteMapping("/{journalID}")
-    public ResponseEntity<Void> archiveJournal(@PathVariable Integer journalID) {
-        journalService.archiveJournal(journalID);
+    @DeleteMapping("/{journalId}")
+    public ResponseEntity<Void> archiveJournal(@PathVariable Integer journalId) {
+        journalService.archiveJournal(journalId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/{journalID}/publish")
-    public ResponseEntity<List<PaperResponse>> getAllPaper(@PathVariable Integer journalID) {
+    @GetMapping("/{journalId}/publish")
+    public ResponseEntity<List<PaperResponse>> getAllPaper(@PathVariable Integer journalId) {
         // TODO: move to publishService
-        List<PaperResponse> papers = paperService.getAllPaperFromJournal(journalID);
+        List<PaperResponse> papers = paperService.getAllPaperFromJournal(journalId);
         return new ResponseEntity<>(papers, HttpStatus.OK);
     }
 
-    // TODO: remove journalID, change it to something else
+    // TODO: remove journalId, change it to something else
     // TODO: Manager role authorization
     @GetMapping("/paper")
-    public ResponseEntity<List<PaperResponse>> getAllPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload accountJWTPayload) {
-        // TODO: validate right manager
-        return null;
+    public ResponseEntity<List<PaperResponse>> getAllPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload) {
+        Integer accountId = payload.getAccountId();
+        List<PaperResponse> responses = journalService.getAllPaper(accountId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }

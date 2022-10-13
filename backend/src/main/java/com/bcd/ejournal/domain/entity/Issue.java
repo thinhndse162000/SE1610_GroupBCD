@@ -16,7 +16,7 @@ import java.sql.Date;
 public class Issue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer issueID;
+    private Integer issueId;
     private String volume;
     private String issue;
     private Date startDate;
@@ -24,6 +24,6 @@ public class Issue {
     private int numberOfPage;
 
     @ManyToOne
-    @JoinColumn(name = "journalID", nullable = false)
+    @JoinColumn(name = "journalId", nullable = false)
     private Journal journal;
 }

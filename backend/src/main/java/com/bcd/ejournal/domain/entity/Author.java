@@ -28,15 +28,19 @@ import lombok.Setter;
 public class Author implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer authorID;
+    private Integer authorId;
     private String introduction;
     private String education;
     private String address;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
+<<<<<<< HEAD
     @JoinColumn(name = "AuthorID")
     @JsonIgnore
+=======
+    @JoinColumn(name = "AuthorId")
+>>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
     private Account account;
 
     @OneToMany(mappedBy = "author")

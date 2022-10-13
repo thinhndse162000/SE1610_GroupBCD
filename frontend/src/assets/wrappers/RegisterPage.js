@@ -12,7 +12,19 @@ const Wrapper = styled.section`
     max-width: 400px;
     border-top: 5px solid var(--primary-500);
   }
-
+  .form-signup {
+    max-width: 800px;
+  }
+  .signup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    
+  }
+  .input-signup p{
+    text-align:left;
+    color:red;
+  }
   h3 {
     text-align: center;
   }
@@ -20,6 +32,7 @@ const Wrapper = styled.section`
     margin: 0;
     margin-top: 1rem;
     text-align: center;
+    color:black;
   }
   .btn {
     margin-top: 1rem;

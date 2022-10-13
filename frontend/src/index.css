@@ -79,7 +79,6 @@ body {
 
 p {
   margin-bottom: 1.5rem;
-  max-width: 40em;
 }
 
 h1,
@@ -207,7 +206,6 @@ ul {
 
 .form {
   width: 90vw;
-  max-width: var(--fixed-width);
   background: var(--white);
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);
@@ -292,8 +290,6 @@ ul {
 }
 
 .container {
-  width: var(--fluid-width);
-  max-width: var(--max-width);
   margin: 0 auto;
 }
 .full-page {
@@ -311,14 +307,4 @@ ul {
 }
 .coffee-info a {
   color: var(--primary-500);
-}
-
-@media screen and (min-width: 992px) {
-  .coffee-info {
-    text-align: left;
-  }
-  .coffee-info span {
-    display: inline-block;
-    margin-right: 0.5rem;
-  }
 }

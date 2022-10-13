@@ -31,6 +31,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+<<<<<<< HEAD
 public class Paper {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +51,28 @@ public class Paper {
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "JournalID", nullable = false)
 	private Journal journal;
+=======
+public class Paper implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PaperId")
+    private int paperId;
+    private String title;
+    @Column(name = "Abstract")
+    private String summary;
+    private Timestamp submitTime;
+    private String linkPDF;
+    private Integer numberOfPage;
+    private Integer grade;
+    @Enumerated(EnumType.STRING)
+    private PaperStatus status;
+    @ManyToOne
+    @JoinColumn(name = "AuthorId", nullable = false)
+    private Author author;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "JournalId", nullable = false)
+    private Journal journal;
+>>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
 
 	@OneToMany(mappedBy = "paper", fetch = FetchType.LAZY)
 	private List<Invitation> invitations;
@@ -59,4 +82,14 @@ public class Paper {
 		this.summary = model.getSummary();
 	}
 
+<<<<<<< HEAD
+=======
+    @OneToMany(mappedBy = "paper")
+    private List<ReviewReport> reviewReports;
+
+    public Paper(PaperSubmitRequest model) {
+        this.title = model.getTitle();
+        this.summary = model.getSummary();
+    }
+>>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
 }
