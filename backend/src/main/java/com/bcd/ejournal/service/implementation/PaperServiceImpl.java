@@ -1,11 +1,11 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,11 +99,30 @@ public class PaperServiceImpl implements PaperService {
         paper.setAuthor(author);
         author.getPapers().add(paper);
 
-        paper.setJournal(journal);
-        journal.getPapers().add(paper);
+		paper.setJournal(journal);
+		journal.getPapers().add(paper);
 
-        paperRepository.save(paper);
-    }
+		paperRepository.save(paper);
+	}
+
+	@Override
+	public void deleteById(Integer paperId) {
+		// TODO: verify accountId
+		// TODO: log existence
+		Optional<Paper> paperOpt = paperRepository.findById(paperId);
+		if (paperOpt.isPresent()) {
+			File file = new File(paperOpt.get().getLinkPDF());
+			// TODO: file service delete
+			boolean isDelete = file.delete();
+			paperRepository.deleteById(paperId);
+			if (isDelete) {
+				System.out.println("File delete successfully");
+			} else {
+				System.out.println("File doesn't exist");
+			}
+
+		}
+	}
 
     @Override
     public void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request) {
@@ -134,18 +153,6 @@ public class PaperServiceImpl implements PaperService {
         }
 
         paperRepository.save(paper);
-    }
-
-    @Override
-    public void deleteById(Integer paperId) {
-        // TODO: verify accountId
-        // TODO: log existence
-        Optional<Paper> paperOpt = paperRepository.findById(paperId);
-        if (paperOpt.isPresent()) {
-            Paper paper = paperOpt.get();
-            // TODO: file service delete
-        }
-        paperRepository.deleteById(paperId);
     }
 
     @Override

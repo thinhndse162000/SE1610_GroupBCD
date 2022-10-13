@@ -1,13 +1,14 @@
 package com.bcd.ejournal.repository;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSearchRequest;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
 
 @Mapper
 public interface RequestMapper {
@@ -21,6 +22,7 @@ public interface RequestMapper {
             "<if test='title != null and title != \"\" '> ",
             "AND Title = #{title} ",
             "</if>",
+            " OFFSET ((#{pageNumber} -1) * 10)   ROWS FETCH NEXT 10 ROWS ONLY;",         
             "</script>"})
     List<Paper> search(PaperSearchRequest paper);
 

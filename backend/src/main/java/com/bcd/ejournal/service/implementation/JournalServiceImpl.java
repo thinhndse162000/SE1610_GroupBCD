@@ -6,9 +6,14 @@ import java.util.stream.StreamSupport;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
+import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
@@ -69,7 +74,7 @@ public class JournalServiceImpl implements JournalService {
     @Override
     public JournalResponse getJournal(String slug) {
         Journal journal = journalRepository.findBySlug(slug)
-            .orElseThrow(() -> new NullPointerException("Journal not found. Slug: " + slug));
+                .orElseThrow(() -> new NullPointerException("Journal not found. Slug: " + slug));
         return modelMapper.map(journal, JournalResponse.class);
     }
 
@@ -84,8 +89,12 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<JournalResponse> search(String name) {
-        return StreamSupport.stream(journalRepository.findByNameContains(name).spliterator(), false)
+    public List<JournalResponse> search(JournalSearchRequest request) {
+        int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
+        Pageable page = PageRequest.of(pageNum, 10);
+        Page<Journal> journals = journalRepository.searchRequest(request, page);
+
+        return journals.stream()
                 .map((journal) -> modelMapper.map(journal, JournalResponse.class))
                 .collect(Collectors.toList());
     }

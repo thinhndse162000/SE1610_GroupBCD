@@ -1,5 +1,7 @@
 package com.bcd.ejournal.service;
 
+import java.util.List;
+
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
@@ -9,7 +11,6 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.List;
-
 
 public interface PaperService {
     void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest);

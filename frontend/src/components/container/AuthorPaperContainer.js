@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Wrapper from "../../assets/wrappers/Container";
 import Paper from "../Paper";
 import { setEditPaper, deletePaper } from "../../context/service/paperService";
+import { PaperCompact } from "..";
 
 const AuthorPaperContainer = () => {
   const papers = useSelector((state) => state.author.submittedPapers);
@@ -34,7 +35,7 @@ const AuthorPaperContainer = () => {
               label: "Detail",
             });
           }
-          return <Paper key={index} paper={paper} action={action}></Paper>;
+          return <PaperCompact key={index} paper={paper} action={action}></PaperCompact>;
         })}
       </div>
     </Wrapper>

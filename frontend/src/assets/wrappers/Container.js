@@ -13,5 +13,11 @@ const Wrapper = styled.section`
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
+  .two-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
 `;
 export default Wrapper;

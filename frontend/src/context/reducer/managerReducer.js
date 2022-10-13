@@ -1,38 +1,20 @@
 import {
-  PAPER_MANAGER,
-  JOURNAL_PAPER,
-  SENT_INVITATION,
-  AVAILABLE_REVIEWER,
   REMOVE_AVAILABLE_REVIEWER,
   ADD_SENT_INVITATION,
+  HANDLE_MANAGER_CHANGE,
 } from "../actions";
 import { manager } from "../state";
 
 const managerReducer = (state = manager, action) => {
   switch (action.type) {
-    case JOURNAL_PAPER:
+    case HANDLE_MANAGER_CHANGE:
       return {
         ...state,
-        sentPapers: action.payload.papers,
-      };
-    case SENT_INVITATION:
-      return {
-        ...state,
-        sentInvitations: action.payload.sentInvitations,
-      };
-    case AVAILABLE_REVIEWER:
-      return {
-        ...state,
-        availableReviewers: action.payload.availableReviewers,
-      };
-    case PAPER_MANAGER:
-      return {
-        ...state,
-        paper: action.payload.paper,
+        [action.payload.name]: action.payload.value,
       };
     case REMOVE_AVAILABLE_REVIEWER:
       const availableReviewers = state.availableReviewers.filter(
-        (reviewer) => reviewer.reviewerId != action.payload.id
+        (reviewer) => reviewer.reviewerId !== action.payload.id
       );
       return {
         ...state,

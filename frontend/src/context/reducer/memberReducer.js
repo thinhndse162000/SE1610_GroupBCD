@@ -1,7 +1,4 @@
-import {
-  SEARCH_RESULT,
-  HANDLE_MEMBER_CHANGE,
-} from "../actions";
+import { HANDLE_MEMBER_CHANGE, MEMBER_JOURNAL_ID } from "../actions";
 import { member } from "../state";
 
 const memberReducer = (state = member, action) => {
@@ -11,11 +8,15 @@ const memberReducer = (state = member, action) => {
         ...state,
         [action.payload.name]: action.payload.value,
       };
-    case SEARCH_RESULT:
-      return {
-        ...state,
-        searchResult: action.payload.searchResult,
-      };
+    case MEMBER_JOURNAL_ID:
+      if (state.journalDetailId !== action.payload.journalId) {
+        return {
+          ...state,
+          journalDetailId: action.payload.journalId,
+        };
+      } else {
+        return state;
+      }
     default:
       return state;
   }

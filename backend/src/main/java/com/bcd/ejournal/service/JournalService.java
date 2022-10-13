@@ -1,11 +1,12 @@
 package com.bcd.ejournal.service;
 
+import java.util.List;
+
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
+import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
-
-import java.util.List;
 
 public interface JournalService {
     JournalResponse createJournal(JournalCreateRequest request);
@@ -16,7 +17,7 @@ public interface JournalService {
 
     JournalResponse getJournalManager(Integer accountId);
 
-    List<JournalResponse> search(String name);
+    List<JournalResponse> search(JournalSearchRequest request);
 
     List<IssueResponse> listAllIssues(Integer journalId);
 

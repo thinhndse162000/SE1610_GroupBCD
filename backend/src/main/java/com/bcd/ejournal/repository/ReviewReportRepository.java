@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewReportRepository extends CrudRepository<ReviewReport, Integer> {
-    @Query(value = "SELECT r FROM ReviewReport r INNER JOIN Paper p WHERE p.paperId = :paperId AND r.status = :#{#status.name()}")
+    @Query(value = "SELECT r FROM ReviewReport r INNER JOIN r.paper p WHERE p.paperId = :paperId AND r.status = :#{#status}")
     List<ReviewReport> findByPaperIdAndStatus(Integer paperId, ReviewReportStatus status);
 }

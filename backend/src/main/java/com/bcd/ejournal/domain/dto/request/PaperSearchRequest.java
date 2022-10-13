@@ -1,6 +1,6 @@
 package com.bcd.ejournal.domain.dto.request;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import com.bcd.ejournal.domain.enums.PaperStatus;
 
@@ -14,6 +14,7 @@ public class PaperSearchRequest {
     private Integer journalId;
     private Integer authorId;
     private PaperStatus status;
-    private Date startDate;
+    private Timestamp startDate;
+    private String summary;
     private Integer page;
 }

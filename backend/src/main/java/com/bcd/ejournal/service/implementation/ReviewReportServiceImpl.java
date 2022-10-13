@@ -59,7 +59,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
             throw new ForbiddenException("Access denied for review report. Id: " + reviewReportId);
         } 
         // check if in reviewing process
-        if (reviewReport.getPaper().getStatus() != PaperStatus.REVIEWING) {
+        if (reviewReport.getPaper().getStatus() != PaperStatus.REVIEWING && reviewReport.getPaper().getStatus() != PaperStatus.PENDING) {
             throw new MethodNotAllowedException("Paper not in reviewing process. Review report Id: " + reviewReportId);
         }
 
@@ -72,6 +72,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         // TODO: test this
         // evaluation process
         List<ReviewReport> reviewReports = reviewreportRepository.findByPaperIdAndStatus(paper.getPaperId(), ReviewReportStatus.DONE);
+
         if (reviewReports.size() == 3) {
             int accepted = 0;
             int grade = 0;
