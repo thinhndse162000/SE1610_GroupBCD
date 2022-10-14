@@ -3,6 +3,7 @@ package com.bcd.ejournal.domain.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,12 +35,10 @@ public class Reviewer {
     
 	 @OneToMany(mappedBy = "reviewer") private List<Invitation> invitations;
 
-<<<<<<< HEAD
-=======
     @OneToMany(mappedBy = "reviewer")
-    private List<Invitation> invitations;
+    private List<Invitation> invitations1;
 
     @OneToMany(mappedBy = "reviewer")
     private List<ReviewReport> reviewReports;
->>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
+
 }

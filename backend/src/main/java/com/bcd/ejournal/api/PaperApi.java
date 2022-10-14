@@ -1,8 +1,11 @@
 package com.bcd.ejournal.api;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,20 +29,7 @@ import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.service.PaperService;
-<<<<<<< HEAD
-=======
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.List;
->>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
 
 
 @RestController
@@ -60,14 +50,8 @@ public class PaperApi {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-<<<<<<< HEAD
-    // FIXME: change to PUT
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperID, @ModelAttribute PaperUpdateRequest request) {
-=======
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperId, @ModelAttribute PaperUpdateRequest request) {
->>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
         // TODO: verify right account
         paperService.updatePaper(paperId, request);
         return new ResponseEntity<>(HttpStatus.OK);

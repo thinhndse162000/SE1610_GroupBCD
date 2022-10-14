@@ -12,15 +12,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
-<<<<<<< HEAD
 import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
-=======
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
->>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
-import com.bcd.ejournal.domain.entity.*;
+import com.bcd.ejournal.domain.entity.Account;
+import com.bcd.ejournal.domain.entity.Author;
+import com.bcd.ejournal.domain.entity.Issue;
+import com.bcd.ejournal.domain.entity.Journal;
+import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.enums.AccountRole;
 import com.bcd.ejournal.domain.enums.JournalStatus;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
@@ -103,8 +104,6 @@ public class JournalServiceImpl implements JournalService {
         return issueResponse;
     }
 
-<<<<<<< HEAD
-=======
     @Override
     public List<PaperResponse> getAllPaper(Integer accountId) {
         Account acc = accountRepository.findById(accountId)
@@ -131,5 +130,5 @@ public class JournalServiceImpl implements JournalService {
         authorResponse.setFullName(author.getAccount().getFullName());
         return authorResponse;
     }
->>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
+
 }

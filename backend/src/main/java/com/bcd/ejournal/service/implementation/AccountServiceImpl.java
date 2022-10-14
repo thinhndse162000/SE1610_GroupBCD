@@ -1,5 +1,11 @@
 package com.bcd.ejournal.service.implementation;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.bcd.ejournal.configuration.jwt.JWTService;
 import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountLoginRequest;
@@ -9,17 +15,14 @@ import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
+import com.bcd.ejournal.domain.entity.EmailDetail;
 import com.bcd.ejournal.domain.entity.Reviewer;
 import com.bcd.ejournal.domain.enums.AccountRole;
 import com.bcd.ejournal.domain.enums.AccountStatus;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.service.AccountService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import com.bcd.ejournal.service.EmailService;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -27,13 +30,15 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final JWTService jwtService;
+    private final EmailService emailService;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, JWTService jwtService) {
+    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, JWTService jwtService, EmailService emailService) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.jwtService = jwtService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -78,7 +83,9 @@ public class AccountServiceImpl implements AccountService {
         acc.setAuthor(author);
         acc.setReviewer(reviewer);
         try {
+        	EmailDetail detail = new EmailDetail();
             acc = accountRepository.save(acc);
+            emailService.sendEmailSignup(detail, req);
         } catch (DataIntegrityViolationException ex) {
             throw new DataIntegrityViolationException("Email already exists", ex);
         }

@@ -25,8 +25,8 @@ public interface PaperRepository extends CrudRepository<Paper, Integer> {
             + "JOIN p.journal ti "
             + "JOIN p.author au " 
             + "WHERE (:#{#req.title} is null OR p.title like %:#{#req.title}%) "
-            + "AND (:#{#req.authorId} is null OR au.authorID = :#{#req.authorId})"
-            + "AND (:#{#req.journalId} is null OR ti.journalID = :#{#req.journalId})"
+            + "AND (:#{#req.authorId} is null OR au.authorId = :#{#req.authorId})"
+            + "AND (:#{#req.journalId} is null OR ti.journalId = :#{#req.journalId})"
             + "AND (:#{#req.submitTime} is null OR p.submitTime > :#{#req.submitTime})"
             + "AND (:#{#req.status} is null OR p.status = :#{#req.status})"
             )

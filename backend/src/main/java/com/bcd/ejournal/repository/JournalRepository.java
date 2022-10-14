@@ -21,7 +21,7 @@ public interface JournalRepository extends CrudRepository<Journal, Integer> {
             + "AND (:#{#req.introduction} is null OR j.introduction like %:#{#req.introduction}%)"
             + "AND (:#{#req.organization} is null OR j.organization like %:#{#req.organization}%)"
             + "AND (:#{#req.issn} is null OR j.issn like %:#{#req.issn}%)"
-            + "AND (:#{#req.journalId} is null OR j.journalID = :#{#req.journalId})"
+            + "AND (:#{#req.journalId} is null OR j.journalId = :#{#req.journalId})"
             )
     List<Journal> searchRequest(@Param(value ="req") JournalSearchRequest req , Pageable pageable);
 }

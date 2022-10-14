@@ -1,5 +1,6 @@
 package com.bcd.ejournal.domain.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -17,6 +18,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.util.Streamable;
+
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 
@@ -31,27 +35,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-<<<<<<< HEAD
-public class Paper {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "PaperId")
-	private int paperId;
-	private String title;
-	@Column(name = "Abstract")
-	private String summary;
-	private Timestamp submitTime;
-	private String linkPDF;
-	private int numberOfPage;
-	@Enumerated(EnumType.STRING)
-	private PaperStatus status;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "AuthorID", nullable = false)
-	private Author author;
-	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinColumn(name = "JournalID", nullable = false)
-	private Journal journal;
-=======
 public class Paper implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,7 +55,6 @@ public class Paper implements Serializable {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "JournalId", nullable = false)
     private Journal journal;
->>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
 
 	@OneToMany(mappedBy = "paper", fetch = FetchType.LAZY)
 	private List<Invitation> invitations;
@@ -82,14 +64,9 @@ public class Paper implements Serializable {
 		this.summary = model.getSummary();
 	}
 
-<<<<<<< HEAD
-=======
-    @OneToMany(mappedBy = "paper")
-    private List<ReviewReport> reviewReports;
+	public Streamable<Order> getReviewReports() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public Paper(PaperSubmitRequest model) {
-        this.title = model.getTitle();
-        this.summary = model.getSummary();
-    }
->>>>>>> fa7bc9628dcf3d0fa2ef64cf90a8ecb9602c3fb0
 }
