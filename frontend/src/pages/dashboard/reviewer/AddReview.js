@@ -39,7 +39,7 @@ const AddReview = () => {
   const handleInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    dispatch(handleChange({ name, value, type: "reviewer" }));
+    dispatch(handleChange({ name, value, type: "review" }));
   };
 
   const handleSubmit = (e) => {
@@ -51,7 +51,6 @@ const AddReview = () => {
       reviewConfidentiality,
       reviewVerdict,
     };
-    console.log(review);
     if (
       !reviewNote ||
       !reviewGrade ||

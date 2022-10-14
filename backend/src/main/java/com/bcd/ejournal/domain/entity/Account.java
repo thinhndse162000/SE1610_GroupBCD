@@ -1,6 +1,5 @@
 package com.bcd.ejournal.domain.entity;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +35,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Account implements UserDetails, Serializable {
+public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer accountId;
@@ -51,6 +50,7 @@ public class Account implements UserDetails, Serializable {
     private AccountRole role;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
+    private String slug;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -67,7 +67,7 @@ public class Account implements UserDetails, Serializable {
     private Journal journal;
 
     public String getFullName() {
-        return lastName + " " + firstName;
+        return firstName + " " + lastName;
     }
 
     @Override

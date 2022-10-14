@@ -15,7 +15,8 @@ CREATE TABLE Account(
 	Organization NVARCHAR(150) not null,
 	DateOfBirth DATE,
   role varchar(10) not null,
-  [status] varchar(10) not null
+  [status] varchar(10) not null,
+  slug nvarchar(300) not null,
 )
 
 go
@@ -85,7 +86,8 @@ CREATE TABLE Journal(
 	Introduction text not null,
 	Organization NVARCHAR(255) not null,
 	ISSN char(8) not null UNIQUE,
-	[status] varchar(10) not null
+	[status] varchar(10) not null,
+  slug nvarchar(255) not null UNIQUE,
 )
 go 
 CREATE TABLE Invoice(
@@ -126,14 +128,14 @@ CREATE TABLE PaperField(
 )
 go 
 CREATE TABLE Manager(
-	JournalId int not null UNIQUE,
-	AccountId int not null UNIQUE,
+	JournalId int not null,
+	AccountId int not null,
 	PRIMARY KEY (JournalId,AccountId)
 )
 go 
 CREATE TABLE JournalField(
-	JournalId int not null UNIQUE,
-	FieldId int not null UNIQUE,
+	JournalId int not null,
+	FieldId int not null,
 	PRIMARY KEY (JournalId,FieldId)
 )
 -- kết thúc bảng nối--

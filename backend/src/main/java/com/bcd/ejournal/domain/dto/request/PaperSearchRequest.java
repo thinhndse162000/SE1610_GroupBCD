@@ -10,12 +10,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaperSearchRequest {
-    private int paperId;
     private String title;
-    private String summary;
-    private int authorId;
-    private int journalId;
-    private Timestamp submitTime;
+    private Integer journalId;
+    private Integer authorId;
     private PaperStatus status;
+    private Timestamp startDate;
+    private String summary;
     private Integer page;
 }

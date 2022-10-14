@@ -10,6 +10,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -36,6 +39,11 @@ public class Journal implements Serializable {
     
     @Enumerated(EnumType.STRING)
     private JournalStatus status;
+    private String slug;
+
+    @ManyToMany
+    @JoinTable(name = "JournalField", joinColumns = @JoinColumn(name = "JournalId", referencedColumnName = "JournalId"), inverseJoinColumns = @JoinColumn(name = "FieldId", referencedColumnName = "FieldId"))
+    private List<Field> fields;
 
     @OneToOne(mappedBy = "journal")
     private Account manager;

@@ -4,14 +4,20 @@ import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 import { downloadFile } from "../context/service/paperService";
 
-const Paper = ({ paper, action = [] }) => {
+const Paper = ({ paper, type = "compact", link, action = [] }) => {
   let date = moment(paper.submitTime).format("DD/MM/YYYY");
   const dispatch = useDispatch();
   return (
     <Wrapper>
       <header>
         <div className="info">
-          <h5>{paper.title}</h5>
+          {link != null ? (
+            <Link to={link}>
+              <h5>{paper.title}</h5>
+            </Link>
+          ) : (
+            <h5>{paper.title}</h5>
+          )}
           <p>
             {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} -
             Submit date: {date}
@@ -25,10 +31,12 @@ const Paper = ({ paper, action = [] }) => {
         </div>
       </header>
       <div className="content">
-        <div className="content-center">
-          <h5>Abstract</h5>
-          <p>{paper.summary}</p>
-        </div>
+        {type === "full" && (
+          <div className="content-center">
+            <h5>Abstract</h5>
+            <p>{paper.summary}</p>
+          </div>
+        )}
         <footer>
           <div className="actions">
             {action.map((act, index) => {

@@ -1,4 +1,4 @@
-import JournalPaper from "./JournalPaper";
+import ManagerPaper from "./ManagerPaper";
 import SendInvitation from "./SendInvitation";
 
-export { JournalPaper, SendInvitation }
+export { ManagerPaper, SendInvitation }

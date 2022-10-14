@@ -15,4 +15,5 @@ public class JournalResponse {
     private String introduction;
     private String organization;
     private String issn;
+    private String slug;
 }

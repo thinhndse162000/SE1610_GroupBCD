@@ -13,6 +13,7 @@ import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
+import com.bcd.ejournal.domain.dto.response.AuthorResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.EmailDetail;
@@ -22,7 +23,17 @@ import com.bcd.ejournal.domain.enums.AccountStatus;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.service.AccountService;
+<<<<<<< HEAD
 import com.bcd.ejournal.service.EmailService;
+=======
+import com.bcd.ejournal.utils.DTOMapper;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+>>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -30,15 +41,27 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final JWTService jwtService;
+<<<<<<< HEAD
     private final EmailService emailService;
 
     @Autowired
     public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, JWTService jwtService, EmailService emailService) {
+=======
+    private final DTOMapper dtoMapper;
+
+    @Autowired
+    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
+            ModelMapper modelMapper, JWTService jwtService, DTOMapper dtoMapper) {
+>>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.jwtService = jwtService;
+<<<<<<< HEAD
         this.emailService = emailService;
+=======
+        this.dtoMapper = dtoMapper;
+>>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
     }
 
     @Override
@@ -63,13 +86,23 @@ public class AccountServiceImpl implements AccountService {
         if (!req.getPassword().equals(req.getPasswordRetype())) {
             throw new DataIntegrityViolationException("Password mismatch");
         }
-        // TODO: trim white space except password
+
+        // trim white space
+        req.setEmail(req.getEmail().trim());
+        req.setFirstName(req.getFirstName().trim());
+        req.setLastName(req.getLastName().trim());
+        req.setOrganization(req.getOrganization().trim());
+        req.setPhone(req.getPhone().trim());
+
         // TODO: validate date of birth
+
         Account acc = modelMapper.map(req, Account.class);
         acc.setAccountId(0);
         acc.setPassword(passwordEncoder.encode(req.getPassword()));
         acc.setRole(AccountRole.MEMBER);
         acc.setStatus(AccountStatus.OPEN);
+        String slug = req.getFirstName() + "-" + req.getLastName();
+        acc.setSlug(slug.toLowerCase());
 
         Author author = new Author();
         author.setAccount(acc);
@@ -115,9 +148,17 @@ public class AccountServiceImpl implements AccountService {
     public AccountProfileResponse updateProfile(Integer id, AccountUpdateProfileRequest req) {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
-        // TODO: trim white space
+
+        req.setFirstName(req.getFirstName().trim());
+        req.setLastName(req.getLastName().trim());
+        req.setOrganization(req.getOrganization().trim());
+        req.setPhone(req.getPhone().trim());
+
         // TODO: validate date of birth
         modelMapper.map(req, acc);
+        String slug = req.getFirstName() + "-" + req.getLastName();
+        acc.setSlug(slug.toLowerCase());
+
         acc = accountRepository.save(acc);
         return modelMapper.map(acc, AccountProfileResponse.class);
     }
@@ -126,7 +167,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountProfileResponse getProfile(Integer id) {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
-        return toAccountResponse(acc);
+        return dtoMapper.toAccountProfileResponse(acc);
     }
 
     @Override
@@ -137,7 +178,10 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(acc);
     }
 
-    private AccountProfileResponse toAccountResponse(Account acc) {
-        return modelMapper.map(acc, AccountProfileResponse.class);
+    @Override
+    public AuthorResponse getAuthorFromSlug(String slug) {
+        Account acc = accountRepository.findBySlug(slug)
+            .orElseThrow(() -> new NullPointerException("No author found. Slug: " + slug));
+        return dtoMapper.toAuthorResponse(acc.getAuthor());
     }
 }

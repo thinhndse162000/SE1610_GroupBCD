@@ -19,26 +19,62 @@ export const setEditPaper = (id) => (dispatch) => {
 
 export const deletePaper = (id) => {};
 
-export const getAuthorPaper = () => async (dispatch) => {
-  dispatch({ type: LOADING });
-  try {
-    const { data } = await authFetch.get("/author/paper");
-    dispatch({ type: SUCCESS_NO_MESSAGE });
-    dispatch({
-      type: AUTHOR_PAPER,
-      payload: {
-        papers: data,
-      },
-    });
-  } catch (error) {
-    if (error.response.status === 401) return;
-    dispatch({
-      type: ERROR,
-      payload: { msg: error.response.data.message },
-    });
-  }
-  dispatch(clearAlert());
-};
+export const getAuthorPaper =
+  ({ keyword: title, startDate, endDate, status, fields, page }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      const { data } = await authFetch.post("/author/paper/search", {
+        title,
+        startDate,
+        endDate,
+        status,
+        fields,
+        page,
+      });
+      dispatch({ type: SUCCESS_NO_MESSAGE });
+      dispatch({
+        type: AUTHOR_PAPER,
+        payload: {
+          papers: data,
+        },
+      });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };
+
+export const getAuthorPublish =
+  ({ id, slug }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      let url = "";
+      if (id != null) {
+        url = `/author/${id}/publish`;
+      } else if (slug != null) {
+        url = `/author/slug/${slug}/publish`;
+      }
+
+      const { data } = await authFetch.get(url);
+      dispatch({ type: SUCCESS_NO_MESSAGE });
+      dispatch(
+        handleChange({ name: "authorPublish", value: data, type: "member" })
+      );
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };
 
 export const getPaperDetail = (paperId) => async (dispatch) => {
   dispatch({ type: LOADING });
@@ -158,25 +194,27 @@ export const clearPaperValues = () => (dispatch) => {
 };
 
 export const search =
-  ({ keyword, type }) =>
+  ({ keyword, type, fields }) =>
   async (dispatch) => {
     dispatch({ type: LOADING });
     try {
       // search
       let data = {};
       if (type === "Journal") {
-        data = await authFetch.get("/journal/search", {
-          params: { name: keyword },
-        });
+        data = await authFetch.post("/journal/search", { name: keyword });
       } else {
-        data = await authFetch.post("/paper/search", {
-          params: { title: keyword },
-        });
+        data = await authFetch.post("/paper/search", { title: keyword });
       }
       dispatch({
         type: SUCCESS_NO_MESSAGE,
       });
-      dispatch(handleChange({ name: "searchResult", value: data.data, type: "member" }))
+      dispatch(
+        handleChange({
+          name: "result",
+          value: data.data,
+          type: "member_search",
+        })
+      );
     } catch (error) {
       dispatch({
         type: ERROR,
@@ -211,7 +249,7 @@ export const downloadFile = (paperId) => async (dispatch) => {
       responseType: "blob",
     });
     dispatch({ type: SUCCESS_NO_MESSAGE });
-    fileDownload(data, `${paperId}.pdf`)
+    fileDownload(data, `${paperId}.pdf`);
   } catch (error) {
     if (error.response.status === 401) return;
     dispatch({

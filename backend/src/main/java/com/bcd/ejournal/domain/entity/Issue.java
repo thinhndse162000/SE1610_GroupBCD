@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,4 +27,7 @@ public class Issue {
     @ManyToOne
     @JoinColumn(name = "journalId", nullable = false)
     private Journal journal;
+
+    @OneToMany(mappedBy = "issue")
+    private List<Publish> publishes;
 }

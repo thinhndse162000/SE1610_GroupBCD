@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface AccountRepository extends CrudRepository<Account, Integer> {
     Optional<Account> findByEmail(String email);
 
+    Optional<Account> findBySlug(String slug);
+
     @Query("SELECT a FROM Account a WHERE a.email LIKE :email AND a.status = 'OPEN'")
     Optional<Account> findByEmailAndStatusEqualsOpen(String email);
 }

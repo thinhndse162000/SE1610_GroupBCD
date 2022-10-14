@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -49,6 +51,11 @@ public class Paper implements Serializable {
     private Integer grade;
     @Enumerated(EnumType.STRING)
     private PaperStatus status;
+
+    @ManyToMany
+    @JoinTable(name = "PaperField", joinColumns = @JoinColumn(name = "PaperId", referencedColumnName = "PaperId"), inverseJoinColumns = @JoinColumn(name = "FieldId", referencedColumnName = "FieldId"))
+    private List<Field> fields;
+
     @ManyToOne
     @JoinColumn(name = "AuthorId", nullable = false)
     private Author author;
@@ -59,6 +66,7 @@ public class Paper implements Serializable {
 	@OneToMany(mappedBy = "paper", fetch = FetchType.LAZY)
 	private List<Invitation> invitations;
 
+<<<<<<< HEAD
 	public Paper(PaperSubmitRequest model) {
 		this.title = model.getTitle();
 		this.summary = model.getSummary();
@@ -69,4 +77,13 @@ public class Paper implements Serializable {
 		return null;
 	}
 
+=======
+    @OneToMany(mappedBy = "paper")
+    private List<ReviewReport> reviewReports;
+
+    public Paper(PaperSubmitRequest model) {
+        this.title = model.getTitle();
+        this.summary = model.getSummary();
+    }
+>>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
 }

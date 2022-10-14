@@ -8,11 +8,6 @@ import {
   CLEAR_ALERT,
   HANDLE_CHANGE,
   CHANGE_PAGE,
-  HANDLE_AUTHOR_CHANGE,
-  HANDLE_MEMBER_CHANGE,
-  HANDLE_REVIEW_CHANGE,
-  HANDLE_INVITATION_CHANGE,
-  HANDLE_MANAGER_CHANGE,
 } from "../actions";
 import authFetch from "../../utils/authFetch";
 
@@ -47,24 +42,8 @@ export const handleChange =
   ({ name, value, type }) =>
   (dispatch) => {
     let dispatchType = HANDLE_CHANGE;
-    switch (type) {
-      case "author":
-        dispatchType = HANDLE_AUTHOR_CHANGE;
-        break;
-      case "member":
-        dispatchType = HANDLE_MEMBER_CHANGE;
-        break;
-      case "reviewer":
-        dispatchType = HANDLE_REVIEW_CHANGE;
-        break;
-      case "invitation":
-        dispatchType = HANDLE_INVITATION_CHANGE;
-        break;
-      case "manager":
-        dispatchType = HANDLE_MANAGER_CHANGE;
-        break;
-      default:
-        dispatchType = HANDLE_CHANGE;
+    if (type != null) {
+      dispatchType = "HANDLE_" + type.toUpperCase() + "_CHANGE";
     }
     dispatch({ type: dispatchType, payload: { name, value } });
   };

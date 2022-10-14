@@ -9,7 +9,7 @@ public class JournalSearchRequest {
 	private String introduction;
     private String organization;
     private String issn;
-    private int journalId;
+    private Integer journalId;
     private Integer page;
 	
 }

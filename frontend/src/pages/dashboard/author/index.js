@@ -1,5 +1,5 @@
-import AddPaper from "./AddPaper";
+import AuthorAddPaper from "./AuthorAddPaper";
 import AuthorPaper from "./AuthorPaper";
-import PaperDetail from "./PaperDetail";
+import AuthorPaperDetail from "./AuthorPaperDetail";
 
-export { AddPaper, AuthorPaper, PaperDetail }
+export { AuthorAddPaper, AuthorPaper, AuthorPaperDetail }

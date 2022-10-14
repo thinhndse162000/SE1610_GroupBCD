@@ -31,7 +31,6 @@ import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.service.PaperService;
 
 
-
 @RestController
 @RequestMapping(path = "/paper")
 public class PaperApi {
@@ -45,15 +44,17 @@ public class PaperApi {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> submitPaper(@AuthenticationPrincipal AccountJWTPayload payload, @ModelAttribute PaperSubmitRequest request) {
+    public ResponseEntity<Void> submitPaper(@AuthenticationPrincipal AccountJWTPayload payload,
+            @ModelAttribute PaperSubmitRequest request) {
         paperService.submitPaper(payload.getAccountId(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updatePaper(@PathVariable(name = "id") Integer paperId, @ModelAttribute PaperUpdateRequest request) {
-        // TODO: verify right account
-        paperService.updatePaper(paperId, request);
+
+    public ResponseEntity<Void> updatePaper(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId, @ModelAttribute PaperUpdateRequest request) {
+        paperService.updatePaper(payload.getAccountId(), paperId, request);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -61,8 +62,9 @@ public class PaperApi {
     @PostMapping("/search")
     public ResponseEntity<List<PaperResponse>> search(@RequestBody PaperSearchRequest request) {
         List<PaperResponse> rs = paperService.searchByRequest(request);
-//        List<PapperResponse> rsl = rs.stream().map(p -> new PapperResponse(p.getPaperId())).collect(Collectors.toList());
-        return ResponseEntity.ok(rs) ;
+        // List<PapperResponse> rsl = rs.stream().map(p -> new
+        // PapperResponse(p.getPaperId())).collect(Collectors.toList());
+        return ResponseEntity.ok(rs);
     }
 
     @DeleteMapping("/{id}")
@@ -83,13 +85,16 @@ public class PaperApi {
     public ResponseEntity<Resource> getFile(@PathVariable(name = "id") Integer paperId) throws IOException {
         // TODO: verify reviewer can download
         Resource rs = paperService.downloadFile(paperId);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + rs.getFilename() + "\"").header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(rs);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + rs.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(rs);
     }
 
     @GetMapping("/{id}/invitation")
-    public ResponseEntity<List<InvitationPaperResponse>> getInvitation(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId) {
+    public ResponseEntity<List<InvitationPaperResponse>> getInvitation(
+            @AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId) {
         Integer accountId = payload.getAccountId();
-        List<InvitationPaperResponse> responses = invitationService.listInvitationFromPaper(paperId);
+        List<InvitationPaperResponse> responses = invitationService.listInvitationFromPaper(accountId, paperId);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }

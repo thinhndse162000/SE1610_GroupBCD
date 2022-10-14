@@ -15,7 +15,7 @@ export const getInvitation = () => async (dispatch) => {
   dispatch({ type: LOADING });
   try {
     const { data } = await authFetch.get("/reviewer/invitation");
-    
+
     dispatch({ type: SUCCESS_NO_MESSAGE });
     dispatch({
       type: INVITATION,
@@ -37,12 +37,9 @@ export const updateInvitationStatus =
   (invitationId, status) => async (dispatch) => {
     dispatch({ type: LOADING });
     try {
-      const { data } = await authFetch.put(
-        `/reviewer/invitation/${invitationId}/status`,
-        {
-          status,
-        }
-      );
+      await authFetch.put(`/reviewer/invitation/${invitationId}/status`, {
+        status,
+      });
       let msg =
         status === "ACCEPTED" ? "Accept invitation" : "Reject invitation";
       dispatch({ type: SUCCESS, payload: { msg } });
@@ -79,8 +76,8 @@ export const sendInvitation =
       dispatch({
         type: ADD_SENT_INVITATION,
         payload: { invitation: data },
-      })
-    
+      });
+
       dispatch({
         type: REMOVE_AVAILABLE_REVIEWER,
         payload: { id: reviewerId },

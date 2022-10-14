@@ -34,8 +34,11 @@ public class Author implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
     @JoinColumn(name = "AuthorId")
     private Account account;
 
