@@ -59,8 +59,6 @@ public class PaperApi {
     @PostMapping("/search")
     public ResponseEntity<List<PaperResponse>> search(@RequestBody PaperSearchRequest request) {
         List<PaperResponse> rs = paperService.searchByRequest(request);
-        // List<PapperResponse> rsl = rs.stream().map(p -> new
-        // PapperResponse(p.getPaperId())).collect(Collectors.toList());
         return ResponseEntity.ok(rs);
     }
 

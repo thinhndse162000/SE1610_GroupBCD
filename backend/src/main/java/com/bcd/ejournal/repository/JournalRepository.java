@@ -19,7 +19,6 @@ public interface JournalRepository extends CrudRepository<Journal, Integer> {
     Optional<Journal> findBySlug(String slug);
     
     @Query("SELECT j FROM Journal j "
-            + "JOIN j.issues su "
             + "WHERE (:#{#req.name} is null OR lower(j.name) like lower(CONCAT('%', :#{#req.name}, '%'))) "
             + "AND (:#{#req.introduction} is null OR j.introduction like %:#{#req.introduction}%)"
             + "AND (:#{#req.organization} is null OR j.organization like %:#{#req.organization}%)"

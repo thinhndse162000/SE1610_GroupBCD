@@ -13,4 +13,6 @@ public interface ReviewReportService {
     List<ReviewReport> searchByRequest(ReviewReportSearchRequest reportSearchRequest);
 
     List<ReviewReportDetailResponse> getAllReviewReport(Integer reviewerId);
+
+    ReviewReportDetailResponse getReviewReport(Integer reviewerId, Integer reviewReportId);
 }

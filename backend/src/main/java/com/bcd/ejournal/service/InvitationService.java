@@ -10,6 +10,8 @@ import java.util.List;
 public interface InvitationService {
     InvitationPaperResponse sendInvitation(Integer accountId, Integer reviewerId, ReviewerInvitationRequest request);
 
+    InvitationReviewerResponse getInvitation(Integer accountId, Integer invitationId);
+
     List<InvitationReviewerResponse> listInvitationFromReviewer(Integer reviewerId);
 
     List<InvitationPaperResponse> listInvitationFromPaper(Integer accountId, Integer paperId);
