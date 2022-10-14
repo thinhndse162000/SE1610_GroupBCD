@@ -11,5 +11,4 @@ public class JournalSearchRequest {
     private String issn;
     private Integer journalId;
     private Integer page;
-	
 }

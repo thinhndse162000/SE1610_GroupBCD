@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
+import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
@@ -15,6 +17,7 @@ import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewerResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
+import com.bcd.ejournal.domain.entity.Invitation;
 import com.bcd.ejournal.domain.entity.Issue;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.Publish;
@@ -85,6 +88,21 @@ public class DTOMapper {
         ReviewerResponse response = new ReviewerResponse();
         response.setReviewerId(reviewer.getReviewerId());
         response.setFullName(reviewer.getAccount().getFullName());
+        return response;
+    }
+
+    public InvitationPaperResponse toInvitationPaperResponse(Invitation invitation) {
+        InvitationPaperResponse response = modelMapper.map(invitation, InvitationPaperResponse.class);
+        Reviewer reviewer = invitation.getReviewer();
+        response.setReviewerId(reviewer.getReviewerId());
+        response.setReviewerName(reviewer.getAccount().getFullName());
+        return response;
+    }
+
+    public InvitationReviewerResponse toInvitationReviewerResponse(Invitation invitation) {
+        InvitationReviewerResponse response = modelMapper.map(invitation, InvitationReviewerResponse.class);
+        PaperResponse paperResponse = toPaperResponse(invitation.getPaper());
+        response.setPaper(paperResponse);
         return response;
     }
 }

@@ -1,8 +1,20 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.sql.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
-import com.bcd.ejournal.domain.dto.response.*;
-import com.bcd.ejournal.domain.entity.*;
+import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
+import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
+import com.bcd.ejournal.domain.entity.Invitation;
+import com.bcd.ejournal.domain.entity.Paper;
+import com.bcd.ejournal.domain.entity.ReviewReport;
+import com.bcd.ejournal.domain.entity.Reviewer;
 import com.bcd.ejournal.domain.enums.InvitationStatus;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
@@ -15,31 +27,20 @@ import com.bcd.ejournal.repository.ReviewerRepository;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.utils.DTOMapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class InvitationServiceImpl implements InvitationService {
     private final InvitationRepository invitationRepository;
     private final ReviewerRepository reviewerRepository;
     private final PaperRepository paperRepository;
     private final ReviewReportRepository reviewReportRepository;
-    private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
 
     @Autowired
-    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
+    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, DTOMapper dtoMapper) {
         this.invitationRepository = invitationRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
         this.reviewReportRepository = reviewReportRepository;
-        this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
     }
 
@@ -75,7 +76,14 @@ public class InvitationServiceImpl implements InvitationService {
         invitation.setPaper(paper);
 
         invitationRepository.save(invitation);
-        return toInvitationPaperResponse(invitation);
+        return dtoMapper.toInvitationPaperResponse(invitation);
+    }
+
+    @Override
+    public InvitationReviewerResponse getInvitation(Integer accountId, Integer invitationId) {
+        Invitation invitation = invitationRepository.findByIdAndReviewerId(invitationId, accountId)
+            .orElseThrow(() -> new NullPointerException("Invitation not found. Id: " + invitationId));
+        return dtoMapper.toInvitationReviewerResponse(invitation);
     }
 
     @Override
@@ -84,7 +92,7 @@ public class InvitationServiceImpl implements InvitationService {
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. Id: " + reviewerId));
         List<Invitation> invitations = reviewer.getInvitations();
         return invitations.stream()
-                .map(this::toInvitationReviewerResponse)
+                .map(dtoMapper::toInvitationReviewerResponse)
                 .collect(Collectors.toList());
     }
 
@@ -99,7 +107,7 @@ public class InvitationServiceImpl implements InvitationService {
 
         List<Invitation> invitations = paper.getInvitations();
         return invitations.stream()
-                .map(this::toInvitationPaperResponse)
+                .map(dtoMapper::toInvitationPaperResponse)
                 .collect(Collectors.toList());
     }
 
@@ -136,20 +144,5 @@ public class InvitationServiceImpl implements InvitationService {
             // change status of other invitation to cancel
             invitationRepository.updateInvitationStatusByPaperId(paper.getPaperId(), InvitationStatus.CANCEL);
         }
-    }
-
-    private InvitationPaperResponse toInvitationPaperResponse(Invitation invitation) {
-        InvitationPaperResponse response = modelMapper.map(invitation, InvitationPaperResponse.class);
-        Reviewer reviewer = invitation.getReviewer();
-        response.setReviewerId(reviewer.getReviewerId());
-        response.setReviewerName(reviewer.getAccount().getFullName());
-        return response;
-    }
-
-    private InvitationReviewerResponse toInvitationReviewerResponse(Invitation invitation) {
-        InvitationReviewerResponse response = modelMapper.map(invitation, InvitationReviewerResponse.class);
-        PaperResponse paperResponse = dtoMapper.toPaperResponse(invitation.getPaper());
-        response.setPaper(paperResponse);
-        return response;
     }
 }

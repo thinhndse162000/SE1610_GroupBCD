@@ -46,6 +46,12 @@ public class ReviewerApi {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+    @GetMapping("/invitation/{id}")
+    public ResponseEntity<InvitationReviewerResponse> getInvitation(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable Integer id) {
+        InvitationReviewerResponse response = invitationService.getInvitation(payload.getAccountId(), id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PutMapping("/invitation/{id}/status")
     public ResponseEntity<Void> acceptOrRejectInvitation(@AuthenticationPrincipal AccountJWTPayload payload,
                                                          @PathVariable(name = "id") Integer invitationId,
@@ -59,6 +65,13 @@ public class ReviewerApi {
     public ResponseEntity<List<ReviewReportDetailResponse>> getReviewDetail(@AuthenticationPrincipal AccountJWTPayload payload) {
         Integer reviewerId = payload.getAccountId();
         List<ReviewReportDetailResponse> responses = reviewReportService.getAllReviewReport(reviewerId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @GetMapping("/reviewreport/{id}")
+    public ResponseEntity<ReviewReportDetailResponse> getReviewDetail(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable Integer id) {
+        Integer reviewerId = payload.getAccountId();
+        ReviewReportDetailResponse responses = reviewReportService.getReviewReport(reviewerId, id);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 

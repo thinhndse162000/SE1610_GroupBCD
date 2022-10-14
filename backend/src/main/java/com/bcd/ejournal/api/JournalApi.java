@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
 import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
+import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
@@ -110,6 +111,13 @@ public class JournalApi {
     public ResponseEntity<List<PaperResponse>> getAllPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload) {
         Integer accountId = payload.getAccountId();
         List<PaperResponse> responses = journalService.getAllPaper(accountId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @PostMapping("/paper/search")
+    public ResponseEntity<List<PaperResponse>> searchPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody PaperSearchRequest request) {
+        Integer accountId = payload.getAccountId();
+        List<PaperResponse> responses = journalService.getAllPaper(accountId, request);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }
