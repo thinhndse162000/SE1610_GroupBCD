@@ -50,6 +50,12 @@ const Navbar = () => {
               >
                 Reviewer
               </Link>
+              <Link
+                to="/Profile"
+                
+              >
+                Profile
+              </Link>
             </>
           )}
         </div>

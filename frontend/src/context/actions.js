@@ -7,6 +7,7 @@ export const ERROR = "ERROR";
 export const SUCCESS = "SUCCESS";
 export const SUCCESS_NO_MESSAGE = "SUCCESS_NO_MESSAGE";
 export const HANDLE_CHANGE = "HANDLE_CHANGE";
+export const GET_ACCOUNT_PROFILE = "GET_ACCOUNT_PROFILE";
 
 // AUTH
 export const SETUP_USER_BEGIN = "SETUP_USER_BEGIN";
