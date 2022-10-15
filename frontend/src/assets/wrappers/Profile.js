@@ -6,6 +6,12 @@ display: :grid;
 display: grid;
 grid-template-columns: auto auto;
 gap: 30px;
+}
+input[type=text] {
+  width: 99%;
+
+}input[type=date] {
+  width: 99%;
 
 
 }
