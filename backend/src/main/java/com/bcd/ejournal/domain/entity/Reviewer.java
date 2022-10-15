@@ -44,8 +44,5 @@ public class Reviewer {
 
     @OneToMany(mappedBy = "reviewer")
     private List<ReviewReport> reviewReports;
-<<<<<<< HEAD
 
-=======
->>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
 }

@@ -66,7 +66,7 @@ public class Paper implements Serializable {
 	@OneToMany(mappedBy = "paper", fetch = FetchType.LAZY)
 	private List<Invitation> invitations;
 
-<<<<<<< HEAD
+
 	public Paper(PaperSubmitRequest model) {
 		this.title = model.getTitle();
 		this.summary = model.getSummary();
@@ -77,13 +77,4 @@ public class Paper implements Serializable {
 		return null;
 	}
 
-=======
-    @OneToMany(mappedBy = "paper")
-    private List<ReviewReport> reviewReports;
-
-    public Paper(PaperSubmitRequest model) {
-        this.title = model.getTitle();
-        this.summary = model.getSummary();
-    }
->>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
 }

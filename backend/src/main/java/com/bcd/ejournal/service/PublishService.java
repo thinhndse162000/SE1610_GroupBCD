@@ -2,6 +2,7 @@ package com.bcd.ejournal.service;
 
 import java.util.List;
 
+import com.bcd.ejournal.domain.dto.request.PublishSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 
 public interface PublishService {
@@ -14,4 +15,6 @@ public interface PublishService {
     List<PublishResponse> getPublishFromAuthor(String slug);
 
     PublishResponse getPublish(Integer publishId);
+    
+    List<PublishResponse> searchByFilter (PublishSearchFilterRequest req);
 }

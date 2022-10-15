@@ -5,8 +5,12 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.bcd.ejournal.domain.dto.request.PublishSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.domain.entity.Publish;
 import com.bcd.ejournal.repository.JournalRepository;
@@ -72,4 +76,14 @@ public class PublishServiceImpl implements PublishService {
             .map(dtoMapper::toPublishResponse)
             .collect(Collectors.toList());
     }
+
+	@Override
+	public List<PublishResponse> searchByFilter(PublishSearchFilterRequest req) {
+		int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
+		Pageable page = PageRequest.of(pageNum, 10);
+		Page<Publish> publishs = publishRepository.searchByRequest(req, page);
+		return publishs.stream().map((publish) -> modelMapper.map(publish, PublishResponse.class)).collect(Collectors.toList());
+	}
+    
+
 }

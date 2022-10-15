@@ -1,8 +1,26 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.sql.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.bcd.ejournal.domain.dto.request.InvitationSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
-import com.bcd.ejournal.domain.dto.response.*;
-import com.bcd.ejournal.domain.entity.*;
+import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
+import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
+import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.domain.entity.Invitation;
+import com.bcd.ejournal.domain.entity.Paper;
+import com.bcd.ejournal.domain.entity.ReviewReport;
+import com.bcd.ejournal.domain.entity.Reviewer;
 import com.bcd.ejournal.domain.enums.InvitationStatus;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
@@ -14,15 +32,6 @@ import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.utils.DTOMapper;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class InvitationServiceImpl implements InvitationService {
@@ -82,7 +91,7 @@ public class InvitationServiceImpl implements InvitationService {
     public List<InvitationReviewerResponse> listInvitationFromReviewer(Integer reviewerId) {
         Reviewer reviewer = reviewerRepository.findById(reviewerId)
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. Id: " + reviewerId));
-        List<Invitation> invitations = reviewer.getInvitations();
+        List<Invitation> invitations = reviewer.getInvitations1();
         return invitations.stream()
                 .map(this::toInvitationReviewerResponse)
                 .collect(Collectors.toList());
@@ -152,4 +161,13 @@ public class InvitationServiceImpl implements InvitationService {
         response.setPaper(paperResponse);
         return response;
     }
+
+	@Override
+	public List<InvitationReviewerResponse> searcFilterInvitation(InvitationSearchFilterRequest filterRequest) {
+		int pageNum = filterRequest.getPage() != null ? filterRequest.getPage() - 1 : 0;
+		Pageable page = PageRequest.of(pageNum, 10);
+		Page<Invitation> invitation = invitationRepository.searchFilte(filterRequest, page);
+		return invitation.stream().map(this::toInvitationReviewerResponse)
+				.collect(Collectors.toList());
+	}
 }

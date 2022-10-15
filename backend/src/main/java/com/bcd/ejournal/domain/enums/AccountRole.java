@@ -1,7 +1,6 @@
 package com.bcd.ejournal.domain.enums;
 
 public enum AccountRole {
-<<<<<<< HEAD
 
     MEMBER("MB"),
     ADMIN("AD"),
@@ -19,9 +18,4 @@ public enum AccountRole {
         return text;
     }
 
-=======
-    MEMBER,
-    ADMIN,
-    MANAGER
->>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
 }

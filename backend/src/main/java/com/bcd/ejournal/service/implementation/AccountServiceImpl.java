@@ -23,17 +23,9 @@ import com.bcd.ejournal.domain.enums.AccountStatus;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.service.AccountService;
-<<<<<<< HEAD
 import com.bcd.ejournal.service.EmailService;
-=======
 import com.bcd.ejournal.utils.DTOMapper;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
->>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -41,27 +33,19 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final JWTService jwtService;
-<<<<<<< HEAD
     private final EmailService emailService;
-
-    @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, JWTService jwtService, EmailService emailService) {
-=======
     private final DTOMapper dtoMapper;
 
     @Autowired
     public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
-            ModelMapper modelMapper, JWTService jwtService, DTOMapper dtoMapper) {
->>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
+            ModelMapper modelMapper, JWTService jwtService, DTOMapper dtoMapper, EmailService emailService) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.jwtService = jwtService;
-<<<<<<< HEAD
         this.emailService = emailService;
-=======
         this.dtoMapper = dtoMapper;
->>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
+
     }
 
     @Override

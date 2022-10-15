@@ -11,14 +11,7 @@ import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 
-<<<<<<< HEAD
 
-
-=======
-import java.io.IOException;
-import java.util.List;
-
->>>>>>> 3fadac01e5e1ab735657b1f75a080e621491e8fe
 public interface PaperService {
     void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest);
 
