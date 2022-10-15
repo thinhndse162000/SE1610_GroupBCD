@@ -1,51 +1,23 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import {  useParams } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/Profile'
 import { FormRow } from '../components'
+import { getAccountProfile } from '../context/service/accountService';
+import { member } from '../context/state';
 
 const ViewProfle = () => {
-  //Check role
-
-  // const { user, isLoading, role } = useSelector(
-  //   (state) => state.base
-  // );  
-  const account= useSelector(
-    (state) => state.base
+  const {member:{profile}} 
+  = useSelector(
+    (state) => state
   );  
+  console.log("profile",profile   )
 
-  //Check role / Navigate
-    
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (user) {
-  //     if (role === "MANAGER") navigate("/manager/profile");
-  //     else navigate("/author/profile");
-  //   }
-  // }, [user, navigate, role]);
-
-
-  //Handle submit
-  const [values, setValues] = useState(initialState);
-
-  const initialState = {
-    email: "",
-    password: "",
-    firstName:"",
-    lastName:"",
-    phoneNumber:"",
-    dateOFBirth:"",
-  };
-
-  // const handleChange = (e) => {
-  //   setValues({ ...values, [e.target.name]: e.target.value });
-  // };
-
-
-  
   const dispatch = useDispatch();
+  const { slug } = useParams();
+  useEffect(() => 
+  {
 
-  useEffect(() => {
-    // dispatch({ type: MEMBER_JOURNAL_ID, payload: { slug } })
     dispatch(getAccountProfile({ slug }));
   }, [dispatch, slug]);
 
@@ -63,7 +35,7 @@ const ViewProfle = () => {
         <FormRow
           type='text'
           name='email'
-          value={account.email}
+          value={profile.email}
         // handleChange={(e) => setName(e.target.value)}
         />
 
@@ -73,7 +45,7 @@ const ViewProfle = () => {
           type='text'
           labelText='First name'
           name='firstName'
-          value={account.firstName}
+          value={profile.firstName}
         // handleChange={(e) => setLastName(e.target.value)}
         />
 
@@ -83,7 +55,7 @@ const ViewProfle = () => {
           type='text'
           labelText='Phone number'
           name='PhoneNumber'
-          value={account.PhoneNumber}
+          value={profile.phone}
         // handleChange={(e) => setLastName(e.target.value)}
         />
 
@@ -93,7 +65,7 @@ const ViewProfle = () => {
           type='text'
           labelText='Date of birth'
           name='dateOfBirth'
-          value={account.dateOFBirth}
+          value={profile.dateOfBirth}
         // handleChange={(e) => setLastName(e.target.value)}
         />
    
@@ -103,7 +75,7 @@ const ViewProfle = () => {
           type='text'
           labelText='last name'
           name='lastName'
-          value={account.lastName}
+          value={profile.lastName}
         // handleChange={(e) => setLastName(e.target.value)}
         />
         {/* 6 */}
@@ -111,7 +83,7 @@ const ViewProfle = () => {
         <FormRow
           type='text'
           name='Organization'
-          value={account.Organization}
+          value={profile.organization}
         // handleChange={(e) => setLastName(e.target.value)}
         />
 

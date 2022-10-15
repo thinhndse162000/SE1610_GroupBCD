@@ -25,7 +25,7 @@ import {
   MemberIssueDetail,
   MemberPublishDetail,
   MemberAuthorProfile,
-  Profile,
+  
 } from "./pages/dashboard";
 import ViewProfle from "./pages/ViewProfle";
 
