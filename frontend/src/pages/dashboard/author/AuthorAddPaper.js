@@ -19,6 +19,7 @@ import {
 } from "../../../context/service/utilService";
 import { useNavigate } from "react-router-dom";
 import authFetch from "../../../utils/authFetch";
+import validateSubmitPaper from "../../../context/validator/validateSubmitPaper";
 
 const AuthorAddPaper = () => {
   const { base, author } = useSelector((state) => state);
@@ -35,7 +36,7 @@ const AuthorAddPaper = () => {
   const { isLoading, showAlert, fields } = base;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [errors, setErrors] = useState({ notEmpty: true });
   const selectFieldOptions = fields.map((field) => ({
     label: field.fieldName,
     value: field.fieldId,
@@ -130,7 +131,7 @@ const AuthorAddPaper = () => {
         label: journal.name,
         value: journal.journalId,
       }));
-    } catch (error) {}
+    } catch (error) { }
     callback(requestResults);
   };
 
@@ -147,7 +148,7 @@ const AuthorAddPaper = () => {
             value={paperTitle}
             labelText="title"
             handleChange={handleInput}
-          />
+          />{errors.paperTitle && <p>{errors.paperTitle}</p>}
           {/* Paper Summary */}
           <FormTextArea
             type="text"
@@ -156,7 +157,7 @@ const AuthorAddPaper = () => {
             labelText="abstract"
             handleChange={handleInput}
           />
-
+            {errors.values &&<p>{errors.paperSummary}</p>}
           <FormDropdown
             labelText="Field"
             isDisabled={editPaperId}
@@ -182,7 +183,6 @@ const AuthorAddPaper = () => {
             }}
             type="select"
           />
-
           <div className="btn-container">
             {/* Paper Journal Name */}
             <FormDropdown
@@ -200,6 +200,8 @@ const AuthorAddPaper = () => {
               }}
               type="async"
             />
+            {errors.values &&<p>{errors.paperJournal}</p>}
+
             {/*Pdf file*/}
             <FormRow
               type="file"
@@ -207,6 +209,7 @@ const AuthorAddPaper = () => {
               name="paperPdfFile"
               handleChange={handleFileInput}
             />
+            {errors.values &&<p>{errors.paperPdfFile}</p>}
           </div>
           {/* btn container */}
           <div className="btn-container">
