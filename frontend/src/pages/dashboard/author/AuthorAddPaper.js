@@ -6,7 +6,6 @@ import {
 } from "../../../components";
 import { useSelector, useDispatch } from "react-redux";
 import Wrapper from "../../../assets/wrappers/DashboardFormPage";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   createPaper,
@@ -120,6 +119,7 @@ const AuthorAddPaper = () => {
 
   const loadJournalOptions = async (inputValue, callback) => {
     // {label: journalName, value: journalId}
+    // FIXME: search without paging 
     let requestResults = "";
     try {
       const { data } = await authFetch.post("/journal/search", {

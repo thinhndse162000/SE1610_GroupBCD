@@ -48,7 +48,7 @@ const authorReducer = (state = author, action) => {
         (paper) => paper.paperId === action.payload.id
       );
 
-      const { paperId, title, summary, linkPDF, journal } = paper;
+      const { paperId, title, summary, linkPDF, journal, fields } = paper;
       // TODO: link PDF
       return {
         ...state,
@@ -64,6 +64,7 @@ const authorReducer = (state = author, action) => {
             journalId: journal.journalId,
             journalName: journal.name,
           },
+          paperFields: fields,
         },
       };
     case AUTHOR_PAPER:

@@ -18,7 +18,9 @@ import {
   AuthorPaperDetail,
   AllReviewReport,
   ReviewReportDetail,
+  ReviewerInvitationDetail,
   ManagerPaper,
+  ManagerPublishIssue,
   SendInvitation,
   MemberJournalDetail,
   MemberIssues,
@@ -43,13 +45,13 @@ function App() {
           <Route index element={<MemberSearch />} />
           <Route path="journal/:slug" element={<MemberJournalDetail />} />
           <Route path="journal/:slug/issue" element={<MemberIssues />} />
-          <Route
-            path="journal/:slug/publish"
-            element={<MemberPublishes />}
-          />
+          <Route path="journal/:slug/publish" element={<MemberPublishes />} />
           <Route path="issue/:issueId" element={<MemberIssueDetail />} />
           <Route path="publish/:publishId" element={<MemberPublishDetail />} />
-          <Route path="author-profile/:slug" element={<MemberAuthorProfile />} />
+          <Route
+            path="author-profile/:slug"
+            element={<MemberAuthorProfile />}
+          />
         </Route>
 
         <Route
@@ -80,6 +82,10 @@ function App() {
             element={<ReviewReportDetail />}
           />
           <Route path="invitation" element={<ReviewerInvitation />} />
+          <Route
+            path="invitation-detail/:invitationId"
+            element={<ReviewerInvitationDetail />}
+          />
         </Route>
 
         <Route
@@ -93,6 +99,7 @@ function App() {
           <Route index element={<ManagerPaper />} />
           <Route path="paper-detail/:paperId" element={<AuthorPaperDetail />} />
           <Route path="send-invitation/:paperId" element={<SendInvitation />} />
+          <Route path="publish" element={<ManagerPublishIssue />} />
           {/* <Route path="invite" element={<ReviewReportDetail />} /> */}
         </Route>
 
