@@ -74,6 +74,7 @@ CREATE TABLE Issue(
 	JournalId int not null,
 	Volume int not null,
 	Issue int not null,
+  Year int not null,
 	startDate DATE not null,
 	endDate DATE not null,
 	NumberOfPage int not null

@@ -13,10 +13,11 @@ import java.sql.Date;
 @AllArgsConstructor
 public class IssueResponse {
     private Integer issueId;
-    private String volume;
-    private String issue;
+    private Integer volume;
+    private Integer issue;
     private Date startDate;
     private Date endDate;
+    private Integer year;
     private int numberOfPage;
     private int numberOfPaper;
     private JournalResponse journal;
