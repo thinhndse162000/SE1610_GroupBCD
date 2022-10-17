@@ -64,7 +64,6 @@ const AuthorPaper = () => {
                     label: "Edit",
                     onClick: () => dispatch(setEditPaper(paper.paperId)),
                   });
-                  // TODO: deletePaper
                   action.push({
                     type: "button",
                     className: "btn delete-btn",

@@ -80,6 +80,9 @@ const Wrapper = styled.article`
     color: var(--red-dark);
     background: var(--red-light);
   }
+.actions > * {
+  margin: 5px;
+}
   &:hover .actions {
     visibility: visible;
   }

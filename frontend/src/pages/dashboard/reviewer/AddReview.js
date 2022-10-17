@@ -4,12 +4,13 @@ import {
   FormRow,
   FormTextArea,
   FormRowSelect,
-  Alert,
   Paper,
+  Alert,
 } from "../../../components";
 import {
   handleChange,
   displayAlert,
+  displayAlertMessage,
 } from "../../../context/service/utilService";
 import { editReview } from "../../../context/service/reviewReportService";
 import { useEffect } from "react";
@@ -30,16 +31,19 @@ const AddReview = () => {
     },
   } = reviewer;
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (!editReviewId) {
-      navigate("/reviewer");
+      setTimeout(() => {
+        navigate("/reviewer");
+      }, 1000);
     }
   }, [editReviewId, navigate]);
 
   const handleInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    dispatch(handleChange({ name, value, type: "review" }));
+    dispatch(handleChange({ name, value, type: "newreview" }));
   };
 
   const handleSubmit = (e) => {
@@ -61,22 +65,18 @@ const AddReview = () => {
       return;
     }
 
-    // TODO: only edit
     dispatch(editReview(review));
     return;
   };
 
-  // TODO: add Paper component
   if (editReviewId) {
     return (
       <>
-        <Paper paper={reviewPaper} />
+        <Paper paper={reviewPaper} type="full" />
         <Wrapper>
           <form className="form">
             <h3>Submit Review</h3>
-            {showAlert && <Alert />}
             <div className="form-center">
-              {/* Paper Summary */}
               <FormTextArea
                 type="text"
                 name="reviewNote"
@@ -119,9 +119,6 @@ const AddReview = () => {
                 >
                   Submit
                 </button>
-                {/* <button className="btn btn-block clear-btn" onClick={handleClear}>
-                clear
-              </button> */}
               </div>
             </div>
           </form>
@@ -129,9 +126,8 @@ const AddReview = () => {
       </>
     );
   } else {
-    return (<></>)
+    return (<>{ showAlert && <Alert /> }</>)
   }
-  
 };
 
 export default AddReview;

@@ -1,7 +1,11 @@
 import { useEffect } from "react";
-import { Loading, ReviewReportContainer } from "../../../components/";
-import { getReviewReport } from "../../../context/service/reviewReportService";
+import { Loading, PaperReviewDetail } from "../../../components/";
+import {
+  getReviewReport,
+  setEditReview,
+} from "../../../context/service/reviewReportService";
 import { useDispatch, useSelector } from "react-redux";
+import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 
 const AllReviewReport = () => {
   const {
@@ -15,14 +19,37 @@ const AllReviewReport = () => {
   }, [dispatch]);
 
   if (isLoading) {
-    return <Loading center />
+    return <Loading center />;
   }
 
   return (
     <>
-      {/* TODO: Refactor not to use container */}
       {reviewReports.length > 0 ? (
-        <ReviewReportContainer />
+        <ContainerWrapper>
+          <div className="container">
+            {reviewReports.map((reviewReport, index) => {
+              let action = [];
+              if (reviewReport.review.status === "PENDING") {
+                action.push({
+                  type: "link",
+                  to: "submit-review",
+                  className: "btn edit-btn",
+                  label: "Submit",
+                  onClick: () =>
+                    dispatch(setEditReview(reviewReport.review.reviewReportId)),
+                });
+              }
+              return (
+                <PaperReviewDetail
+                  key={index}
+                  reviewReport={reviewReport}
+                  action={action}
+                  link={`review-detail/${reviewReport.review.reviewReportId}`}
+                />
+              );
+            })}
+          </div>
+        </ContainerWrapper>
       ) : (
         <p>No review found</p>
       )}

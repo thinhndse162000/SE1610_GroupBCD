@@ -1,14 +1,13 @@
 import {
   LOADING,
   LOADING_ALERT,
-  REVIEW_REPORT,
   SET_EDIT_REVIEW,
   SUCCESS_NO_MESSAGE,
   CLEAR_REVIEW_VALUES,
   ERROR,
   SUCCESS,
 } from "../actions";
-import { clearAlert } from "./utilService";
+import { clearAlert, handleChange } from "./utilService";
 import authFetch from "../../utils/authFetch";
 
 export const getReviewReport = () => async (dispatch) => {
@@ -16,12 +15,21 @@ export const getReviewReport = () => async (dispatch) => {
   try {
     const { data } = await authFetch.get("/reviewer/reviewreport");
     dispatch({ type: SUCCESS_NO_MESSAGE });
-    dispatch({
-      type: REVIEW_REPORT,
-      payload: {
-        reviewReports: data,
-      },
-    });
+    dispatch(handleChange({ name: "reviewReports", value: data, type: "reviewer" }));
+  } catch (error) {
+    console.log(error);
+    console.log("error getting paper");
+  }
+  dispatch(clearAlert());
+};
+
+export const getReviewReportDetail = ({ reviewId }) => async (dispatch) => {
+  dispatch({ type: LOADING });
+  try {
+    const { data } = await authFetch.get(`/reviewer/reviewreport/${reviewId}`);
+    console.log(data)
+    dispatch({ type: SUCCESS_NO_MESSAGE });
+    dispatch(handleChange({ name: "reviewDetail", value: data, type: "reviewer" }));
   } catch (error) {
     console.log(error);
     console.log("error getting paper");
