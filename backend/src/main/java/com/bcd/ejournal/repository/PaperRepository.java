@@ -15,7 +15,7 @@ public interface PaperRepository extends CrudRepository<Paper, Integer> {
     Iterable<Paper> searchByTitle(String title);
 
     @Query("SELECT p FROM Paper p JOIN p.journal j JOIN p.author a "
-            + "WHERE (:#{#req.title} IS NULL OR lower(p.title) LIKE lower(CONCAT('%', :#{#req.title}, '%')))"
+            + "WHERE (:#{#req.title} IS NULL OR p.title LIKE %:#{#req.title}%)"
             + "AND (:#{#req.journalId} IS NULL OR j.journalId = :#{#req.journalId})"
             + "AND (:#{#req.authorId} IS NULL OR a.authorId = :#{#req.authorId})"
             + "AND (:#{#req.startDate} IS NULL OR p.submitTime > :#{#req.startDate})"

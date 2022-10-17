@@ -1,5 +1,6 @@
 package com.bcd.ejournal.configuration;
 
+import com.bcd.ejournal.domain.exception.ConflictException;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
 import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.domain.exception.UnauthorizedException;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(value = {NullPointerException.class})
+    @ExceptionHandler(value = { NullPointerException.class })
     public ResponseEntity<Object> handleNotFound(NullPointerException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    @ExceptionHandler(value = { DataIntegrityViolationException.class })
     public ResponseEntity<Object> handleConflict(DataIntegrityViolationException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
@@ -36,7 +37,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(value = {UnauthorizedException.class})
+    @ExceptionHandler(value = { ConflictException.class })
+    public ResponseEntity<Object> handleConflict(ConflictException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = { UnauthorizedException.class })
     public ResponseEntity<Object> handleUnauthorized(UnauthorizedException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
@@ -45,7 +55,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(value = {ForbiddenException.class})
+    @ExceptionHandler(value = { ForbiddenException.class })
     public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
@@ -54,7 +64,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(value = {MethodNotAllowedException.class})
+    @ExceptionHandler(value = { MethodNotAllowedException.class })
     public ResponseEntity<Object> handleMethodNotAllowedException(MethodNotAllowedException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
@@ -63,7 +73,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler({ MethodArgumentNotValidException.class })
     public ResponseEntity<Map<String, Object>> yourExceptionHandler(MethodArgumentNotValidException ex) {
 
         Map<String, Object> body = new LinkedHashMap<>();

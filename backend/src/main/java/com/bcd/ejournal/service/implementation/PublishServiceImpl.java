@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.domain.entity.Publish;
+import com.bcd.ejournal.domain.enums.PublishAccessLevel;
+import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PublishRepository;
 import com.bcd.ejournal.service.PublishService;
@@ -71,5 +73,20 @@ public class PublishServiceImpl implements PublishService {
         return publishes.stream()
             .map(dtoMapper::toPublishResponse)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public PublishResponse updateAccessLevel(Integer accountId, Integer publishId, PublishAccessLevel accessLevel) {
+        Publish publish = publishRepository.findById(publishId)
+            .orElseThrow(() -> new NullPointerException("Publish not found. Id" + publishId));
+
+        // Authorization
+        if (accountId != publish.getPaper().getJournal().getManager().getAccountId()) {
+            throw new MethodNotAllowedException("Account not allow to modify publish. AccountId: " + accountId);
+        }
+
+        publish.setAccessLevel(accessLevel);
+        publishRepository.save(publish);
+        return dtoMapper.toPublishResponse(publish);
     }
 }

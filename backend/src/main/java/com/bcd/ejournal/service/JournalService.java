@@ -24,6 +24,8 @@ public interface JournalService {
 
     List<IssueResponse> listAllIssues(String slug);
 
+    List<IssueResponse> listAllIssuesFromManager(Integer accountId);
+
     JournalResponse updateJournal(Integer journalId, JournalCreateRequest request);
 
     void archiveJournal(Integer journalId);
