@@ -1,20 +1,20 @@
 import {
-  INVITATION,
   REVIEW_REPORT,
   SET_EDIT_REVIEW,
   CLEAR_REVIEW_VALUES,
-  HANDLE_REVIEW_CHANGE,
+  HANDLE_REVIEWER_CHANGE,
+  HANDLE_NEWREVIEW_CHANGE,
   HANDLE_INVITATION_CHANGE,
 } from "../actions";
 import { reviewer } from "../state";
 
 const reviewerReducer = (state = reviewer, action) => {
   switch (action.type) {
-    case INVITATION:
+    case HANDLE_REVIEWER_CHANGE:
       return {
         ...state,
-        invitations: action.payload.invitations,
-      };
+        [action.payload.name]: action.payload.value,
+      }
     case CLEAR_REVIEW_VALUES:
       const reviewer = {
         editReviewId: "",
@@ -49,7 +49,7 @@ const reviewerReducer = (state = reviewer, action) => {
           reviewPaper: reviewReport.paper,
         },
       };
-    case HANDLE_REVIEW_CHANGE:
+    case HANDLE_NEWREVIEW_CHANGE:
       return {
         ...state,
         newReview: {
@@ -64,11 +64,21 @@ const reviewerReducer = (state = reviewer, action) => {
         }
         return invitation;
       });
-
-      return {
-        ...state,
-        invitations,
-      };
+      if (state.invitationDetail.invitationId === action.payload.id) {
+        return {
+          ...state,
+          invitations,
+          invitationDetail: {
+            ...state.invitationDetail,
+            status: action.payload.status,
+          }
+        };
+      } else {
+        return {
+          ...state,
+          invitations,
+        };
+      }
     default:
       return state;
   }

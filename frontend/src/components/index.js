@@ -23,6 +23,7 @@ import SentInvitationContainer from "./container/SentInvitationContainer";
 import ReviewerResultContainer from "./container/ReviewerResultContainer";
 import Publish from "./Publish";
 import PageBtnContainer from "./container/PageBtnContainer";
+import PaperReviewDetail from "./PaperReviewDetail"
 
 export {
   Logo,
@@ -38,6 +39,7 @@ export {
   FormDropdown,
   Journal,
   Paper,
+  PaperReviewDetail,
   PaperContainer,
   InvitationContainer,
   ReviewReport,

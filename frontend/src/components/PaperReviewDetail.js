@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import { downloadFile } from "../context/service/paperService";
 import { useDispatch } from "react-redux";
 
-const PaperReviewDetail = ({ reviewReport, action = [] }) => {
+const PaperReviewDetail = ({
+  reviewReport,
+  type = "compact",
+  link,
+  action = [],
+}) => {
   const { paper, review } = reviewReport;
   const dispatch = useDispatch();
 
@@ -12,25 +17,37 @@ const PaperReviewDetail = ({ reviewReport, action = [] }) => {
       <header>
         <div className="info">
           <h3>Paper</h3>
-          <h5>{paper.title}</h5>
+          {link != null ? (
+            <Link to={link}>
+              <h5>{paper.title}</h5>
+            </Link>
+          ) : (
+            <h5>{paper.title}</h5>
+          )}
           <p>Author: {paper.authors.fullName}</p>
         </div>
-        <footer>
-          <div className="actions">
-            <button
-              type="button"
-              className="btn edit-btn"
-              onClick={() => dispatch(downloadFile(paper.paperId))}
-            >
-              Download PDF
-            </button>
+
+        {type === "full" && (
+          <div>
+            <h5>Abstract</h5>
+            <p>{paper.summary}</p>
           </div>
-        </footer>
+        )}
+
+        <div className="actions">
+          <button
+            type="button"
+            className="btn edit-btn"
+            onClick={() => dispatch(downloadFile(paper.paperId))}
+          >
+            Download PDF
+          </button>
+        </div>
       </header>
       <div className="content">
         {review.status === "DONE" && (
           <div>
-            <h3>Review Detail</h3>
+            <h4>Review Detail</h4>
             <p>
               Grade: {review.grade} - Confidentiality: {review.confidentiality}{" "}
               - Verdict:{" "}
@@ -38,8 +55,12 @@ const PaperReviewDetail = ({ reviewReport, action = [] }) => {
                 {review.verdict}
               </span>
             </p>
-            <h5>Note</h5>
-            <p>{review.note}</p>
+            {type === "full" && (
+              <>
+                <h5>Note</h5>
+                <p>{review.note}</p>
+              </>
+            )}
           </div>
         )}
         <footer>

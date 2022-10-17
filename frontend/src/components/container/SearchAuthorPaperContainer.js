@@ -31,6 +31,7 @@ const SearchAuthorPaperContainer = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     dispatch(getAuthorPaper({ keyword, startDate, endDate, status: status === "ALL" ? null : status, fields, page }));
+    // TODO: set page number to 1
   }
 
   return (

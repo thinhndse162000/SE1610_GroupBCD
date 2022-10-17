@@ -25,6 +25,7 @@ const SendInvitation = () => {
     e.preventDefault();
     dispatch(searchAvailableReviewer({ paperId, keyword }));
   };
+
   if (Object.keys(paperDetail).length !== 0) {
     return (
       <>

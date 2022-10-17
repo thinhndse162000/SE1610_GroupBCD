@@ -6,7 +6,6 @@ import {
 } from "../../../components";
 import { useSelector, useDispatch } from "react-redux";
 import Wrapper from "../../../assets/wrappers/DashboardFormPage";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   createPaper,
@@ -19,6 +18,7 @@ import {
 } from "../../../context/service/utilService";
 import { useNavigate } from "react-router-dom";
 import authFetch from "../../../utils/authFetch";
+import validateSubmitPaper from "../../../context/validator/validateSubmitPaper";
 
 const AuthorAddPaper = () => {
   const { base, author } = useSelector((state) => state);
@@ -35,7 +35,7 @@ const AuthorAddPaper = () => {
   const { isLoading, showAlert, fields } = base;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [errors, setErrors] = useState({ notEmpty: true });
   const selectFieldOptions = fields.map((field) => ({
     label: field.fieldName,
     value: field.fieldId,
@@ -55,16 +55,16 @@ const AuthorAddPaper = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(paperTitle, paperSummary, paperJournal, paperPdfFile);
-    if (
-      !paperTitle ||
-      !paperSummary ||
-      !paperJournal.journalId ||
-      !paperPdfFile
-    ) {
-      dispatch(displayAlert());
-      return;
-    }
+    // console.log(paperTitle, paperSummary, paperJournal, paperPdfFile);
+    // if (
+    //   !paperTitle ||
+    //   !paperSummary ||
+    //   !paperJournal.journalId ||
+    //   !paperPdfFile
+    // ) {
+    //   dispatch(displayAlert());
+    //   return;
+    // }
     if (editPaperId) {
       const paper = {
         editPaperId,
@@ -86,12 +86,25 @@ const AuthorAddPaper = () => {
       paperPdfFile,
       paperFields,
     };
-    dispatch(createPaper(paper));
-    if (!paperTitle) {
-      setSelectValue("");
-      navigate("/author");
-    }
+    setErrors(validateSubmitPaper(paper))
+    // if (!paperTitle) {
+    //   setSelectValue("");
+    //   navigate("/author");
+    // }
   };
+  useEffect(() => {
+    const paper = {
+      paperTitle,
+      paperSummary,
+      paperJournal,
+      paperPdfFile,
+      paperFields,
+    };
+    if (Object.getOwnPropertyNames(errors).length === 0) {
+      dispatch(createPaper(paper))
+    }
+    // eslint-disable-next-line
+  }, [dispatch, errors])
 
   const handleClear = (e) => {
     e.preventDefault();
@@ -117,9 +130,9 @@ const AuthorAddPaper = () => {
       })
     );
   };
-
   const loadJournalOptions = async (inputValue, callback) => {
     // {label: journalName, value: journalId}
+    // FIXME: search without paging 
     let requestResults = "";
     try {
       const { data } = await authFetch.post("/journal/search", {
@@ -130,7 +143,7 @@ const AuthorAddPaper = () => {
         label: journal.name,
         value: journal.journalId,
       }));
-    } catch (error) {}
+    } catch (error) { }
     callback(requestResults);
   };
 
@@ -140,6 +153,7 @@ const AuthorAddPaper = () => {
         <h3>{editPaperId ? "edit paper" : "add paper"}</h3>
         {showAlert && <Alert />}
         <div className="form-center">
+          <div>
           {/* Paper Title */}
           <FormRow
             type="text"
@@ -147,8 +161,10 @@ const AuthorAddPaper = () => {
             value={paperTitle}
             labelText="title"
             handleChange={handleInput}
-          />
+          />{errors.paperTitle && <p>{errors.paperTitle}</p>}
           {/* Paper Summary */}
+          </div>
+          <div>
           <FormTextArea
             type="text"
             name="paperSummary"
@@ -156,7 +172,8 @@ const AuthorAddPaper = () => {
             labelText="abstract"
             handleChange={handleInput}
           />
-
+          {errors.paperSummary && <p>{errors.paperSummary}</p>}
+          </div>
           <FormDropdown
             labelText="Field"
             isDisabled={editPaperId}
@@ -182,9 +199,10 @@ const AuthorAddPaper = () => {
             }}
             type="select"
           />
-
+          {errors.paperFields && <p>{errors.paperFields}</p>}
           <div className="btn-container">
             {/* Paper Journal Name */}
+            <div>
             <FormDropdown
               labelText={
                 "Journal" +
@@ -200,13 +218,18 @@ const AuthorAddPaper = () => {
               }}
               type="async"
             />
+            {errors.paperJournal && <p>{errors.paperJournal}</p>}
+            </div>
             {/*Pdf file*/}
-            <FormRow
-              type="file"
-              labelText="PDF file"
-              name="paperPdfFile"
-              handleChange={handleFileInput}
-            />
+            <div>
+              <FormRow
+                type="file"
+                labelText="PDF file"
+                name="paperPdfFile"
+                handleChange={handleFileInput}
+              />
+              {errors.paperPdfFile && <p>{errors.paperPdfFile}</p>}
+            </div>
           </div>
           {/* btn container */}
           <div className="btn-container">
