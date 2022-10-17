@@ -1,4 +1,4 @@
-const FormRow = ({ type, name, value, handleChange, labelText, required = false ,disabled=false}) => {
+const FormRow = ({ type, name, value, handleChange, labelText, required = false, disabled = false }) => {
   return (
     <div className='form-row'>
       <label htmlFor={name} className='form-label'>
