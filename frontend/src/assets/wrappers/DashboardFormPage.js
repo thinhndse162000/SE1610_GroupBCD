@@ -6,8 +6,12 @@ const Wrapper = styled.section`
   background: var(--white);
   padding: 3rem 2rem 4rem;
   box-shadow: var(--shadow-2);
+  
   h3 {
     margin-top: 0;
+  }
+  p{
+    color:red;
   }
   .form {
     margin: 0;

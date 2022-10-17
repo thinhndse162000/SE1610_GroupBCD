@@ -4,11 +4,12 @@ export default function validateInfo(values) {
   bday = bday.split("-");
   var date = new Date();
   var year = date.getFullYear()
-  if ((year - parseInt(bday[0])) <= 18 && (year - parseInt(bday[0])>=0) ) {
+  // let regSpace = new RegExp(/\s/)
+  if ((year - parseInt(bday[0])) <= 18 && (year - parseInt(bday[0]) >= 0)) {
     errors.dateOfBirth = "You must be more than 18 years old."
   } else if (bday.length === 1) {
     errors.dateOfBirth = "Date of birth is required."
-  } else if ( (parseInt(bday[0]) - year) > 0) {
+  } else if ((parseInt(bday[0]) - year) > 0) {
     errors.dateOfBirth = "Your date of birth is not valid."
   }
   if (!values.email) {
