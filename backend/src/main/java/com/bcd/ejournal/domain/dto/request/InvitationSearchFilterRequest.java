@@ -8,6 +8,5 @@ import lombok.Setter;
 public class InvitationSearchFilterRequest {
 	private String title;
 	private Integer reviewerId;
-	private Integer invitationId;
 	private Integer page;
 }

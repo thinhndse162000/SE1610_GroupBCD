@@ -56,7 +56,7 @@ public class ReviewerApi {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
     
-    @PostMapping("/filter")
+    @PostMapping("/search")
     public ResponseEntity<List<InvitationReviewerResponse>> searchFilter(@RequestBody InvitationSearchFilterRequest req){
     	List<InvitationReviewerResponse> response = invitationService.searcFilterInvitation(req);
     	return new ResponseEntity<>(response , HttpStatus.OK);

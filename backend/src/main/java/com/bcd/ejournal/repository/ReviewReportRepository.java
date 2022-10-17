@@ -20,11 +20,9 @@ public interface ReviewReportRepository extends CrudRepository<ReviewReport, Int
     
     @Query("SELECT rp FROM ReviewReport rp "
             + "JOIN rp.reviewer re "
-            + "JOIN rp.paper pa "
-            + "WHERE (:#{#req.grade} is null OR rp.grade = :#{#req.grade}) "
-            + "AND (:#{#req.confidentiality} is null OR rp.confidentiality = :#{#req.confidentiality})"
+            + "WHERE (:#{#req.status} is null OR rp.status = :#{#req.status})"
+            + "AND (:#{#req.verdict} is null OR rp.verdict = :#{#req.verdict})"
             + "AND (:#{#req.reviewerId} is null OR re.reviewerId = :#{#req.reviewerId})"
-            + "AND (:#{#req.reviewReportId} is null OR rp.reviewReportId = :#{#req.reviewReportId})"
             )
-    Page<ReviewReport> searchFilter(@Param (value ="req") ReviewReportSearchFilterRequest req , Pageable page );
+    Page<ReviewReport> searchFilter(@Param(value ="req") ReviewReportSearchFilterRequest req , Pageable page );
 }
