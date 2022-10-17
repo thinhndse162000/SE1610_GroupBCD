@@ -50,6 +50,12 @@ const Navbar = () => {
               >
                 Reviewer
               </Link>
+              <Link
+                to="/Profile"
+                onClick={(e) => dispatch(changeView("profile"))}
+              >
+                Profile
+              </Link>
             </>
           )}
         </div>

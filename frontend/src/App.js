@@ -29,6 +29,7 @@ import {
   MemberPublishDetail,
   MemberAuthorProfile,
 } from "./pages/dashboard";
+import ViewProfle from "./pages/ViewProfle";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           }
         >
           <Route index element={<AuthorPaper />} />
+
           <Route path="paper-detail/:paperId" element={<AuthorPaperDetail />} />
           <Route path="submit-paper" element={<AuthorAddPaper />} />
         </Route>
@@ -76,6 +78,7 @@ function App() {
           }
         >
           <Route index element={<AllReviewReport />} />
+
           <Route path="submit-review" element={<AddReview />} />
           <Route
             path="review-detail/:reviewId"
@@ -101,6 +104,17 @@ function App() {
           <Route path="send-invitation/:paperId" element={<SendInvitation />} />
           <Route path="publish" element={<ManagerPublishIssue />} />
           {/* <Route path="invite" element={<ReviewReportDetail />} /> */}
+        </Route>
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <SharedLayout viewType="profile" />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<ViewProfle />} />
         </Route>
 
         <Route path="/signup" element={<Signup />} />

@@ -63,6 +63,10 @@ const NavLinks = ({ toggleSidebar }) => {
       { id: 1, text: "papers", path: "/manager", icon: <IoBarChartSharp /> },
       { id: 2, text: "publish issue", path: "publish", icon: <IoBarChartSharp /> },
     ],
+
+    profile: [
+      { id: 1, text: "profile", path: "/profile", icon: <IoBarChartSharp /> },
+    ]
   };
 
   const { viewType } = useSelector((state) => state.base);

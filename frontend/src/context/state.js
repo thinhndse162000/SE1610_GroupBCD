@@ -67,6 +67,7 @@ const member = {
   journalDetailId: '',
   journalSlug: '',
   journal: {},
+  profile: {},
   issuePublishes: {},
   publish: null,
   authorProfile: null,
