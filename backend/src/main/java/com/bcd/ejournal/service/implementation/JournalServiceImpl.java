@@ -97,6 +97,7 @@ public class JournalServiceImpl implements JournalService {
     public List<JournalResponse> search(JournalSearchRequest request) {
         int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10);
+        System.out.println(request.getName());
         Page<Journal> journals = journalRepository.searchRequest(request, page);
 
         return journals.stream()
@@ -116,6 +117,16 @@ public class JournalServiceImpl implements JournalService {
     public List<IssueResponse> listAllIssues(String slug) {
         Iterable<Issue> issues = issueRepository.findAllByJournalSlug(slug);
         return StreamSupport.stream(issues.spliterator(), false)
+                .map(dtoMapper::toIssueResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<IssueResponse> listAllIssuesFromManager(Integer accountId) {
+        Account acc = accountRepository.findById(accountId)
+            .orElseThrow(() -> new NullPointerException("Manager not found. Id: " + accountId));
+        List<Issue> issues = acc.getJournal().getIssues();
+        return issues.stream()
                 .map(dtoMapper::toIssueResponse)
                 .collect(Collectors.toList());
     }
