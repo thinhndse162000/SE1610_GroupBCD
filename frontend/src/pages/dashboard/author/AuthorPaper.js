@@ -64,12 +64,12 @@ const AuthorPaper = () => {
                     label: "Edit",
                     onClick: () => dispatch(setEditPaper(paper.paperId)),
                   });
-                  action.push({
-                    type: "button",
-                    className: "btn delete-btn",
-                    label: "Delete",
-                    onClick: () => dispatch(deletePaper(paper.paperId)),
-                  });
+                  // action.push({
+                  //   type: "button",
+                  //   className: "btn delete-btn",
+                  //   label: "Delete",
+                  //   onClick: () => dispatch(deletePaper(paper.paperId)),
+                  // });
                 }
                 return (
                   <Paper
