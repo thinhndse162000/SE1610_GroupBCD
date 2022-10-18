@@ -13,6 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
 import com.bcd.ejournal.domain.entity.EmailDetail;
 import com.bcd.ejournal.service.EmailService;
 
@@ -81,6 +82,33 @@ public class EmailServiceImp implements EmailService {
 
 			// Display message when exception occurred
 			return "Error while sending mail!!!";
+		}
+	}
+
+	@Override
+	public String sendEmailSignup(EmailDetail detail, AccountSignupRequest accountSignupRequest) {
+		try {
+			String subject = "Sign Up ";
+			detail.setSubject(subject);
+			String msg = "Your Account have been create";
+			detail.setMsgBody(msg);
+			// Creating a simple mail message
+			SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+			// Setting up necessary details
+			mailMessage.setFrom(sender);
+			mailMessage.setTo(accountSignupRequest.getEmail());
+			mailMessage.setText(detail.getMsgBody());
+			mailMessage.setSubject(detail.getSubject());
+
+			// Sending the mail
+			javaMailSender.send(mailMessage);
+			return "Mail Sent Successfully...";
+		}
+
+		// Catch block to handle the exceptions
+		catch (Exception e) {
+			return "Error while Sending Mail";
 		}
 	}
 

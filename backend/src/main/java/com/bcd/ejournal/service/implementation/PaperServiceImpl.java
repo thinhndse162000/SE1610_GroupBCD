@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -34,7 +33,6 @@ import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.FieldRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PaperRepository;
-import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.DTOMapper;
 import com.bcd.ejournal.utils.FileUtils;
@@ -45,22 +43,18 @@ public class PaperServiceImpl implements PaperService {
     private final AccountRepository accountRepository;
     private final JournalRepository journalRepository;
     private final FieldRepository fieldRepository;
-    private final RequestMapper paperMapper;
-    private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
     public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository,
-            JournalRepository journalRepository, FieldRepository fieldRepository, RequestMapper paperMapper,
-            ModelMapper modelMapper, DTOMapper dtoMapper) {
+            JournalRepository journalRepository, FieldRepository fieldRepository,
+            DTOMapper dtoMapper) {
         this.paperRepository = paperRepository;
         this.accountRepository = accountRepository;
         this.journalRepository = journalRepository;
         this.fieldRepository = fieldRepository;
-        this.paperMapper = paperMapper;
-        this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
     }
 
@@ -99,30 +93,29 @@ public class PaperServiceImpl implements PaperService {
         paper.setAuthor(author);
         author.getPapers().add(paper);
 
-		paper.setJournal(journal);
-		journal.getPapers().add(paper);
+        paper.setJournal(journal);
+        journal.getPapers().add(paper);
 
-		paperRepository.save(paper);
-	}
+        paperRepository.save(paper);
+    }
 
-	@Override
-	public void deleteById(Integer paperId) {
-		// TODO: verify accountId
-		// TODO: log existence
-		Optional<Paper> paperOpt = paperRepository.findById(paperId);
-		if (paperOpt.isPresent()) {
-			File file = new File(paperOpt.get().getLinkPDF());
-			// TODO: file service delete
-			boolean isDelete = file.delete();
-			paperRepository.deleteById(paperId);
-			if (isDelete) {
-				System.out.println("File delete successfully");
-			} else {
-				System.out.println("File doesn't exist");
-			}
-
-		}
-	}
+    @Override
+    public void deleteById(Integer paperId) {
+        // TODO: verify accountId
+        // TODO: log existence
+        Optional<Paper> paperOpt = paperRepository.findById(paperId);
+        if (paperOpt.isPresent()) {
+            File file = new File(paperOpt.get().getLinkPDF());
+            // TODO: file service delete
+            boolean isDelete = file.delete();
+            paperRepository.deleteById(paperId);
+            if (isDelete) {
+                System.out.println("File delete successfully");
+            } else {
+                System.out.println("File doesn't exist");
+            }
+        }
+    }
 
     @Override
     public void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request) {

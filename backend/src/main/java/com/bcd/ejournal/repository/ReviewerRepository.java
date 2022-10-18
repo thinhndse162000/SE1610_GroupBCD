@@ -1,10 +1,11 @@
 package com.bcd.ejournal.repository;
 
-import com.bcd.ejournal.domain.entity.Reviewer;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
+import com.bcd.ejournal.domain.entity.Reviewer;
 
 public interface ReviewerRepository extends CrudRepository<Reviewer, Integer> {
     @Query(value = "SELECT DISTINCT(r) FROM Reviewer r INNER JOIN r.fields f "

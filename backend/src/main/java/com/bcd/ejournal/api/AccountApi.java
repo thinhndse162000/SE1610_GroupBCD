@@ -1,4 +1,4 @@
-	package com.bcd.ejournal.api;
+package com.bcd.ejournal.api;
 
 import javax.validation.Valid;
 
