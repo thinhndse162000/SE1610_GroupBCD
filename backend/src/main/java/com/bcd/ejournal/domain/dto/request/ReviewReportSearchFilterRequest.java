@@ -1,5 +1,8 @@
 package com.bcd.ejournal.domain.dto.request;
 
+import com.bcd.ejournal.domain.enums.ReviewReportStatus;
+import com.bcd.ejournal.domain.enums.ReviewReportVerdict;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +10,8 @@ import lombok.Setter;
 @Setter
 public class ReviewReportSearchFilterRequest {
     private Integer reviewerId;
-    private Integer confidentiality;
-    private Integer grade;
     private Integer reviewReportId;
+    private ReviewReportVerdict verdict;
     private Integer page;
+    private ReviewReportStatus status;
 }

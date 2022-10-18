@@ -7,7 +7,8 @@ import lombok.Setter;
 @Setter
 public class PublishSearchFilterRequest {
     private Integer issue;
-    private int paperId;
     private Integer page;
+    private String title;
+    private Integer authorId;
     private Integer volume;
 }
