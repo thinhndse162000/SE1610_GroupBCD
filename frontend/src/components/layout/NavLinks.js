@@ -7,7 +7,7 @@ import { FaWpforms } from "react-icons/fa";
 
 const NavLinks = ({ toggleSidebar }) => {
   const {
-    base: { user },
+    base: { user, viewType },
     member: { journalSlug: slug },
   } = useSelector((state) => state);
 
@@ -61,7 +61,7 @@ const NavLinks = ({ toggleSidebar }) => {
 
     manager: [
       { id: 1, text: "papers", path: "/manager", icon: <IoBarChartSharp /> },
-      { id: 2, text: "publish issue", path: "publish", icon: <IoBarChartSharp /> },
+      // { id: 2, text: "publish issue", path: "publish", icon: <IoBarChartSharp /> },
     ],
 
     profile: [
@@ -69,10 +69,10 @@ const NavLinks = ({ toggleSidebar }) => {
     ]
   };
 
-  const { viewType } = useSelector((state) => state.base);
   return (
     <div className="nav-links">
-      <div className="nav-links">
+      <div className="info-header">
+        <span className="icon">{viewType.toUpperCase()} Page</span>
         <span className="icon">{user}</span>
       </div>
       {links[viewType].map((link) => {

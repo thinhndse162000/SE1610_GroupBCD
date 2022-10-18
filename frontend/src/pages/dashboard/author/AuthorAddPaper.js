@@ -87,10 +87,6 @@ const AuthorAddPaper = () => {
       paperFields,
     };
     setErrors(validateSubmitPaper(paper))
-    // if (!paperTitle) {
-    //   setSelectValue("");
-    //   navigate("/author");
-    // }
   };
   useEffect(() => {
     const paper = {
@@ -103,6 +99,11 @@ const AuthorAddPaper = () => {
     if (Object.getOwnPropertyNames(errors).length === 0) {
       dispatch(createPaper(paper))
     }
+
+    // if (!paperTitle) {
+    //   setSelectValue("");
+    //   navigate("/author");
+    // }
     // eslint-disable-next-line
   }, [dispatch, errors])
 
