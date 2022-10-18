@@ -7,6 +7,7 @@ import {
   PageBtnContainer,
 } from "../../../components";
 import {
+    createIssue,
   getAcceptedPaper,
   getLatestIssue,
 } from "../../../context/service/journalService";
@@ -107,6 +108,11 @@ const ManagerPublishIssue = () => {
     return false;
   };
 
+  const handleConfirm = (e) => {
+    e.preventDefault()
+    dispatch(createIssue({ startDate, endDate, publishes }))
+  }
+
   let nextIssue = 1;
   let nextVolume = 1;
   if (latestIssue != null) {
@@ -187,7 +193,7 @@ const ManagerPublishIssue = () => {
             })}
           </div>
         </ContainerWrapper>
-      <button className="btn" disabled={isLoading} onClick={() => console.log("finarlly it ending")}>Confirm Publish</button>
+      <button className="btn" disabled={isLoading} onClick={handleConfirm}>Confirm Publish</button>
       </>
     );
   }

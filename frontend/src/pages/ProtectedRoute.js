@@ -7,9 +7,6 @@ const ProtectedRoute = ({ children }) => {
   if (!user) {
     return <Navigate to="/landing" />;
   }
-  if (role !== "MEMBER") {
-    return <Navigate to="/error" />;
-  }
   return children;
 };
 

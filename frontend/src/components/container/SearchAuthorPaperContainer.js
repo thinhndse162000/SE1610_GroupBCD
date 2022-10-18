@@ -53,6 +53,8 @@ const SearchAuthorPaperContainer = () => {
               list={[...paperStatusOptions, "ALL"]}
             />
 
+    {/*
+      TODO: add field to search
           <FormDropdown
             labelText="Field"
             value={fields.map((field) => ({
@@ -75,7 +77,7 @@ const SearchAuthorPaperContainer = () => {
               );
             }}
             type="select"
-          />
+          /> */}
           <button className="btn" disabled={isLoading} onClick={handleSearch}>
             Search
           </button>

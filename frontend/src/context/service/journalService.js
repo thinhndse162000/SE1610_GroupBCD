@@ -167,6 +167,7 @@ export const getAcceptedPaper =
       const { data } = await authFetch.post("/journal/paper/search", {
         title,
         page,
+        status: "ACCEPTED",
       });
       dispatch({ type: SUCCESS_NO_MESSAGE });
       dispatch(
@@ -176,6 +177,30 @@ export const getAcceptedPaper =
           type: "manager_publishissue",
         })
       );
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };
+
+export const createIssue =
+  ({ startDate, endDate, publishes }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      let pub = publishes.map((p) => ({ paperId: p.paper.paperId, accessLevel: p.accessLevel }));
+
+      await authFetch.post("/journal/issue", {
+        startDate,
+        endDate,
+        publishes: pub,
+      });
+
+      dispatch({ type: SUCCESS_NO_MESSAGE });
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
