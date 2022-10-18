@@ -29,6 +29,6 @@ public class Issue {
     @JoinColumn(name = "journalId", nullable = false)
     private Journal journal;
 
-    @OneToMany(mappedBy = "issue")
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.MERGE)
     private List<Publish> publishes;
 }
