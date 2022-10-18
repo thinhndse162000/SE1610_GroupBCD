@@ -232,7 +232,7 @@ class InvitationSql(SqlTemplate):
             i = 0
             while (i < 3):
                 reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id):
+                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
                     super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', 'ACCEPTED')")
                     i += 1
                     if (reviewer_id not in accepted_reviewer_paper_id):
@@ -240,12 +240,13 @@ class InvitationSql(SqlTemplate):
                     accepted_reviewer_paper_id[reviewer_id].append(paper_id)
                     if (reviewer_id not in reviewer_field):
                         reviewer_field[reviewer_id] = set()
-                    reviewer_field[reviewer_id].update(paper_field[paper_id])
+                    if (len(reviewer_field[reviewer_id]) < 3):
+                        reviewer_field[reviewer_id].update(paper_field[paper_id])
 
             for _ in range(random.randint(2, 5)):
 
                 reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id):
+                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
                     random_status = "CANCEL"
                     if (random.randint(1, 5) == 1):
                         random_status = "REJECTED"
@@ -253,7 +254,8 @@ class InvitationSql(SqlTemplate):
 
                     if (reviewer_id not in reviewer_field):
                         reviewer_field[reviewer_id] = set()
-                    reviewer_field[reviewer_id].update(paper_field[paper_id])
+                    if (len(reviewer_field[reviewer_id]) < 3):
+                        reviewer_field[reviewer_id].update(paper_field[paper_id])
 
         for author_id, paper_id in rejected_paper_id:
             reviewer_id_list = list(range(1, account_num+1))
@@ -261,7 +263,7 @@ class InvitationSql(SqlTemplate):
             i = 0
             while (i < 3):
                 reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id):
+                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
                     super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', 'ACCEPTED')")
                     i += 1
                     if (reviewer_id not in rejected_reviewer_paper_id):
@@ -270,18 +272,20 @@ class InvitationSql(SqlTemplate):
 
                     if (reviewer_id not in reviewer_field):
                         reviewer_field[reviewer_id] = set()
-                    reviewer_field[reviewer_id].update(paper_field[paper_id])
+                    if (len(reviewer_field[reviewer_id]) < 3):
+                        reviewer_field[reviewer_id].update(paper_field[paper_id])
 
             for _ in range(random.randint(2, 5)):
                 reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id):
+                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
                     random_status = "CANCEL"
                     if (random.randint(1, 5) == 1):
                         random_status = "REJECTED"
                     super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', '{random_status}')")
                     if (reviewer_id not in reviewer_field):
                         reviewer_field[reviewer_id] = set()
-                    reviewer_field[reviewer_id].update(paper_field[paper_id])
+                    if (len(reviewer_field[reviewer_id]) < 3):
+                        reviewer_field[reviewer_id].update(paper_field[paper_id])
 
         for author_id, paper_id in pending_paper_id:
             reviewer_id_list = list(range(1, account_num+1))
@@ -290,7 +294,7 @@ class InvitationSql(SqlTemplate):
             max_num = random.randint(1, 2)
             while (i < max_num):
                 reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id):
+                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
                     super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', 'ACCEPTED')")
                     i += 1
                     if (reviewer_id not in pending_reviewer_paper_id):
@@ -298,18 +302,20 @@ class InvitationSql(SqlTemplate):
                     pending_reviewer_paper_id[reviewer_id].append(paper_id)
                     if (reviewer_id not in reviewer_field):
                         reviewer_field[reviewer_id] = set()
-                    reviewer_field[reviewer_id].update(paper_field[paper_id])
+                    if (len(reviewer_field[reviewer_id]) < 3):
+                        reviewer_field[reviewer_id].update(paper_field[paper_id])
 
             for _ in range(random.randint(2, 5)):
                 reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id):
+                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
                     random_status = "PENDING"
                     if (random.randint(1, 5) == 1):
                         random_status = "REJECTED"
                     super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', '{random_status}')")
                     if (reviewer_id not in reviewer_field):
                         reviewer_field[reviewer_id] = set()
-                    reviewer_field[reviewer_id].update(paper_field[paper_id])
+                    if (len(reviewer_field[reviewer_id]) < 3):
+                        reviewer_field[reviewer_id].update(paper_field[paper_id])
 
         for author_id, paper_id in reviewing_paper_id:
             reviewer_id_list = list(range(1, account_num+1))
@@ -317,7 +323,7 @@ class InvitationSql(SqlTemplate):
             i = 0
             while (i < 3):
                 reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id):
+                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
                     super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', 'ACCEPTED')")
                     i += 1
                     if (reviewer_id not in reviewing_reviewer_paper_id):
@@ -325,19 +331,21 @@ class InvitationSql(SqlTemplate):
                     reviewing_reviewer_paper_id[reviewer_id].append(paper_id)
                     if (reviewer_id not in reviewer_field):
                         reviewer_field[reviewer_id] = set()
-                    reviewer_field[reviewer_id].update(paper_field[paper_id])
+                    if (len(reviewer_field[reviewer_id]) < 3):
+                        reviewer_field[reviewer_id].update(paper_field[paper_id])
 
             for _ in range(random.randint(2, 5)):
 
                 reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id):
+                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
                     random_status = "CANCEL"
                     if (random.randint(1, 5) == 1):
                         random_status = "REJECTED"
                     super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', '{random_status}')")
                     if (reviewer_id not in reviewer_field):
                         reviewer_field[reviewer_id] = set()
-                    reviewer_field[reviewer_id].update(paper_field[paper_id])
+                    if (len(reviewer_field[reviewer_id]) < 3):
+                        reviewer_field[reviewer_id].update(paper_field[paper_id])
         
 class ReviewerFieldSql(SqlTemplate):
     def __init__(self):
@@ -408,7 +416,7 @@ class IssueSql(SqlTemplate):
 
                 for i in range(num_of_issue):
                     self.id += 1
-                    super().insert(f"({journal_id}, 1, {i+1}, '{date[i][0]}', '{date[i][1]}', {random.randint(80, 125)})")
+                    super().insert(f"({journal_id}, 1, {i+1}, 2022, '{date[i][0]}', '{date[i][1]}', {random.randint(80, 125)})")
                     num_of_paper = random.randint(7, 10)
 
                     for _ in range(num_of_paper):

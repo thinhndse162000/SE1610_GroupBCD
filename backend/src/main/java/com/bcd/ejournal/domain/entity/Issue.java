@@ -18,16 +18,17 @@ public class Issue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer issueId;
-    private String volume;
-    private String issue;
+    private Integer volume;
+    private Integer issue;
     private Date startDate;
     private Date endDate;
-    private int numberOfPage;
+    private Integer numberOfPage;
+    private Integer year;
 
     @ManyToOne
     @JoinColumn(name = "journalId", nullable = false)
     private Journal journal;
 
-    @OneToMany(mappedBy = "issue")
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.MERGE)
     private List<Publish> publishes;
 }

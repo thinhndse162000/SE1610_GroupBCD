@@ -112,4 +112,16 @@ public class ReviewReportServiceImpl implements ReviewReportService {
                 .map(dtoMapper::toReviewReportDetailResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ReviewReportDetailResponse getReviewReport(Integer reviewerId, Integer reviewReportId) {
+        ReviewReport reviewReport = reviewreportRepository.findById(reviewReportId)
+            .orElseThrow(() -> new NullPointerException("No review report found. Id: " + reviewReportId));
+
+        if (reviewReport.getReviewer().getReviewerId() != reviewerId) {
+            throw new MethodNotAllowedException("Review not allow to see this");
+        }
+
+        return dtoMapper.toReviewReportDetailResponse(reviewReport);
+    }
 }

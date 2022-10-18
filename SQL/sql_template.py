@@ -69,7 +69,7 @@ VALUES
   """
 
 issue_sql = """INSERT INTO Issue
-  (JournalID, Volume, Issue, startDate, endDate, NumberOfPage)
+  (JournalID, Volume, Issue, Year, startDate, endDate, NumberOfPage)
 VALUES
   """
 

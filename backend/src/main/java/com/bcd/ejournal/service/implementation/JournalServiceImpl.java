@@ -14,18 +14,21 @@ import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
 import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
+import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Issue;
 import com.bcd.ejournal.domain.entity.Journal;
+import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.enums.AccountRole;
 import com.bcd.ejournal.domain.enums.JournalStatus;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.IssueRepository;
 import com.bcd.ejournal.repository.JournalRepository;
+import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.service.JournalService;
 import com.bcd.ejournal.utils.DTOMapper;
 
@@ -34,15 +37,17 @@ public class JournalServiceImpl implements JournalService {
     private final JournalRepository journalRepository;
     private final IssueRepository issueRepository;
     private final AccountRepository accountRepository;
+    private final PaperRepository paperRepository;
     private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
 
     @Autowired
     public JournalServiceImpl(JournalRepository journalRepository, IssueRepository issueRepository,
-            AccountRepository accountRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
+            AccountRepository accountRepository, PaperRepository paperRepository,ModelMapper modelMapper, DTOMapper dtoMapper) {
         this.journalRepository = journalRepository;
         this.issueRepository = issueRepository;
         this.accountRepository = accountRepository;
+        this.paperRepository = paperRepository;
         this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
     }
@@ -92,6 +97,7 @@ public class JournalServiceImpl implements JournalService {
     public List<JournalResponse> search(JournalSearchRequest request) {
         int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10);
+        System.out.println(request.getName());
         Page<Journal> journals = journalRepository.searchRequest(request, page);
 
         return journals.stream()
@@ -111,6 +117,16 @@ public class JournalServiceImpl implements JournalService {
     public List<IssueResponse> listAllIssues(String slug) {
         Iterable<Issue> issues = issueRepository.findAllByJournalSlug(slug);
         return StreamSupport.stream(issues.spliterator(), false)
+                .map(dtoMapper::toIssueResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<IssueResponse> listAllIssuesFromManager(Integer accountId) {
+        Account acc = accountRepository.findById(accountId)
+            .orElseThrow(() -> new NullPointerException("Manager not found. Id: " + accountId));
+        List<Issue> issues = acc.getJournal().getIssues();
+        return issues.stream()
                 .map(dtoMapper::toIssueResponse)
                 .collect(Collectors.toList());
     }
@@ -143,6 +159,27 @@ public class JournalServiceImpl implements JournalService {
         }
 
         return acc.getJournal().getPapers().stream()
+                .map(dtoMapper::toPaperResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PaperResponse> getAllPaper(Integer accountId, PaperSearchRequest request) {
+        Account acc = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
+
+        if (acc.getRole() != AccountRole.MANAGER) {
+            throw new ForbiddenException("Unauthorized action");
+        }
+
+        int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
+        Pageable page = PageRequest.of(pageNum, 10, Sort.by("submitTime").descending());
+
+        request.setJournalId(acc.getJournal().getJournalId());
+
+        Page<Paper> papers = paperRepository.searchAndFilter(request, page);
+
+        return papers.stream()
                 .map(dtoMapper::toPaperResponse)
                 .collect(Collectors.toList());
     }
