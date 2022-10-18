@@ -32,8 +32,8 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final JWTService jwtService;
-    private final DTOMapper dtoMapper;
     private final EmailService emailService;
+    private final DTOMapper dtoMapper;
 
     @Autowired
     public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
@@ -42,8 +42,8 @@ public class AccountServiceImpl implements AccountService {
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.jwtService = jwtService;
-        this.dtoMapper = dtoMapper;
         this.emailService = emailService;
+        this.dtoMapper = dtoMapper;
     }
 
     @Override

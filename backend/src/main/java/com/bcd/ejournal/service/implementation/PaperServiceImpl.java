@@ -39,7 +39,6 @@ import com.bcd.ejournal.utils.FileUtils;
 
 @Service
 public class PaperServiceImpl implements PaperService {
-    private final PaperRepository paperRepository;
     private final AccountRepository accountRepository;
     private final JournalRepository journalRepository;
     private final FieldRepository fieldRepository;

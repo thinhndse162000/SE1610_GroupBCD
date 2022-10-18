@@ -1,6 +1,24 @@
 package com.bcd.ejournal.api;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
+import com.bcd.ejournal.domain.dto.request.InvitationSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.request.InvitationUpdateStatusRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
@@ -10,14 +28,6 @@ import com.bcd.ejournal.domain.dto.response.ReviewerResponse;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.service.ReviewReportService;
 import com.bcd.ejournal.service.ReviewerService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/reviewer")
@@ -50,6 +60,12 @@ public class ReviewerApi {
     public ResponseEntity<InvitationReviewerResponse> getInvitation(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable Integer id) {
         InvitationReviewerResponse response = invitationService.getInvitation(payload.getAccountId(), id);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<List<InvitationReviewerResponse>> searchFilter(@RequestBody InvitationSearchFilterRequest req){
+    	List<InvitationReviewerResponse> response = invitationService.searcFilterInvitation(req);
+    	return new ResponseEntity<>(response , HttpStatus.OK);
     }
 
     @PutMapping("/invitation/{id}/status")

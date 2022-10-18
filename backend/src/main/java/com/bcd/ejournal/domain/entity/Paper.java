@@ -20,9 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.util.Streamable;
-
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 
