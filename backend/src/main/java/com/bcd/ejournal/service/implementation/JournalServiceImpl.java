@@ -17,6 +17,7 @@ import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Issue;
@@ -94,15 +95,19 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<JournalResponse> search(JournalSearchRequest request) {
+    public PagingResponse search(JournalSearchRequest request) {
         int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10);
         System.out.println(request.getName());
         Page<Journal> journals = journalRepository.searchRequest(request, page);
 
-        return journals.stream()
+        PagingResponse response = new PagingResponse();
+        response.setNumOfPage(journals.getTotalPages());
+
+        response.setResult(journals.stream()
                 .map((journal) -> modelMapper.map(journal, JournalResponse.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        return response;
     }
 
     @Override

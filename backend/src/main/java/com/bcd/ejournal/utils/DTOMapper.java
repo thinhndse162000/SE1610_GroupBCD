@@ -68,7 +68,7 @@ public class DTOMapper {
     public ReviewReportResponse toReviewReportResponse(ReviewReport reviewReport) {
         ReviewReportResponse response = modelMapper.map(reviewReport, ReviewReportResponse.class);
         Account acc = reviewReport.getReviewer().getAccount();
-        response.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName()));
+        response.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName(), acc.getReviewer().getFields()));
         return response;
     }
 
@@ -78,7 +78,7 @@ public class DTOMapper {
 
         ReviewReportResponse tmp = modelMapper.map(reviewReport, ReviewReportResponse.class);
         Account acc = reviewReport.getReviewer().getAccount();
-        tmp.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName()));
+        tmp.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName(), acc.getReviewer().getFields()));
         response.setReview(tmp);
 
         return response;
@@ -88,14 +88,14 @@ public class DTOMapper {
         ReviewerResponse response = new ReviewerResponse();
         response.setReviewerId(reviewer.getReviewerId());
         response.setFullName(reviewer.getAccount().getFullName());
+        response.setFields(reviewer.getFields());
         return response;
     }
 
     public InvitationPaperResponse toInvitationPaperResponse(Invitation invitation) {
         InvitationPaperResponse response = modelMapper.map(invitation, InvitationPaperResponse.class);
         Reviewer reviewer = invitation.getReviewer();
-        response.setReviewerId(reviewer.getReviewerId());
-        response.setReviewerName(reviewer.getAccount().getFullName());
+        response.setReviewer(toReviewerResponse(reviewer));
         return response;
     }
 

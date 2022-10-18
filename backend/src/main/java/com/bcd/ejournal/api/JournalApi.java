@@ -24,6 +24,7 @@ import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.domain.enums.PublishAccessLevel;
@@ -72,8 +73,8 @@ public class JournalApi {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<JournalResponse>> searchJournal(@RequestBody JournalSearchRequest request) {
-        List<JournalResponse> responses = journalService.search(request);
+    public ResponseEntity<PagingResponse> searchJournal(@RequestBody JournalSearchRequest request) {
+        PagingResponse responses = journalService.search(request);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 

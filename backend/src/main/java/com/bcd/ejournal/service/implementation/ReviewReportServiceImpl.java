@@ -97,7 +97,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     }
 
     @Override
-    public List<ReviewReport> searchByRequest(ReviewReportSearchRequest reportSearchRequest) {
+    public PagingResponse searchByRequest(ReviewReportSearchRequest reportSearchRequest) {
         // TODO: fix bug, its not mapping Object
         // TODO: authorization
         List<ReviewReport> rs = reviewMapper.searchReview(reportSearchRequest);
