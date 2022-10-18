@@ -17,7 +17,7 @@ export const setEditPaper = (id) => (dispatch) => {
   dispatch({ type: SET_EDIT_PAPER, payload: { id } });
 };
 
-export const deletePaper = (id) => {};
+export const deletePaper = (id) => (dispatch) => {};
 
 export const getAuthorPaper =
   ({ keyword: title, startDate, endDate, status, fields, page }) =>
@@ -194,16 +194,16 @@ export const clearPaperValues = () => (dispatch) => {
 };
 
 export const search =
-  ({ keyword, type, fields }) =>
+  ({ keyword, type, fields, page }) =>
   async (dispatch) => {
     dispatch({ type: LOADING });
     try {
       // search
       let data = {};
       if (type === "Journal") {
-        data = await authFetch.post("/journal/search", { name: keyword });
+        data = await authFetch.post("/journal/search", { name: keyword, fields, page });
       } else {
-        data = await authFetch.post("/paper/search", { title: keyword });
+        data = await authFetch.post("/paper/search", { title: keyword, fields, page });
       }
       dispatch({
         type: SUCCESS_NO_MESSAGE,
@@ -243,19 +243,12 @@ export const listInvitation = (paperId) => async (dispatch) => {
 };
 
 export const downloadFile = (paperId) => async (dispatch) => {
-  dispatch({ type: LOADING });
   try {
     const { data } = await authFetch.get(`/paper/${paperId}/download`, {
       responseType: "blob",
     });
-    dispatch({ type: SUCCESS_NO_MESSAGE });
     fileDownload(data, `${paperId}.pdf`);
   } catch (error) {
     if (error.response.status === 401) return;
-    dispatch({
-      type: ERROR,
-      payload: { msg: error.response.data.message },
-    });
   }
-  dispatch(clearAlert());
 };

@@ -1,9 +1,27 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.bcd.ejournal.domain.dto.request.ReviewReportSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSearchRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
-import com.bcd.ejournal.domain.dto.response.*;
-import com.bcd.ejournal.domain.entity.*;
+import com.bcd.ejournal.domain.dto.response.ReviewReportDetailResponse;
+import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
+import com.bcd.ejournal.domain.entity.Paper;
+import com.bcd.ejournal.domain.entity.ReviewReport;
+import com.bcd.ejournal.domain.entity.Reviewer;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportVerdict;
@@ -15,17 +33,6 @@ import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
 import com.bcd.ejournal.service.ReviewReportService;
 import com.bcd.ejournal.utils.DTOMapper;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
 
 @Service
 public class ReviewReportServiceImpl implements ReviewReportService {
@@ -124,4 +131,13 @@ public class ReviewReportServiceImpl implements ReviewReportService {
 
         return dtoMapper.toReviewReportDetailResponse(reviewReport);
     }
+
+	@Override
+	public List<ReviewReportResponse> searchFilter(ReviewReportSearchFilterRequest req) {
+		int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
+		Pageable page = PageRequest.of(pageNum, 10);
+		Page<ReviewReport> reviewReports = reviewreportRepository.searchFilter(req, page);
+		return reviewReports.stream().map((reviewReport) -> modelMapper.map(reviewReports, ReviewReportResponse.class))
+				.collect(Collectors.toList());
+	}
 }

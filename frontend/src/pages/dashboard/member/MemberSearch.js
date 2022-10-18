@@ -46,6 +46,7 @@ const MemberSearch = () => {
 
   useEffect(() => {
     dispatch(search({ keyword, type, fields, page }));
+    // TODO: set page num to 1
     // eslint-disable-next-line
   }, [dispatch, page]);
 

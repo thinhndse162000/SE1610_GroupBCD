@@ -31,6 +31,11 @@ const Wrapper = styled.aside`
       display: flex;
       flex-direction: column;
     }
+    .info-header {
+      padding-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
     .nav-link {
       display: flex;
       align-items: center;

@@ -4,8 +4,7 @@ import Wrapper from "../assets/wrappers/RegisterPage";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../context/service/authService";
-import ValidateInfo from "../components/container/ValidateInfo";
-
+import validateInfo from "../context/validator/validateInfo";
 const initialState = {
   firstName: "",
   lastName: "",
@@ -29,7 +28,7 @@ const Signup = () => {
   const [errors, setErrors] = useState({ notEmpty: true });
   const onSubmit = (e) => {
     e.preventDefault();
-    setErrors(ValidateInfo(values));
+    setErrors(validateInfo(values));
   };
 
   useEffect(() => {
@@ -117,6 +116,7 @@ const Signup = () => {
               value={values.dateOfBirth}
               handleChange={handleChange}
             />
+            {errors.dateOfBirth && <p>{errors.dateOfBirth}</p>}
           </div>
           {/* organziation input */}
           <div className="input-signup">

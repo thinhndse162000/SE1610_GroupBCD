@@ -53,46 +53,46 @@ public class JournalServiceImpl implements JournalService {
         this.dtoMapper = dtoMapper;
     }
 
-    @Override
-    public JournalResponse createJournal(JournalCreateRequest request) {
-        // trim white space
-        request.setName(request.getName().trim());
-        request.setIntroduction(request.getIntroduction().trim());
-        request.setOrganization(request.getOrganization().trim());
-        request.setIssn(request.getIssn().trim());
+	@Override
+	public JournalResponse createJournal(JournalCreateRequest request) {
+		// trim white space
+		request.setName(request.getName().trim());
+		request.setIntroduction(request.getIntroduction().trim());
+		request.setOrganization(request.getOrganization().trim());
+		request.setIssn(request.getIssn().trim());
 
-        Journal journal = modelMapper.map(request, Journal.class);
-        journal.setJournalId(0);
-        journal.setStatus(JournalStatus.OPEN);
-        journal = journalRepository.save(journal);
-        journal.setSlug(request.getName().toLowerCase());
-        return modelMapper.map(journal, JournalResponse.class);
-    }
+		Journal journal = modelMapper.map(request, Journal.class);
+		journal.setJournalId(0);
+		journal.setStatus(JournalStatus.OPEN);
+		journal = journalRepository.save(journal);
+		journal.setSlug(request.getName().toLowerCase());
+		return modelMapper.map(journal, JournalResponse.class);
+	}
 
-    @Override
-    public JournalResponse getJournal(Integer journalId) {
-        // TODO: return journal detail: latest issue, lastest publish
-        Journal journal = journalRepository.findById(journalId)
-                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
-        return modelMapper.map(journal, JournalResponse.class);
-    }
+	@Override
+	public JournalResponse getJournal(Integer journalId) {
+		// TODO: return journal detail: latest issue, lastest publish
+		Journal journal = journalRepository.findById(journalId)
+				.orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
+		return modelMapper.map(journal, JournalResponse.class);
+	}
 
-    @Override
-    public JournalResponse getJournal(String slug) {
-        Journal journal = journalRepository.findBySlug(slug)
-                .orElseThrow(() -> new NullPointerException("Journal not found. Slug: " + slug));
-        return modelMapper.map(journal, JournalResponse.class);
-    }
+	@Override
+	public JournalResponse getJournal(String slug) {
+		Journal journal = journalRepository.findBySlug(slug)
+				.orElseThrow(() -> new NullPointerException("Journal not found. Slug: " + slug));
+		return modelMapper.map(journal, JournalResponse.class);
+	}
 
-    @Override
-    public JournalResponse getJournalManager(Integer accountId) {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
-        if (account.getRole() != AccountRole.MANAGER) {
-            throw new ForbiddenException("Unauthorized action");
-        }
-        return modelMapper.map(account.getJournal(), JournalResponse.class);
-    }
+	@Override
+	public JournalResponse getJournalManager(Integer accountId) {
+		Account account = accountRepository.findById(accountId)
+				.orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
+		if (account.getRole() != AccountRole.MANAGER) {
+			throw new ForbiddenException("Unauthorized action");
+		}
+		return modelMapper.map(account.getJournal(), JournalResponse.class);
+	}
 
     @Override
     public PagingResponse search(JournalSearchRequest request) {
@@ -110,21 +110,19 @@ public class JournalServiceImpl implements JournalService {
         return response;
     }
 
-    @Override
-    public List<IssueResponse> listAllIssues(Integer journalId) {
-        Iterable<Issue> issues = issueRepository.findAllByJournalId(journalId);
-        return StreamSupport.stream(issues.spliterator(), false)
-                .map(dtoMapper::toIssueResponse)
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<IssueResponse> listAllIssues(Integer journalId) {
+		Iterable<Issue> issues = issueRepository.findAllByJournalId(journalId);
+		return StreamSupport.stream(issues.spliterator(), false).map(dtoMapper::toIssueResponse)
+				.collect(Collectors.toList());
+	}
 
-    @Override
-    public List<IssueResponse> listAllIssues(String slug) {
-        Iterable<Issue> issues = issueRepository.findAllByJournalSlug(slug);
-        return StreamSupport.stream(issues.spliterator(), false)
-                .map(dtoMapper::toIssueResponse)
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<IssueResponse> listAllIssues(String slug) {
+		Iterable<Issue> issues = issueRepository.findAllByJournalSlug(slug);
+		return StreamSupport.stream(issues.spliterator(), false).map(dtoMapper::toIssueResponse)
+				.collect(Collectors.toList());
+	}
 
     @Override
     public List<IssueResponse> listAllIssuesFromManager(Integer accountId) {
@@ -146,22 +144,22 @@ public class JournalServiceImpl implements JournalService {
         return modelMapper.map(journal, JournalResponse.class);
     }
 
-    @Override
-    public void archiveJournal(Integer journalId) {
-        Journal journal = journalRepository.findById(journalId)
-                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
-        journal.setStatus(JournalStatus.ARCHIVED);
-        journalRepository.save(journal);
-    }
+	@Override
+	public void archiveJournal(Integer journalId) {
+		Journal journal = journalRepository.findById(journalId)
+				.orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
+		journal.setStatus(JournalStatus.ARCHIVED);
+		journalRepository.save(journal);
+	}
 
-    @Override
-    public List<PaperResponse> getAllPaper(Integer accountId) {
-        Account acc = accountRepository.findById(accountId)
-                .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
+	@Override
+	public List<PaperResponse> getAllPaper(Integer accountId) {
+		Account acc = accountRepository.findById(accountId)
+				.orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
 
-        if (acc.getRole() != AccountRole.MANAGER) {
-            throw new ForbiddenException("Unauthorized action");
-        }
+		if (acc.getRole() != AccountRole.MANAGER) {
+			throw new ForbiddenException("Unauthorized action");
+		}
 
         return acc.getJournal().getPapers().stream()
                 .map(dtoMapper::toPaperResponse)

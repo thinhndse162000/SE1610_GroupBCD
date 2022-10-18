@@ -205,7 +205,6 @@ ul {
 /* form */
 
 .form {
-  width: 90vw;
   background: var(--white);
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);

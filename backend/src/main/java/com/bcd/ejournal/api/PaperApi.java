@@ -29,6 +29,11 @@ import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.service.PaperService;
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 1d70c73 (fix Conflict)
 
 @RestController
 @RequestMapping(path = "/paper")

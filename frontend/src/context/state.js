@@ -28,14 +28,29 @@ const author = {
 
 const reviewer = {
   invitations: [],
+  invitationDetail: {},
   reviewReports: [],
+  reviewDetail: {},
   editReviewId: "",
+  searchInvitation: {
+    title: "",
+    status: "ALL",
+    startDate: "",
+    page: 1,
+    numOfPage: 10,
+  },
+  searchReview: {
+    title: "",
+    status: "ALL",
+    page: 1,
+    numOfPage: 10,
+  },
   newReview: {
     reviewPaper: {},
     reviewNote: "",
     reviewGrade: 0,
     reviewConfidentiality: 0,
-    reviewVerdict: "",
+    reviewVerdict: "ACCEPTED",
   }
 }
 
@@ -47,11 +62,12 @@ const member = {
     fields: [],
     result: [],
     page: 1,
-    numOfPage: 1,
+    numOfPage: 10,
   },
   journalDetailId: '',
   journalSlug: '',
   journal: {},
+  profile: {},
   issuePublishes: {},
   publish: null,
   authorProfile: null,
@@ -59,6 +75,23 @@ const member = {
 };
 
 const manager = {
+  searchPaper: {
+    keyword: "",
+    status: "ALL",
+    startDate: "",
+    page: 1,
+    numOfPage: 10,
+  },
+  publishIssue: {
+    acceptedPapers: [],
+    publishes: [],
+    startDate: "",
+    endDate: "",
+    latestIssue: {},
+    confirm: false,
+    page: 1,
+    numOfPage: 10,
+  },
   sentPapers: [],
   sentInvitations: [],
   availableReviewers: [],
@@ -78,6 +111,7 @@ const base = {
   showSidebar: false,
   viewType: "author",
   fields: [],
+  invitationStatus: ["PENDING", "ACCEPTED", "REJECTED"],
 };
 
 const initialState = {
