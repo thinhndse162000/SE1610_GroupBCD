@@ -16,5 +16,5 @@ public class IssueCreateRequest {
     @NotBlank(message = "End date must not be null")
     private Date endDate;
     @NotBlank(message = "Publish must not be null")
-    private List<Integer> publishIds;
+    private List<IssueCreatePublishRequest> publishes;
 }

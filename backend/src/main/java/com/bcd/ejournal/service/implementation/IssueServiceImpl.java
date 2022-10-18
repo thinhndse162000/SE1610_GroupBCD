@@ -1,6 +1,8 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.sql.Date;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,17 +15,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.bcd.ejournal.domain.dto.request.IssueCreatePublishRequest;
 import com.bcd.ejournal.domain.dto.request.IssueCreateRequest;
 import com.bcd.ejournal.domain.dto.response.IssueDetailResponse;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Issue;
+import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.Publish;
+import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.exception.ConflictException;
 import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.IssueRepository;
+import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.PublishRepository;
 import com.bcd.ejournal.service.IssueService;
 import com.bcd.ejournal.utils.DTOMapper;
@@ -32,14 +38,16 @@ import com.bcd.ejournal.utils.DTOMapper;
 public class IssueServiceImpl implements IssueService {
     private final AccountRepository accountRepository;
     private final IssueRepository issueRepository;
+    private final PaperRepository paperRepository;
     private final PublishRepository publishRepository;
     private final DTOMapper dtoMapper;
 
     @Autowired
-    public IssueServiceImpl(AccountRepository accountRepository, IssueRepository issueRepository,
+    public IssueServiceImpl(AccountRepository accountRepository, IssueRepository issueRepository, PaperRepository paperRepository,
             PublishRepository publishRepository, DTOMapper dtoMapper) {
         this.accountRepository = accountRepository;
         this.issueRepository = issueRepository;
+        this.paperRepository = paperRepository;
         this.publishRepository = publishRepository;
         this.dtoMapper = dtoMapper;
     }
@@ -146,26 +154,38 @@ public class IssueServiceImpl implements IssueService {
         issue.setStartDate(request.getStartDate());
         issue.setEndDate(request.getEndDate());
         issue.setJournal(account.getJournal());
+        issue.setPublishes(new ArrayList<>());
+
+        issue.setIssueId(0);
 
         // Add paper to publish
         Integer totalPage = 0;
-        for (Integer publishId : request.getPublishIds()) {
-            Publish publish = publishRepository.findById(publishId)
-                .orElseThrow(() -> new NullPointerException("Publish not found. Id: " + publishId));
+        for (IssueCreatePublishRequest pub : request.getPublishes()) {
+            Paper paper = paperRepository.findById(pub.getPaperId())
+                .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + pub.getPaperId()));
 
-            totalPage += publish.getPaper().getNumberOfPage();
-            issue.getPublishes().add(publish);
+            // TODO: check if paper is not publish and accepted
+
+            totalPage += paper.getNumberOfPage();
+            Publish publish = new Publish();
+
+            publish.setPublishId(0);
+            publish.setPublishDate(new Date(System.currentTimeMillis()));
+            publish.setPaper(paper);
             publish.setIssue(issue);
+            publish.setAccessLevel(pub.getAccessLevel());
+            paper.setStatus(PaperStatus.PUBLISH);
+            paperRepository.save(paper);
+
+            issue.getPublishes().add(publish);
         }
 
-        issue.setIssueId(0);
         issue.setNumberOfPage(totalPage);
-
         issueRepository.save(issue);
     }
 
     private Issue getLatestIssueFromJournal(Integer journalId) {
-        Pageable pageable = PageRequest.of(0, 1, Sort.by("issueId"));
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("issueId").descending());
 
         Page<Issue> latestIssuePage = issueRepository.findFirstByJournalId(journalId, pageable);
         
