@@ -1,7 +1,5 @@
 package com.bcd.ejournal.api;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSearchFilterRequest;
-import com.bcd.ejournal.domain.dto.request.ReviewReportSearchRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
 import com.bcd.ejournal.domain.dto.response.PagingResponse;
-import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
 import com.bcd.ejournal.service.ReviewReportService;
 
 @RestController
@@ -34,16 +30,9 @@ public class ReviewReportApi {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<PagingResponse> searchOfReviewer(@RequestBody ReviewReportSearchRequest req) {
+    public ResponseEntity<PagingResponse> searchOfReviewer(@RequestBody ReviewReportSearchFilterRequest req) {
         // TODO: verify account
-        PagingResponse rs = reportService.searchByRequest(req);
-        return ResponseEntity.ok(rs);
+        PagingResponse response = reportService.search(req);
+    	return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
-    @PostMapping("/searchFilter")
-    public ResponseEntity<List<ReviewReportResponse>> searchFilter(@RequestBody ReviewReportSearchFilterRequest req ){
-    	List<ReviewReportResponse> responses = reportService.searchFilter(req);
-    	return new ResponseEntity<>(responses, HttpStatus.OK);
-    }
-    
 }

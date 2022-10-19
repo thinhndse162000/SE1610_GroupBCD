@@ -103,6 +103,7 @@ public class JournalServiceImpl implements JournalService {
 
         PagingResponse response = new PagingResponse();
         response.setNumOfPage(journals.getTotalPages());
+        response.setTotalFound(journals.getTotalElements());
 
         response.setResult(journals.stream()
                 .map((journal) -> modelMapper.map(journal, JournalResponse.class))
@@ -167,7 +168,7 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<PaperResponse> getAllPaper(Integer accountId, PaperSearchRequest request) {
+    public PagingResponse getAllPaper(Integer accountId, PaperSearchRequest request) {
         Account acc = accountRepository.findById(accountId)
                 .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
 
@@ -181,9 +182,13 @@ public class JournalServiceImpl implements JournalService {
         request.setJournalId(acc.getJournal().getJournalId());
 
         Page<Paper> papers = paperRepository.searchAndFilter(request, page);
+        PagingResponse response = new PagingResponse();
 
-        return papers.stream()
-                .map(dtoMapper::toPaperResponse)
-                .collect(Collectors.toList());
+        response.setResult(papers.stream().map(dtoMapper::toPaperResponse)
+				.collect(Collectors.toList()));
+        response.setNumOfPage(papers.getTotalPages());
+        response.setTotalFound(papers.getTotalElements());
+
+        return response;
     }
 }

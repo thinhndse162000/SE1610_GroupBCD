@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
@@ -39,6 +40,7 @@ import com.bcd.ejournal.utils.FileUtils;
 
 @Service
 public class PaperServiceImpl implements PaperService {
+    private final PaperRepository paperRepository;
     private final AccountRepository accountRepository;
     private final JournalRepository journalRepository;
     private final FieldRepository fieldRepository;
@@ -148,14 +150,20 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public List<PaperResponse> searchByRequest(PaperSearchRequest request) {
+    public PagingResponse searchByRequest(PaperSearchRequest request) {
         int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10, Sort.by("submitTime").descending());
 
         Page<Paper> papers = paperRepository.searchAndFilter(request, page);
-        return papers.stream()
-                .map(dtoMapper::toPaperResponse)
-                .collect(Collectors.toList());
+
+        PagingResponse response = new PagingResponse();
+
+        response.setResult(papers.stream().map(dtoMapper::toPaperResponse)
+				.collect(Collectors.toList()));
+        response.setNumOfPage(papers.getTotalPages());
+        response.setTotalFound(papers.getTotalElements());
+
+        return response;
     }
 
     @Override

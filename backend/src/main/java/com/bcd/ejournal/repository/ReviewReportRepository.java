@@ -24,5 +24,5 @@ public interface ReviewReportRepository extends CrudRepository<ReviewReport, Int
             + "AND (:#{#req.verdict} is null OR rp.verdict = :#{#req.verdict})"
             + "AND (:#{#req.reviewerId} is null OR re.reviewerId = :#{#req.reviewerId})"
             )
-    Page<ReviewReport> searchFilter(@Param(value ="req") ReviewReportSearchFilterRequest req , Pageable page );
+    Page<ReviewReport> search(@Param(value ="req") ReviewReportSearchFilterRequest req , Pageable page );
 }

@@ -31,7 +31,7 @@ public interface JournalService {
 
     void archiveJournal(Integer journalId);
 
-    List<PaperResponse> getAllPaper(Integer accountId, PaperSearchRequest request);
+    PagingResponse getAllPaper(Integer accountId, PaperSearchRequest request);
 
     List<PaperResponse> getAllPaper(Integer accountId);
 }

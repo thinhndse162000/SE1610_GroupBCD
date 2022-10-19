@@ -16,24 +16,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
-import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
-import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.service.PaperService;
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 1d70c73 (fix Conflict)
 
 @RestController
 @RequestMapping(path = "/paper")
@@ -58,13 +50,6 @@ public class PaperApi {
     public ResponseEntity<Void> updatePaper(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId, @ModelAttribute PaperUpdateRequest request) {
         paperService.updatePaper(payload.getAccountId(), paperId, request);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    // TODO: specify which role will use this
-    @PostMapping("/search")
-    public ResponseEntity<List<PaperResponse>> search(@RequestBody PaperSearchRequest request) {
-        List<PaperResponse> rs = paperService.searchByRequest(request);
-        return ResponseEntity.ok(rs);
     }
 
     @DeleteMapping("/{id}")

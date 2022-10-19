@@ -15,10 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.domain.dto.request.ReviewReportSearchFilterRequest;
-import com.bcd.ejournal.domain.dto.request.ReviewReportSearchRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewReportDetailResponse;
-import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.entity.Reviewer;
@@ -28,7 +27,6 @@ import com.bcd.ejournal.domain.enums.ReviewReportVerdict;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
 import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.PaperRepository;
-import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
 import com.bcd.ejournal.service.ReviewReportService;
@@ -40,18 +38,16 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     private final ReviewReportRepository reviewreportRepository;
     private final ReviewerRepository reviewerRepository;
     private final PaperRepository paperRepository;
-    private final RequestMapper reviewMapper;
     private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
-    public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, RequestMapper reviewMapper, ModelMapper modelMapper, DTOMapper dtoMapper) {
+    public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
         this.reviewreportRepository = reviewreportRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
-        this.reviewMapper = reviewMapper;
         this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
     }
@@ -104,14 +100,6 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     }
 
     @Override
-    public PagingResponse searchByRequest(ReviewReportSearchRequest reportSearchRequest) {
-        // TODO: fix bug, its not mapping Object
-        // TODO: authorization
-        List<ReviewReport> rs = reviewMapper.searchReview(reportSearchRequest);
-        return rs;
-    }
-
-    @Override
     public List<ReviewReportDetailResponse> getAllReviewReport(Integer reviewerId) {
         Reviewer reviewer = reviewerRepository.findById(reviewerId)
                 .orElseThrow(() -> new NullPointerException("No reviewer found. Id: " + reviewerId));
@@ -133,11 +121,15 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     }
 
 	@Override
-	public List<ReviewReportResponse> searchFilter(ReviewReportSearchFilterRequest req) {
+	public PagingResponse search(ReviewReportSearchFilterRequest req) {
 		int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
 		Pageable page = PageRequest.of(pageNum, 10);
-		Page<ReviewReport> reviewReports = reviewreportRepository.searchFilter(req, page);
-		return reviewReports.stream().map((reviewReport) -> modelMapper.map(reviewReports, ReviewReportResponse.class))
-				.collect(Collectors.toList());
+		Page<ReviewReport> reviewReports = reviewreportRepository.search(req, page);
+        PagingResponse response = new PagingResponse();
+        response.setResult(reviewReports.stream().map(dtoMapper::toReviewReportResponse)
+				.collect(Collectors.toList()));
+        response.setNumOfPage(reviewReports.getTotalPages());
+        response.setTotalFound(reviewReports.getTotalElements());
+        return response;
 	}
 }

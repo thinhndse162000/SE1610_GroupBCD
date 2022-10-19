@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.domain.dto.request.PublishSearchFilterRequest;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.domain.entity.Publish;
 import com.bcd.ejournal.domain.enums.PublishAccessLevel;
@@ -92,11 +93,15 @@ public class PublishServiceImpl implements PublishService {
     }
 
     @Override
-    public List<PublishResponse> searchByFilter(PublishSearchFilterRequest req) {
+    public PagingResponse searchByFilter(PublishSearchFilterRequest req) {
         int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10);
         Page<Publish> publishs = publishRepository.searchByRequest(req, page);
-        return publishs.stream().map((publish) -> modelMapper.map(publish, PublishResponse.class))
-                .collect(Collectors.toList());
+        PagingResponse response = new PagingResponse();
+        response.setResult(publishs.stream().map((publish) -> modelMapper.map(publish, PublishResponse.class))
+                .collect(Collectors.toList()));
+        response.setTotalFound(publishs.getTotalElements());
+        response.setNumOfPage(publishs.getTotalPages());
+        return response;
     }
 }

@@ -15,6 +15,7 @@ import com.bcd.ejournal.domain.dto.request.InvitationSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.entity.Invitation;
 import com.bcd.ejournal.domain.entity.Paper;
@@ -150,4 +151,20 @@ public class InvitationServiceImpl implements InvitationService {
             invitationRepository.updateInvitationStatusByPaperId(paper.getPaperId(), InvitationStatus.CANCEL);
         }
     }
+
+	@Override
+	public PagingResponse searchFilterInvitation(InvitationSearchFilterRequest filterRequest) {
+		int pageNum = filterRequest.getPage() != null ? filterRequest.getPage() - 1 : 0;
+		Pageable page = PageRequest.of(pageNum, 10);
+		Page<Invitation> invitation = invitationRepository.searchFilter(filterRequest, page);
+
+        PagingResponse response = new PagingResponse();
+
+        response.setResult(invitation.stream().map(dtoMapper::toInvitationReviewerResponse)
+				.collect(Collectors.toList()));
+        response.setNumOfPage(invitation.getTotalPages());
+        response.setTotalFound(invitation.getTotalElements());
+
+        return response;
+	}
 }

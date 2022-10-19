@@ -13,5 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PagingResponse {
     private List<Object> result;
+    private Long totalFound;
     private Integer numOfPage;
 }

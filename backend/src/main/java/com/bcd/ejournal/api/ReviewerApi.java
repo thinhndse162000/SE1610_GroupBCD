@@ -23,6 +23,7 @@ import com.bcd.ejournal.domain.dto.request.InvitationUpdateStatusRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewReportDetailResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewerResponse;
 import com.bcd.ejournal.service.InvitationService;
@@ -63,8 +64,8 @@ public class ReviewerApi {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<InvitationReviewerResponse>> searchFilter(@RequestBody InvitationSearchFilterRequest req){
-    	List<InvitationReviewerResponse> response = invitationService.searcFilterInvitation(req);
+    public ResponseEntity<PagingResponse> searchFilter(@RequestBody InvitationSearchFilterRequest req){
+    	PagingResponse response = invitationService.searchFilterInvitation(req);
     	return new ResponseEntity<>(response , HttpStatus.OK);
     }
 
@@ -93,6 +94,7 @@ public class ReviewerApi {
 
     @GetMapping("/paper/{id}/search")
     public ResponseEntity<List<ReviewerResponse>> getReviewerAvailableForPaper(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId, @RequestParam String name) {
+        // TODO: might need paging
         Integer accountId = payload.getAccountId();
         List<ReviewerResponse> responses = reviewerService.searchReviewerAvailable(paperId, name);
         return new ResponseEntity<>(responses, HttpStatus.OK);

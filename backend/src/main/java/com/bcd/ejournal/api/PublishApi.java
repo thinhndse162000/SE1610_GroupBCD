@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bcd.ejournal.domain.dto.request.PublishSearchFilterRequest;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.service.PublishService;
 
@@ -33,8 +34,8 @@ public class PublishApi {
     }
     
     @PostMapping("/search")
-    public ResponseEntity<List<PublishResponse>> searchFilter(@RequestBody PublishSearchFilterRequest request ){
-    	List<PublishResponse> responses = publishService.searchByFilter(request);
+    public ResponseEntity<PagingResponse> searchFilter(@RequestBody PublishSearchFilterRequest request ){
+    	PagingResponse responses = publishService.searchByFilter(request);
     	return new ResponseEntity<>(responses, HttpStatus.OK);
     	
     }

@@ -121,20 +121,10 @@ public class JournalApi {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @GetMapping("/paper/accepted")
-    public ResponseEntity<List<PaperResponse>> getAllAcceptedPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload) {
-        Integer accountId = payload.getAccountId();
-        PaperSearchRequest request = new PaperSearchRequest();
-        request.setStatus(PaperStatus.ACCEPTED);
-
-        List<PaperResponse> responses = journalService.getAllPaper(accountId, request);
-        return new ResponseEntity<>(responses, HttpStatus.OK);
-    }
-
     @PostMapping("/paper/search")
-    public ResponseEntity<List<PaperResponse>> searchPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody PaperSearchRequest request) {
+    public ResponseEntity<PagingResponse> searchPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody PaperSearchRequest request) {
         Integer accountId = payload.getAccountId();
-        List<PaperResponse> responses = journalService.getAllPaper(accountId, request);
+        PagingResponse responses = journalService.getAllPaper(accountId, request);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 

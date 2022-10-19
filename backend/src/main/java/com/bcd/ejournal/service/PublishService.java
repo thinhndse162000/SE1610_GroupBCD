@@ -3,6 +3,7 @@ package com.bcd.ejournal.service;
 import java.util.List;
 
 import com.bcd.ejournal.domain.dto.request.PublishSearchFilterRequest;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.domain.enums.PublishAccessLevel;
 
@@ -19,5 +20,5 @@ public interface PublishService {
 
     PublishResponse updateAccessLevel(Integer accountId, Integer publishId, PublishAccessLevel accessLevel);
     
-    List<PublishResponse> searchByFilter (PublishSearchFilterRequest req);
+    PagingResponse searchByFilter (PublishSearchFilterRequest req);
 }
