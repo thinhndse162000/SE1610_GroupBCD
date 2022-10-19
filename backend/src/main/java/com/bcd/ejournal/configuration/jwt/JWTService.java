@@ -39,7 +39,7 @@ public class JWTService implements JWTSerializer, JWTDeserializer {
     }
     
     public String jwtShrotDuration(Account account) {
-        AccountJWTPayload payload = AccountJWTPayload.of(account, now().getEpochSecond() + 300);
+        AccountJWTPayload payload = AccountJWTPayload.of(account, now().getEpochSecond() + duration);
         String payloadBase64 = Base64URL.encode(payload.toString());
 
         final String message = JWT_HEADER.concat(".").concat(payloadBase64);

@@ -14,9 +14,10 @@ CREATE TABLE Account(
 	lastName NVARCHAR(150) not null,
 	Organization NVARCHAR(150) not null,
 	DateOfBirth DATE,
-  role varchar(10) not null,
-  [status] varchar(10) not null,
-  slug nvarchar(300) not null,
+	role varchar(10) not null,
+	[status] varchar(10) not null,
+	slug nvarchar(300) not null,
+	[enable] bit DEFAULT '0'
 )
 
 go

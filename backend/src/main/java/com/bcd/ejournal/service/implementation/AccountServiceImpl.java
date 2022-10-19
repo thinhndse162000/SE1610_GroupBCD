@@ -7,10 +7,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.configuration.jwt.JWTService;
+import com.bcd.ejournal.configuration.jwt.payload.JWTPayload;
 import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountLoginRequest;
 import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
+import com.bcd.ejournal.domain.dto.request.TokenRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
@@ -102,7 +104,7 @@ public class AccountServiceImpl implements AccountService {
         try {
         	EmailDetail detail = new EmailDetail();
             acc = accountRepository.save(acc);
-            detail.setToken("http://localhost:3000/verify?token="+	jwtService.jwtShrotDuration(acc));
+            detail.setToken("Your Acc account has been Created \n\nClick this link to login\n\n"+ "http://localhost:3000/auth/verify/"+ jwtService.jwtShrotDuration(acc));
             emailService.sendEmailSignup(detail, req);
             
         } catch (DataIntegrityViolationException ex) {
@@ -170,4 +172,21 @@ public class AccountServiceImpl implements AccountService {
             .orElseThrow(() -> new NullPointerException("No author found. Slug: " + slug));
         return dtoMapper.toAuthorResponse(acc.getAuthor());
     }
+
+	@Override
+	public void verify(TokenRequest req) {
+		final String token = req.getToken();
+		try {
+            JWTPayload payload = jwtService.jwtPayloadFromJWT(token);
+            Account account = accountRepository.findById(payload.getAccountId())
+                    .filter(Account::isEnabled)
+                    .orElse(null);
+            if(account != null) {
+            	accountRepository.updateEnable(account);
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+		
+	}
 }
