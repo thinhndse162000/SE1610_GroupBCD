@@ -99,8 +99,8 @@ public class EmailServiceImp implements EmailService {
 			mailMessage.setFrom(sender);
 			mailMessage.setTo(accountSignupRequest.getEmail());
 			mailMessage.setText(detail.getMsgBody());
+			mailMessage.setText(detail.getToken());
 			mailMessage.setSubject(detail.getSubject());
-
 			// Sending the mail
 			javaMailSender.send(mailMessage);
 			return "Mail Sent Successfully...";

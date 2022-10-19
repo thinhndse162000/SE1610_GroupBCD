@@ -102,7 +102,9 @@ public class AccountServiceImpl implements AccountService {
         try {
         	EmailDetail detail = new EmailDetail();
             acc = accountRepository.save(acc);
+            detail.setToken("http://localhost:3000/verify?token="+	jwtService.jwtShrotDuration(acc));
             emailService.sendEmailSignup(detail, req);
+            
         } catch (DataIntegrityViolationException ex) {
             throw new DataIntegrityViolationException("Email already exists", ex);
         }
