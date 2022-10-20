@@ -29,7 +29,9 @@ import {
   MemberPublishDetail,
   MemberAuthorProfile,
 } from "./pages/dashboard";
-import ViewProfle from "./pages/ViewProfle";
+import ChangePassword from "./pages/dashboard/profile/ChangePassword";
+import ChangePsssword from "./pages/dashboard/profile/ChangePassword";
+import ViewProfle from "./pages/dashboard/profile/ViewProfle";
 
 function App() {
   return (
@@ -65,7 +67,6 @@ function App() {
         >
           <Route index element={<AuthorPaper />} />
 
-          <Route path="paper-detail/:paperId" element={<AuthorPaperDetail />} />
           <Route path="submit-paper" element={<AuthorAddPaper />} />
         </Route>
 
@@ -115,7 +116,8 @@ function App() {
           }
         >
           <Route index element={<ViewProfle />} />
-        </Route>
+          <Route path="changePassword" element={<ChangePassword />} />
+           </Route>
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
