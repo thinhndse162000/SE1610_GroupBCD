@@ -22,6 +22,16 @@ const Journal = ({ journal, type = "compact" }) => {
             <strong>ISSN</strong>: {issn} - <strong>Organization</strong>:{" "}
             {organization}
           </p>
+
+          <p>
+            Fields:{" "}
+            {journal.fields.map((field, index) => (
+              <span key={index}>
+                {field.fieldName}
+                {index !== journal.fields.length - 1 && ","}{" "}
+              </span>
+            ))}
+          </p>
         </div>
       </header>
       {type === "full" && (
