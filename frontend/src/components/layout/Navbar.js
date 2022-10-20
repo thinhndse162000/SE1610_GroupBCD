@@ -11,8 +11,9 @@ const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const { user, role } = useSelector((state) => state.base);
   const dispatch = useDispatch();
+
   return (
-    <Wrapper>
+    <Wrapper id="navbar" className="sticky">
       <div className="nav-center">
         <button
           type="button"
