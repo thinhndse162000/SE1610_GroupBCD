@@ -23,7 +23,16 @@ const Paper = ({ paper, type = "compact", link, action = [] }) => {
             Submit date: {date}
           </p>
           <p>
-            Grade: {paper.grade} -{" "}
+            Fields:{" "}
+            {paper.fields.map((field, index) => (
+              <span key={index}>
+                {field.fieldName}
+                {index !== paper.fields.length - 1 && ","}{" "}
+              </span>
+            ))}
+          </p>
+          <p>
+            {paper.status !== "PENDING" && paper.status !== "REVIEWING" && <span>Grade: {paper.grade} - </span>}
             <span className={`status ${paper.status.toLowerCase()}`}>
               {paper.status}
             </span>
