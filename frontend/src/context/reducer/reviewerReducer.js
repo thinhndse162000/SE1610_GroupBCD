@@ -79,6 +79,41 @@ const reviewerReducer = (state = reviewer, action) => {
           invitations,
         };
       }
+
+    case "HANDLE_REVIEWER_SEARCHINVITATION_CHANGE":
+      return {
+        ...state,
+        searchInvitation: {
+          ...state.searchInvitation,
+          [action.payload.name]: action.payload.value,
+        }
+      }
+    case "HANDLE_REVIEWER_SPREAD_SEARCHINVITATION_CHANGE":
+      return {
+        ...state,
+        searchInvitation: {
+          ...state.searchInvitation,
+          ...action.payload.value,
+        }
+      }
+
+    case "HANDLE_REVIEWER_SEARCHREVIEW_CHANGE":
+      return {
+        ...state,
+        searchReview: {
+          ...state.searchReview,
+          [action.payload.name]: action.payload.value,
+        }
+      }
+    case "HANDLE_REVIEWER_SPREAD_SEARCHREVIEW_CHANGE":
+      return {
+        ...state,
+        searchReview: {
+          ...state.searchReview,
+          ...action.payload.value,
+        }
+      }
+
     default:
       return state;
   }

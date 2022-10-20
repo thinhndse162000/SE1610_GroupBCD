@@ -13,7 +13,6 @@ import {
   clearPaperValues,
 } from "../../../context/service/paperService";
 import {
-  displayAlert,
   handleChange,
 } from "../../../context/service/utilService";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +31,7 @@ const AuthorAddPaper = () => {
       paperFields,
     },
   } = author;
+
   const { isLoading, showAlert, fields } = base;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -47,9 +47,11 @@ const AuthorAddPaper = () => {
   });
 
   useEffect(() => {
-    paperJournal["journalName"] = "";
-    paperJournal["journalId"] = "";
-    setSelectValue("");
+    if (editPaperId === "") {
+      paperJournal["journalId"] = "";
+      paperJournal["journalName"] = "";
+      setSelectValue("");
+    }
     // eslint-disable-next-line
   }, [paperFields]);
 
@@ -88,6 +90,7 @@ const AuthorAddPaper = () => {
     };
     setErrors(validateSubmitPaper(paper))
   };
+
   useEffect(() => {
     const paper = {
       paperTitle,
@@ -139,7 +142,6 @@ const AuthorAddPaper = () => {
       const { data } = await authFetch.post("/journal/search", {
         name: inputValue,
       });
-      console.log(data);
       requestResults = data.map((journal) => ({
         label: journal.name,
         value: journal.journalId,

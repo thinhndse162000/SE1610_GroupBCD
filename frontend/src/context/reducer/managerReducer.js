@@ -23,12 +23,28 @@ const managerReducer = (state = manager, action) => {
           [action.payload.name]: action.payload.value,
         },
       }
+    case "HANDLE_MANAGER_SPREAD_PUBLISHISSUE_CHANGE":
+      return {
+        ...state,
+        publishIssue: {
+          ...state.publishIssue,
+          ...action.payload.value,
+        },
+      }
     case HANDLE_MANAGER_SEARCHPAPER_CHANGE:
       return {
         ...state,
         searchPaper: {
           ...state.searchPaper,
           [action.payload.name]: action.payload.value,
+        }
+      };
+    case "HANDLE_MANAGER_SPREAD_SEARCHPAPER_CHANGE":
+      return {
+        ...state,
+        searchPaper: {
+          ...state.searchPaper,
+          ...action.payload.value,
         }
       };
     case HANDLE_MANAGER_SEARCHINVITATION_CHANGE:

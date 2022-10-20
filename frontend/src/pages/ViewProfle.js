@@ -27,7 +27,7 @@ const ViewProfle = () => {
             type="text"
             name="email"
             value={profile.email}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setName(e.target.value)}
           />
 
@@ -36,7 +36,7 @@ const ViewProfle = () => {
             labelText="First name"
             name="firstName"
             value={profile.firstName}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -45,7 +45,7 @@ const ViewProfle = () => {
             labelText="Phone number"
             name="PhoneNumber"
             value={profile.phone}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -54,7 +54,7 @@ const ViewProfle = () => {
             labelText="Date of birth"
             name="dateOfBirth"
             value={profile.dateOfBirth}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -63,7 +63,7 @@ const ViewProfle = () => {
             labelText="last name"
             name="lastName"
             value={profile.lastName}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -71,7 +71,7 @@ const ViewProfle = () => {
             type="text"
             name="Organization"
             value={profile.organization}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 

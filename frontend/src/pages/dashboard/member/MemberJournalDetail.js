@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getJournalFromMember } from "../../../context/service/journalService";
-import { default as ItemWrapper } from "../../../assets/wrappers/Item";
 import { MEMBER_JOURNAL_ID } from "../../../context/actions";
+import { Journal } from "../../../components";
 
 const MemberJournalDetail = () => {
   const { slug } = useParams();
@@ -17,23 +17,12 @@ const MemberJournalDetail = () => {
     dispatch(getJournalFromMember({ slug }));
   }, [dispatch, slug]);
 
-  return (
-    <ItemWrapper>
-      <header>
-        <div className="info">
-          <h3>Journal</h3>
-          <h5>{journal.name}</h5>
-          <p>
-            <strong>ISSN</strong>: {journal.issn} -{" "}
-            <strong>Organization</strong>: {journal.organization}
-          </p>
-        </div>
-      </header>
-      <div className="content">
-        <p>{journal.introduction}</p>
-      </div>
-    </ItemWrapper>
-  );
+  if (Object.keys(journal).length > 0) {
+    return (
+      <Journal journal={journal} type="full" />
+    );
+  }
+  return <></>
 };
 
 export default MemberJournalDetail;

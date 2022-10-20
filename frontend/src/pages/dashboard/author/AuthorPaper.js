@@ -18,8 +18,16 @@ const AuthorPaper = () => {
   const {
     base: { isLoading },
     author: {
-      submittedPapers: papers,
-      search: { keyword, startDate, endDate, status, fields, page, numOfPage },
+      search: {
+        keyword,
+        startDate,
+        endDate,
+        status,
+        fields,
+        page,
+        numOfPage,
+        result: papers,
+      },
     },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -35,18 +43,30 @@ const AuthorPaper = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getAuthorPaper({ keyword, startDate, endDate, status: status === "ALL" ? null : status, fields, page }));
+    dispatch(
+      getAuthorPaper({
+        keyword,
+        startDate,
+        endDate,
+        status: status === "ALL" ? null : status,
+        fields,
+        page,
+      })
+    );
     // eslint-disable-next-line
   }, [dispatch, page]);
 
   return (
     <>
       <SearchAuthorPaperContainer />
-      <PageBtnContainer
-        page={page}
-        numOfPage={numOfPage}
-        changePage={handlePageChange}
-      />
+
+      {papers.length > 0 && (
+        <PageBtnContainer
+          page={page}
+          numOfPage={numOfPage}
+          changePage={handlePageChange}
+        />
+      )}
       {isLoading ? (
         <Loading center />
       ) : papers.length > 0 ? (
@@ -64,12 +84,12 @@ const AuthorPaper = () => {
                     label: "Edit",
                     onClick: () => dispatch(setEditPaper(paper.paperId)),
                   });
-                  // action.push({
-                  //   type: "button",
-                  //   className: "btn delete-btn",
-                  //   label: "Delete",
-                  //   onClick: () => dispatch(deletePaper(paper.paperId)),
-                  // });
+                  action.push({
+                    type: "button",
+                    className: "btn delete-btn",
+                    label: "Delete",
+                    onClick: () => dispatch(deletePaper(paper.paperId)),
+                  });
                 }
                 return (
                   <Paper

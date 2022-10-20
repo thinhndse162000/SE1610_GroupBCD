@@ -15,7 +15,7 @@ export const getSentPaper =
       });
       dispatch({ type: SUCCESS_NO_MESSAGE });
       dispatch(
-        handleChange({ name: "sentPapers", value: data, type: "manager" })
+        handleChange({ name: "sentPapers", value: data, type: "manager_spread_searchpaper" })
       );
     } catch (error) {
       if (error.response.status === 401) return;
@@ -174,7 +174,7 @@ export const getAcceptedPaper =
         handleChange({
           name: "acceptedPapers",
           value: data,
-          type: "manager_publishissue",
+          type: "manager_spread_publishissue",
         })
       );
     } catch (error) {

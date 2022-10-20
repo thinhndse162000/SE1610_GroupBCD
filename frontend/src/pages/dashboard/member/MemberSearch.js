@@ -41,12 +41,15 @@ const MemberSearch = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    dispatch(search({ keyword, type, fields }));
+    if (page === 1) {
+      dispatch(search({ keyword, type, fields, page }));
+    } else {
+      handlePageChange(1);
+    }
   };
 
   useEffect(() => {
     dispatch(search({ keyword, type, fields, page }));
-    // TODO: set page num to 1
     // eslint-disable-next-line
   }, [dispatch, page]);
 
@@ -105,11 +108,14 @@ const MemberSearch = () => {
           </div>
         </form>
       </SearchWrapper>
-      <PageBtnContainer
-        page={page}
-        numOfPage={numOfPage}
-        changePage={handlePageChange}
-      />
+
+      {result.length > 0 && (
+        <PageBtnContainer
+          page={page}
+          numOfPage={numOfPage}
+          changePage={handlePageChange}
+        />
+      )}
       {isLoading ? (
         <Loading center />
       ) : result.length > 0 ? (
@@ -131,7 +137,9 @@ const MemberSearch = () => {
             changePage={handlePageChange}
           />
         </>
-      ) : <p>No result found</p>}
+      ) : (
+        <p>No result found</p>
+      )}
     </div>
   );
 };

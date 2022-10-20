@@ -22,9 +22,15 @@ const ManagerPaper = () => {
     base: { isLoading },
     author: { paperStatusOptions },
     manager: {
-      sentPapers: papers,
       journal,
-      searchPaper: { keyword, startDate, status, page, numOfPage },
+      searchPaper: {
+        keyword,
+        startDate,
+        status,
+        page,
+        numOfPage,
+        result: papers,
+      },
     },
   } = useSelector((state) => state);
 
@@ -64,15 +70,18 @@ const ManagerPaper = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    dispatch(
-      getSentPaper({
-        keyword,
-        startDate,
-        status: status === "ALL" ? null : status,
-        page,
-      })
-    );
-    // TODO: set page number to 1
+    if (page === 1) {
+      dispatch(
+        getSentPaper({
+          keyword,
+          startDate,
+          status: status === "ALL" ? null : status,
+          page,
+        })
+      );
+    } else {
+      handlePageChange(1);
+    }
   };
 
   return (
@@ -116,11 +125,13 @@ const ManagerPaper = () => {
           </div>
         </form>
       </SearchWrapper>
-      <PageBtnContainer
-        page={page}
-        numOfPage={numOfPage}
-        changePage={handlePageChange}
-      />
+      {papers.length > 0 && (
+        <PageBtnContainer
+          page={page}
+          numOfPage={numOfPage}
+          changePage={handlePageChange}
+        />
+      )}
 
       {isLoading ? (
         <Loading center />

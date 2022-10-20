@@ -7,7 +7,7 @@ import {
   PageBtnContainer,
 } from "../../../components";
 import {
-    createIssue,
+  createIssue,
   getAcceptedPaper,
   getLatestIssue,
 } from "../../../context/service/journalService";
@@ -21,7 +21,7 @@ const ManagerPublishIssue = () => {
     base: { isLoading },
     manager: {
       publishIssue: {
-        acceptedPapers: papers,
+        result: papers,
         publishes,
         startDate,
         endDate,
@@ -46,10 +46,6 @@ const ManagerPublishIssue = () => {
   // Select accepted paper
   // Edit access level of chosen accepted paper
   // Publish new issue
-
-  // if (isLoading) {
-  //   return <Loading center />;
-  // }
 
   const handleSelect = (paper) => {
     var checkbox = document.getElementById(`paper-${paper.paperId}`);
@@ -109,9 +105,9 @@ const ManagerPublishIssue = () => {
   };
 
   const handleConfirm = (e) => {
-    e.preventDefault()
-    dispatch(createIssue({ startDate, endDate, publishes }))
-  }
+    e.preventDefault();
+    dispatch(createIssue({ startDate, endDate, publishes }));
+  };
 
   let nextIssue = 1;
   let nextVolume = 1;
@@ -129,9 +125,9 @@ const ManagerPublishIssue = () => {
 
   if (confirm) {
     const handleAccessLevelChange = (paperId, value) => {
-      console.log(paperId, value)
+      console.log(paperId, value);
       let newPublishes = publishes;
-      
+
       for (let i = 0; i < newPublishes.length; i++) {
         if (newPublishes[i].paper.paperId === paperId) {
           newPublishes[i].accessLevel = value;
@@ -181,10 +177,12 @@ const ManagerPublishIssue = () => {
                       labelText="Access level"
                       name="accessLevel"
                       value={tmpPub.accessLevel}
-                      handleChange={(e) => handleAccessLevelChange(
-                        tmpPub.paper.paperId,
-                        e.target.value
-                      )}
+                      handleChange={(e) =>
+                        handleAccessLevelChange(
+                          tmpPub.paper.paperId,
+                          e.target.value
+                        )
+                      }
                       list={["OPEN", "PRIVATE"]}
                     />
                   </header>
@@ -193,7 +191,9 @@ const ManagerPublishIssue = () => {
             })}
           </div>
         </ContainerWrapper>
-      <button className="btn" disabled={isLoading} onClick={handleConfirm}>Confirm Publish</button>
+        <button className="btn" disabled={isLoading} onClick={handleConfirm}>
+          Confirm Publish
+        </button>
       </>
     );
   }
@@ -237,17 +237,19 @@ const ManagerPublishIssue = () => {
           </div>
         </form>
       </SearchWrapper>
-    {/* TODO: search bar*/}
+      {/* TODO: search bar*/}
 
-      <PageBtnContainer
-        page={page}
-        numOfPage={numOfPage}
-        changePage={handlePageChange}
-      />
+      {papers.length > 0 && (
+        <PageBtnContainer
+          page={page}
+          numOfPage={numOfPage}
+          changePage={handlePageChange}
+        />
+      )}
 
       {isLoading ? (
         <Loading center />
-      ) : (
+      ) : papers.length > 0 ? (
         <ContainerWrapper>
           <div className="container">
             <h3>Accepted Paper - {publishes.length} papers selected</h3>
@@ -269,6 +271,8 @@ const ManagerPublishIssue = () => {
             })}
           </div>
         </ContainerWrapper>
+      ) : (
+        <p>No accepted paper yet</p>
       )}
     </>
   );
