@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Wrapper from "../assets/wrappers/Profile";
-import { FormRow } from "../components";
-import { getAccountProfile } from "../context/service/accountService";
+import Wrapper from "../../../assets/wrappers/Profile";
+import { FormRow } from "../../../components";
+import { getAccountProfile } from "../../../context/service/accountService";
 
 const ViewProfle = () => {
   const {
     member: { profile },
   } = useSelector((state) => state);
+const test= useSelector((state) => state);
 
+console.log ("test", test)
   const dispatch = useDispatch();
   const { slug } = useParams();
   useEffect(() => {
@@ -17,7 +19,7 @@ const ViewProfle = () => {
   }, [dispatch, slug]);
 
   return (
-    <Wrapper className="full-page">
+   <Wrapper className="full-page">
       <form className="form" onSubmit={(e) => { e.preventDefault() }}>
         <h3>profile</h3>
         {/* {showAlert && <Alert />} */}
@@ -84,7 +86,7 @@ const ViewProfle = () => {
             Save
           </button>
         </div>
-      </form>
+      </form> 
     </Wrapper>
   );
 };
