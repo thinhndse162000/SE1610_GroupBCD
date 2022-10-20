@@ -126,7 +126,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
 		Pageable page = PageRequest.of(pageNum, 10);
 		Page<ReviewReport> reviewReports = reviewreportRepository.search(req, page);
         PagingResponse response = new PagingResponse();
-        response.setResult(reviewReports.stream().map(dtoMapper::toReviewReportResponse)
+        response.setResult(reviewReports.stream().map(dtoMapper::toReviewReportDetailResponse)
 				.collect(Collectors.toList()));
         response.setNumOfPage(reviewReports.getTotalPages());
         response.setTotalFound(reviewReports.getTotalElements());

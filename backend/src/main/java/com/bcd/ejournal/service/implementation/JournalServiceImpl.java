@@ -1,5 +1,6 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -98,8 +99,11 @@ public class JournalServiceImpl implements JournalService {
     public PagingResponse search(JournalSearchRequest request) {
         int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10);
-        System.out.println(request.getName());
-        Page<Journal> journals = journalRepository.searchRequest(request, page);
+        if (request.getFieldIds() == null) {
+            request.setFieldIds(new ArrayList<>());
+        }
+
+        Page<Journal> journals = journalRepository.searchRequest(request, Long.valueOf(request.getFieldIds().size()), page);
 
         PagingResponse response = new PagingResponse();
         response.setNumOfPage(journals.getTotalPages());

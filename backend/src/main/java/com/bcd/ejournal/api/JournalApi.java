@@ -28,7 +28,6 @@ import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.domain.enums.PublishAccessLevel;
-import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.service.IssueService;
 import com.bcd.ejournal.service.JournalService;
 import com.bcd.ejournal.service.PublishService;

@@ -63,8 +63,9 @@ public class ReviewerApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<PagingResponse> searchFilter(@RequestBody InvitationSearchFilterRequest req){
+    @PostMapping("/invitation/search")
+    public ResponseEntity<PagingResponse> searchFilter(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody InvitationSearchFilterRequest req){
+        req.setReviewerId(payload.getAccountId());
     	PagingResponse response = invitationService.searchFilterInvitation(req);
     	return new ResponseEntity<>(response , HttpStatus.OK);
     }

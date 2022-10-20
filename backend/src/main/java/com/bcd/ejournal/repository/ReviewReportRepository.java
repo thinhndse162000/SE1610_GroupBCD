@@ -19,8 +19,9 @@ public interface ReviewReportRepository extends CrudRepository<ReviewReport, Int
     List<ReviewReport> findByPaperIdAndStatus(Integer paperId, ReviewReportStatus status);
     
     @Query("SELECT rp FROM ReviewReport rp "
-            + "JOIN rp.reviewer re "
+            + "JOIN rp.reviewer re JOIN rp.paper p "
             + "WHERE (:#{#req.status} is null OR rp.status = :#{#req.status})"
+            + "AND (:#{#req.title} is null OR p.title LIKE %:#{#req.title}%)"
             + "AND (:#{#req.verdict} is null OR rp.verdict = :#{#req.verdict})"
             + "AND (:#{#req.reviewerId} is null OR re.reviewerId = :#{#req.reviewerId})"
             )

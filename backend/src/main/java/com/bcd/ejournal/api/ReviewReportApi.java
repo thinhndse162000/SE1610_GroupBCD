@@ -30,8 +30,8 @@ public class ReviewReportApi {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<PagingResponse> searchOfReviewer(@RequestBody ReviewReportSearchFilterRequest req) {
-        // TODO: verify account
+    public ResponseEntity<PagingResponse> searchOfReviewer(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody ReviewReportSearchFilterRequest req) {
+        req.setReviewerId(payload.getAccountId());
         PagingResponse response = reportService.search(req);
     	return new ResponseEntity<>(response, HttpStatus.OK);
     }

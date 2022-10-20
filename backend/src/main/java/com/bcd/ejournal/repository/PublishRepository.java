@@ -30,7 +30,7 @@ public interface PublishRepository extends CrudRepository<Publish, Integer> {
             + "WHERE (:#{#req.issue} is null OR su.issue = :#{#req.issue}) "
             + "AND (:#{#req.volume} is null OR su.volume = :#{#req.volume})"
             + "AND (:#{#req.authorId} is null OR pa.author = :#{#req.authorId})"
-            + "AND (:#{#req.title} IS NULL OR lower(pa.title) LIKE lower(CONCAT('%', :#{#req.title}, '%')))"
+            + "AND (:#{#req.title} IS NULL OR pa.title LIKE %:#{#req.title}%)"
             )
     Page<Publish> searchByRequest(@Param(value ="req") PublishSearchFilterRequest req, Pageable page);
 }

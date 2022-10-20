@@ -1,5 +1,9 @@
 package com.bcd.ejournal.domain.dto.response;
 
+import java.util.List;
+
+import com.bcd.ejournal.domain.entity.Field;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +20,5 @@ public class JournalResponse {
     private String organization;
     private String issn;
     private String slug;
+    private List<Field> fields;
 }

@@ -26,7 +26,9 @@ public interface InvitationRepository extends CrudRepository<Invitation, Integer
     void updateInvitationStatusByPaperId(Integer paperId, InvitationStatus status);
   
     @Query("SELECT i FROM Invitation i JOIN i.reviewer re JOIN i.paper p "
-            + "WHERE (:#{#req.title} IS NULL OR lower(p.title) LIKE lower(CONCAT('%', :#{#req.title}, '%')))"
-            + "AND (:#{#req.reviewerId} is null OR re.reviewerId LIKE :#{#req.reviewerId})")
+            + "WHERE (:#{#req.title} IS NULL OR p.title LIKE %:#{#req.title}%)"
+            + "AND (:#{#req.reviewerId} is null OR re.reviewerId LIKE :#{#req.reviewerId})"
+            + "AND (:#{#req.status} is null OR i.status = :#{#req.status})"
+            )
     Page<Invitation> searchFilter(@Param(value ="req") InvitationSearchFilterRequest req, Pageable page);
 }
