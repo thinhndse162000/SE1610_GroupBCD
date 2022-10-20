@@ -61,7 +61,7 @@ const NavLinks = ({ toggleSidebar }) => {
 
     manager: [
       { id: 1, text: "papers", path: "/manager", icon: <IoBarChartSharp /> },
-      // { id: 2, text: "publish issue", path: "publish", icon: <IoBarChartSharp /> },
+      { id: 2, text: "publish issue", path: "publish", icon: <IoBarChartSharp /> },
     ],
 
     profile: [
