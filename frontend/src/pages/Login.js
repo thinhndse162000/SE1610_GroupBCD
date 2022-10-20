@@ -74,19 +74,16 @@ const Login = () => {
             Signup
           </button>
         </p>
-    {/*
-      <p>
-      Forgot password?
-      <button
-      type="button"
-      onClick={() => navigate("/forgot-password")}
-      className="member-btn"
-      >
-      Forgot password
-      </button>
-      </p>
-      */
-    }
+        <p>
+          Forgot password?
+          <button
+            type="button"
+            onClick={() => navigate("/forgot-password")}
+            className="member-btn"
+          >
+            Forgot password
+          </button>
+        </p>
       </form>
     </Wrapper>
   );

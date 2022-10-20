@@ -43,8 +43,16 @@ const authorReducer = (state = author, action) => {
           [action.payload.name]: action.payload.value,
         }
       }
+    case "HANDLE_AUTHOR_SPREAD_SEARCH_CHANGE":
+      return {
+        ...state,
+        search: {
+          ...state.search,
+          ...action.payload.value,
+        }
+      }
     case SET_EDIT_PAPER:
-      const paper = state.submittedPapers.find(
+      const paper = state.search.result.find(
         (paper) => paper.paperId === action.payload.id
       );
 
