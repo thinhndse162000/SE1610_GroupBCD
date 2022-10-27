@@ -17,6 +17,7 @@ import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.domain.entity.EmailDetail;
 import com.bcd.ejournal.domain.entity.Invitation;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
@@ -30,6 +31,7 @@ import com.bcd.ejournal.repository.InvitationRepository;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
+import com.bcd.ejournal.service.EmailService;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.utils.DTOMapper;
 
@@ -41,6 +43,8 @@ public class InvitationServiceImpl implements InvitationService {
     private final ReviewReportRepository reviewReportRepository;
     private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
@@ -50,6 +54,7 @@ public class InvitationServiceImpl implements InvitationService {
         this.reviewReportRepository = reviewReportRepository;
         this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
+
     }
 
     @Override
@@ -82,8 +87,10 @@ public class InvitationServiceImpl implements InvitationService {
         invitation.setInviteDate(new Date(System.currentTimeMillis()));
         invitation.setReviewer(reviewer);
         invitation.setPaper(paper);
-
         invitationRepository.save(invitation);
+        EmailDetail detail = new EmailDetail();
+        detail.setRecipient(reviewer.getAccount().getEmail());
+        emailService.sendEmailInvitaion(detail);
         return toInvitationPaperResponse(invitation);
     }
 
@@ -141,7 +148,6 @@ public class InvitationServiceImpl implements InvitationService {
             // update paper status
             paper.setStatus(PaperStatus.REVIEWING);
             paperRepository.save(paper);
-
             // change status of other invitation to cancel
             invitationRepository.updateInvitationStatusByPaperId(paper.getPaperId(), InvitationStatus.CANCEL);
         }

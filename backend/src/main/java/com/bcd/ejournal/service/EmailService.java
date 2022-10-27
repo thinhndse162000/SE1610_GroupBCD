@@ -1,6 +1,8 @@
 package com.bcd.ejournal.service;
 
+import com.bcd.ejournal.domain.dto.request.AccountEmailVerify;
 import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
+import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.EmailDetail;
 
 public interface EmailService {
@@ -11,5 +13,12 @@ public interface EmailService {
 	// Method
 	// To send an email with attachment
 	String sendMailWithAttachment(EmailDetail details);
+	
 	String sendEmailSignup(EmailDetail detail , AccountSignupRequest accountSignupRequest);
+	
+	String sendEmailInvitaion(EmailDetail detail);
+	
+	String sendEmailSumbitPaper(Account acc);
+	
+	String sendEmailForgetPassword (AccountEmailVerify req);
 }

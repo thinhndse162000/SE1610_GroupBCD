@@ -69,7 +69,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         if (reviewReport.getPaper().getStatus() != PaperStatus.REVIEWING && reviewReport.getPaper().getStatus() != PaperStatus.PENDING) {
             throw new MethodNotAllowedException("Paper not in reviewing process. Review report Id: " + reviewReportId);
         }
-
+        
         modelMapper.map(req, reviewReport);
         reviewReport.setReviewDate(new Timestamp(System.currentTimeMillis()));
         reviewReport.setStatus(ReviewReportStatus.DONE);

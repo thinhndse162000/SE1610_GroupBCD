@@ -40,6 +40,7 @@ import com.bcd.ejournal.repository.FieldRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.RequestMapper;
+import com.bcd.ejournal.service.EmailService;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.DTOMapper;
 import com.bcd.ejournal.utils.FileUtils;
@@ -54,6 +55,9 @@ public class PaperServiceImpl implements PaperService {
 	private final RequestMapper paperMapper;
 	private final ModelMapper modelMapper;
 	private final DTOMapper dtoMapper;
+	
+	@Autowired
+	private EmailService emailService;
 	@Value("${paper.file.dir}")
 	private String uploadDir;
 
@@ -103,12 +107,13 @@ public class PaperServiceImpl implements PaperService {
 				.orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId)).getAuthor();
 		paper.setAuthor(author);
 		author.getPapers().add(paper);
-
+		Account account = (Account) accountRepository.getAccountId(journal.getManager().getAccountId());
 		paper.setJournal(journal);
 		journal.getPapers().add(paper);
-
+		emailService.sendEmailSumbitPaper(account);
 		paperRepository.save(paper);
-	}
+
+}
 
 	@Override
 	public void deleteById(Integer paperID) {

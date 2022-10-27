@@ -51,7 +51,7 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
     private String slug;
-    private int enable;
+    private boolean enable;
     
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn

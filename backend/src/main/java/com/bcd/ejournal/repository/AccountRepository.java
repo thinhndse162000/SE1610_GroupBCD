@@ -1,5 +1,6 @@
 package com.bcd.ejournal.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.ibatis.annotations.Param;
@@ -22,4 +23,7 @@ public interface AccountRepository extends CrudRepository<Account, Integer> {
     @Modifying
     @Query("UPDATE Account a SET a.enable = '1' WHERE a.accountId = :#{#acc.accountId} ")
     void updateEnable(@Param("accountId") Account acc);
+    
+    @Query("SELECT email FROM Account WHERE AccountId = :#{#req.accountId}")
+    List<Account> getAccountId(@Param(value ="req") Integer req);
 }

@@ -1,7 +1,7 @@
 USE eJournal_DB
 
 INSERT INTO Account
-  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status, slug, isEnable)
+  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status, slug, [Enable])
 VALUES
   ('test0@gmail.com', '$2b$12$.EkvA0HVPgYozBsv4MUiGuKfZ0h8FxNlY/l2fRyvSm41jaF5IduDO', '9812423212', 'Isidro', 'Costello', 'FPT', '2001-01-01', 'MEMBER', 'OPEN', 'isidro-costello','1'),
   ('test1@gmail.com', '$2b$12$.EkvA0HVPgYozBsv4MUiGuvKz7QkTJWdZLK.H2FNmvDMyMtYj3482', '9812423213', 'Brian', 'Rhoades', 'FPT', '2001-01-01', 'MEMBER', 'OPEN', 'brian-rhoades','1'),

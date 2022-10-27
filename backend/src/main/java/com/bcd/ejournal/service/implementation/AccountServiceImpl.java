@@ -1,3 +1,4 @@
+
 package com.bcd.ejournal.service.implementation;
 
 import org.modelmapper.ModelMapper;
@@ -189,4 +190,6 @@ public class AccountServiceImpl implements AccountService {
         }
 		
 	}
+
+
 }
