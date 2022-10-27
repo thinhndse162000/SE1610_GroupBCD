@@ -9,7 +9,9 @@ const ViewProfle = () => {
   const {
     member: { profile },
   } = useSelector((state) => state);
+const test= useSelector((state) => state);
 
+console.log ("test", test)
   const dispatch = useDispatch();
   const { slug } = useParams();
   useEffect(() => {
