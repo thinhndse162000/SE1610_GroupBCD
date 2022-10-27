@@ -7,6 +7,7 @@ import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
 
 public interface AccountService {
     AccountTokenResponse login(AccountLoginRequest req);
@@ -18,6 +19,8 @@ public interface AccountService {
     AccountProfileResponse updateProfile(Integer id, AccountUpdateProfileRequest req);
 
     AccountProfileResponse getProfile(Integer id);
+
+    EducationResponse getEducation(Integer accountId);
 
     void archiveAccount(Integer id);
 

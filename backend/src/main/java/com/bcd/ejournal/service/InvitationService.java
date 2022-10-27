@@ -21,4 +21,8 @@ public interface InvitationService {
     void updateStatus(Integer reviewerId, Integer invitationId, InvitationStatus status);
     
     PagingResponse searchFilterInvitation(InvitationSearchFilterRequest filterRequest);
+
+    void cleanDueInvitation();
+
+    void notifyReviewer();
 }

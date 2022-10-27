@@ -14,6 +14,7 @@ import java.sql.Date;
 @AllArgsConstructor
 public class InvitationPaperResponse {
     private Integer invitationId;
+    private Integer round;
     private ReviewerResponse reviewer;
     private Date inviteDate;
     private InvitationStatus status;

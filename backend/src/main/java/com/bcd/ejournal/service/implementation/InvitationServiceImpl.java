@@ -16,8 +16,8 @@ import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.PagingResponse;
-import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.entity.Invitation;
+import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.entity.Reviewer;
@@ -77,6 +77,7 @@ public class InvitationServiceImpl implements InvitationService {
         Invitation invitation = new Invitation();
         invitation.setInvitationId(0);
         invitation.setStatus(InvitationStatus.PENDING);
+        invitation.setRound(paper.getRound());
         invitation.setInviteDate(new Date(System.currentTimeMillis()));
         invitation.setReviewer(reviewer);
         invitation.setPaper(paper);
@@ -132,6 +133,7 @@ public class InvitationServiceImpl implements InvitationService {
         invitationRepository.save(invitation);
 
         Paper paper = invitation.getPaper();
+        Journal journal = paper.getJournal();
         List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(), InvitationStatus.ACCEPTED);
 
         // Create new review report
@@ -142,13 +144,13 @@ public class InvitationServiceImpl implements InvitationService {
         reviewReport.setStatus(ReviewReportStatus.PENDING);
 
         reviewReportRepository.save(reviewReport);
-        if (acceptedInvitations.size() == 3) {
+        if (acceptedInvitations.size() == journal.getNumberOfReviewer()) {
             // update paper status
             paper.setStatus(PaperStatus.REVIEWING);
             paperRepository.save(paper);
 
             // change status of other invitation to cancel
-            invitationRepository.updateInvitationStatusByPaperId(paper.getPaperId(), InvitationStatus.CANCEL);
+            invitationRepository.updateInvitationStatusByPaperIdAndRound(paper.getPaperId(), paper.getRound(), InvitationStatus.CANCEL);
         }
     }
 
@@ -167,4 +169,18 @@ public class InvitationServiceImpl implements InvitationService {
 
         return response;
 	}
+
+    @Override
+    @Transactional
+    public void cleanDueInvitation() {
+        // Cancel pending invitation after 14 days
+        invitationRepository.updatePendingInvitationAfter14Days();
+    }
+
+    @Override
+    public void notifyReviewer() {
+        // Send reviewer email after 10 days
+        List<Invitation> invitations = invitationRepository.findPendingInvitationAfter10Days();
+        // TODO: Thinh oi, lam cai gui email den reviewer nha
+    }
 }

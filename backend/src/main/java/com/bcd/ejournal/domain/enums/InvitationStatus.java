@@ -5,4 +5,5 @@ public enum InvitationStatus {
     ACCEPTED,
     REJECTED,
     CANCEL,
+    DUEDATE,
 }

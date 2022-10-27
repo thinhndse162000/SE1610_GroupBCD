@@ -36,10 +36,13 @@ public class Journal implements Serializable {
     private String introduction;
     private String organization;
     private String issn;
+    private Integer numberOfRound;
+    private Integer numberOfReviewer;
     
     @Enumerated(EnumType.STRING)
     private JournalStatus status;
     private String slug;
+    private Integer price;
 
     @ManyToMany
     @JoinTable(name = "JournalField", joinColumns = @JoinColumn(name = "JournalId", referencedColumnName = "JournalId"), inverseJoinColumns = @JoinColumn(name = "FieldId", referencedColumnName = "FieldId"))

@@ -22,8 +22,8 @@ public interface InvitationRepository extends CrudRepository<Invitation, Integer
     List<Invitation> findByPaperIdAndStatus(Integer paperId, InvitationStatus status);
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE Invitation SET status = :#{#status.name()} WHERE paperId = :paperId AND status = 'PENDING'", nativeQuery = true)
-    void updateInvitationStatusByPaperId(Integer paperId, InvitationStatus status);
+    @Query(value = "UPDATE Invitation SET status = :#{#status.name()} WHERE paperId = :paperId AND round = :round AND status = 'PENDING'", nativeQuery = true)
+    void updateInvitationStatusByPaperIdAndRound(Integer paperId, Integer round, InvitationStatus status);
   
     @Query("SELECT i FROM Invitation i JOIN i.reviewer re JOIN i.paper p "
             + "WHERE (:#{#req.title} IS NULL OR p.title LIKE %:#{#req.title}%)"
@@ -31,4 +31,11 @@ public interface InvitationRepository extends CrudRepository<Invitation, Integer
             + "AND (:#{#req.status} is null OR i.status = :#{#req.status})"
             )
     Page<Invitation> searchFilter(@Param(value ="req") InvitationSearchFilterRequest req, Pageable page);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Invitation i SET i.status = 'DUEDATE' WHERE i.inviteDate < current_date() - 14 AND i.status = 'PENDING'")
+    void updatePendingInvitationAfter14Days();
+
+    @Query("SELECT i FROM Invitation i WHERE i.status = 'PENDING' AND i.inviteDate < current_date() - 10")
+    List<Invitation> findPendingInvitationAfter10Days();
 }

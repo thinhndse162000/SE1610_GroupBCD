@@ -18,6 +18,7 @@ import com.bcd.ejournal.domain.dto.request.ReviewReportSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
 import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewReportDetailResponse;
+import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.entity.Reviewer;
@@ -71,12 +72,13 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         reviewReport.setStatus(ReviewReportStatus.DONE);
         reviewreportRepository.save(reviewReport);
         Paper paper = reviewReport.getPaper();
+        Journal journal = paper.getJournal();
 
         // TODO: test this
         // evaluation process
         List<ReviewReport> reviewReports = reviewreportRepository.findByPaperIdAndStatus(paper.getPaperId(), ReviewReportStatus.DONE);
 
-        if (reviewReports.size() == 3) {
+        if (reviewReports.size() == journal.getNumberOfReviewer()) {
             int accepted = 0;
             int grade = 0;
             for (ReviewReport report : reviewReports) {
@@ -87,8 +89,13 @@ public class ReviewReportServiceImpl implements ReviewReportService {
             }
 
             // accept if two or more reviewer accept 
-            if (accepted >= 2) {
-                paper.setStatus(PaperStatus.ACCEPTED);
+            if (accepted >= (journal.getNumberOfReviewer() + 1) / 2) {
+                if (paper.getRound() == journal.getNumberOfRound()) {
+                    paper.setStatus(PaperStatus.ACCEPTED);
+                } else {
+                    paper.setRound(paper.getRound() + 1);
+                    paper.setStatus(PaperStatus.PENDING);
+                }
             } else {
                 paper.setStatus(PaperStatus.REJECTED);
             }

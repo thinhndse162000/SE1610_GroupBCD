@@ -45,6 +45,7 @@ CREATE TABLE Paper(
 	SubmitTime DATETIME not null,
 	LinkPDF char(100) not null,
 	NumberOfPage int not null,
+  [Round] int not null,
   Grade int,
 	[status] varchar(10) not null,
 	JournalId int not null,
@@ -54,10 +55,11 @@ go
 CREATE TABLE Invitation(
 	InvitationId int not null PRIMARY KEY IDENTITY(1,1),
 	ReviewerId int not null,
+  [Round] int not null,
 	PaperId int not null,
 	InviteDate DATE not null,
 	[status] varchar(10) not null,
-	CONSTRAINT UQ_Invitation UNIQUE(ReviewerId,PaperId)
+	CONSTRAINT UQ_Invitation UNIQUE(ReviewerId,PaperId,[Round])
 )
 go
 CREATE TABLE Publish(
@@ -88,6 +90,9 @@ CREATE TABLE Journal(
 	Organization NVARCHAR(255) not null,
 	ISSN char(8) not null UNIQUE,
 	[status] varchar(10) not null,
+  price int not null,
+  NumberOfRound int not null,
+  NumberOfReviewer int not null,
   slug nvarchar(255) not null UNIQUE,
 )
 go 
@@ -113,13 +118,14 @@ CREATE TABLE ReviewReport(
 	ReviewReportID int not null PRIMARY KEY IDENTITY(1,1),
 	PaperId int not null,
 	ReviewerId int not null ,
+  [Round] int not null,
 	ReviewDate DATE,
 	grade int CHECK(grade>=0 AND grade<=10),
 	Confidentiality INT,
   Verdict varchar(10),
 	Note text,
 	[status] varchar(10) not null
-	CONSTRAINT UQ_ReviewReport UNIQUE(PaperId,ReviewerId)
+	CONSTRAINT UQ_ReviewReport UNIQUE(PaperId,ReviewerId,[Round])
 )
 go
 CREATE TABLE PaperField(

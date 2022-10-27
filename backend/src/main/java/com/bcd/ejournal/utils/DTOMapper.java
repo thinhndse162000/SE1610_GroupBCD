@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
@@ -42,6 +43,14 @@ public class DTOMapper {
         paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
         paperResponse.setAuthors(toAuthorResponse(paper.getAuthor()));
         return paperResponse;
+    }
+
+    public EducationResponse toEducationResponse(Account account) {
+        EducationResponse educationResponse = new EducationResponse();
+        modelMapper.map(account.getReviewer(), educationResponse);
+        modelMapper.map(account.getAuthor(), educationResponse);
+
+        return educationResponse;
     }
 
     public AuthorResponse toAuthorResponse(Author author) {

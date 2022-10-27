@@ -80,6 +80,7 @@ public class PaperServiceImpl implements PaperService {
         }
 
         paper.setPaperId(0);
+        paper.setRound(1);
         paper.setSubmitTime(new Timestamp(System.currentTimeMillis()));
         // TODO: read number of page from pdf
         paper.setNumberOfPage(10);
@@ -129,6 +130,10 @@ public class PaperServiceImpl implements PaperService {
         // check author's ownership
         if (paper.getAuthor().getAuthorId() != accountId) {
             throw new ForbiddenException("Author does not own paper. Paper Id: " + paperId);
+        }
+
+        if (paper.getRound() != 0 || paper.getStatus() != PaperStatus.PENDING) {
+            throw new ForbiddenException("Paper cannot be updated. Paper Id: " + paperId);
         }
 
         paper.setTitle(request.getTitle());
@@ -209,9 +214,13 @@ public class PaperServiceImpl implements PaperService {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
         String fileName = paper.getLinkPDF();
-        // TODO: verify reviewer can download
-        // TODO: verify author
-        // TODO: verify manager
         return FileUtils.load(uploadDir, fileName.trim());
+    }
+
+    public void cleanDuePaper() {
+        // Update status to cancel for all paper that is in pending state for more than 6 months
+        // FIXME: fix for paper that is review for many round, should check accept date
+        paperRepository.updatePendingPaperAfter6Months();
+        // TODO: Thinh send email to author
     }
 }

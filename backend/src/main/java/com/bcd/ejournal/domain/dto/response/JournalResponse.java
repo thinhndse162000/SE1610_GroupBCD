@@ -19,6 +19,9 @@ public class JournalResponse {
     private String introduction;
     private String organization;
     private String issn;
+    private Integer numberOfRound;
+    private Integer numberOfReviewer;
     private String slug;
+    private Integer price;
     private List<Field> fields;
 }

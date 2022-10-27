@@ -2,6 +2,7 @@ package com.bcd.ejournal.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,9 @@ public interface PaperRepository extends CrudRepository<Paper, Integer> {
             + "AND (:#{#req.startDate} IS NULL OR p.submitTime > :#{#req.startDate})"
             + "AND (:#{#req.status} IS NULL OR p.status = :#{#req.status})")
     Page<Paper> searchAndFilter(PaperSearchRequest req, Pageable page);
+
+    // TODO: have a field in journal and compare that to due date in journal
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Paper p SET p.status = 'CANCEL' WHERE p.submitTime < current_date() + 180 AND p.status = 'PENDING'")
+    void updatePendingPaperAfter6Months();
 }

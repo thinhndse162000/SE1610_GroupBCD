@@ -16,5 +16,6 @@ public class InvitationReviewerResponse {
     private Integer invitationId;
     private Date inviteDate;
     private InvitationStatus status;
+    private Integer round;
     private PaperResponse paper;
 }

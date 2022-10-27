@@ -17,6 +17,7 @@ import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
 import com.bcd.ejournal.service.AccountService;
 
 @RestController
@@ -38,6 +39,13 @@ public class AccountApi {
     @PutMapping("/profile")
     public ResponseEntity<AccountProfileResponse> updateProfile(@AuthenticationPrincipal AccountJWTPayload jwt, @Valid @RequestBody AccountUpdateProfileRequest request) {
         AccountProfileResponse response = accountService.updateProfile(jwt.getAccountId(), request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/education")
+    public ResponseEntity<EducationResponse> getEducation(@AuthenticationPrincipal AccountJWTPayload payload) {
+        Integer accountId = payload.getAccountId();
+        EducationResponse response = accountService.getEducation(accountId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -21,6 +21,8 @@ public class Invitation {
     private Date inviteDate;
     @Enumerated(EnumType.STRING)
     private InvitationStatus status;
+    @Column(name = "[Round]")
+    private Integer round;
 
     @ManyToOne
     @JoinColumn(name = "ReviewerId", nullable = false)

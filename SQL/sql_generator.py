@@ -4,13 +4,17 @@ import names
 import random
 from lorem_text import lorem
 
+ROUND = 0 
+REVIEWER = 1
+
 field_num = 12
-account_num = 50
+account_num = 100
 journal_num = len(fields) * 2
 paper_num = 50 * 25
 journal_field = {}
 
 journal_accepted_paper = {}
+journal = {}
 
 paper_field = {}
 
@@ -109,6 +113,7 @@ class AccountSql(SqlTemplate):
             self.phone += 1
 
             slug = (first_name + '-' + last_name).lower()
+
             super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MANAGER', 'OPEN', '{slug}')")
             self.author.insert(f"{first_name} {last_name}")
             self.reviewer.insert_manager()
@@ -151,7 +156,13 @@ class JournalSql(SqlTemplate):
 
                 self.issn += 1
                 slug = '-'.join(name.format(field_name).lower().split())
-                super().insert(f"('{name.format(field_name)}', 'This is {name.format(field_name)}', 'FPT', '123-{self.issn}', 'OPEN', '{slug}')")
+
+                num_of_paper_round = random.choice([1, 1, 1, 1, 1, 2, 3])
+                num_of_reviewer = random.choice([3, 3, 3, 5, 5])
+
+                journal[id] = [num_of_paper_round, num_of_reviewer];
+
+                super().insert(f"('{name.format(field_name)}', 'This is {name.format(field_name)}', 'FPT', {num_of_paper_round}, {num_of_reviewer}, '123-{self.issn}', 'OPEN', '{slug}', 10000)")
 
                 self.journal_field.insert(id, random.choice(list(range(1,i+1)) + list(range(i+2, len(fields)))))
                 self.journal_field.insert(id, i+1)
@@ -183,23 +194,30 @@ class PaperSql(SqlTemplate):
         number_of_page = 10
         grade = 'null'
 
+
+        num_of_pass_paper_round = random.randint(0, journal[journal_id][ROUND] - 1)
+
         if (status == "PENDING"):
-            pending_paper_id.append([author_id, self.id])
+            pending_paper_id.append([author_id, self.id, journal_id, num_of_pass_paper_round])
             grade = 'null'
         elif (status == "ACCEPTED"):
             grade = random.randint(8, 10)
-            accepted_paper_id.append([author_id, self.id])
+            accepted_paper_id.append([author_id, self.id, journal_id])
+            num_of_pass_paper_round = journal[journal_id][ROUND]
             if (journal_id not in journal_accepted_paper):
                 journal_accepted_paper[journal_id] = []
             journal_accepted_paper[journal_id].append(self.id)
         elif (status == "REJECTED"):
             grade = random.randint(1, 6)
-            rejected_paper_id.append([author_id, self.id])
+            rejected_paper_id.append([author_id, self.id, journal_id, num_of_pass_paper_round])
         elif (status == "REVIEWING"):
             grade = 'null'
-            reviewing_paper_id.append([author_id, self.id])
+            reviewing_paper_id.append([author_id, self.id, journal_id, num_of_pass_paper_round])
 
-        super().insert(f"('{title}', '{abstract}', '{submit_time}', '{link_pdf}', '{number_of_page}', {grade}, '{status}', {journal_id}, {author_id})")
+        if (num_of_pass_paper_round != journal[journal_id][ROUND]):
+            num_of_pass_paper_round += 1
+
+        super().insert(f"('{title}', '{abstract}', '{submit_time}', '{link_pdf}', '{number_of_page}', {num_of_pass_paper_round}, {grade}, '{status}', {journal_id}, {author_id})")
 
         # insert paper field
         self.paper_field.insert(self.id, journal_field[journal_id])
@@ -225,127 +243,72 @@ class InvitationSql(SqlTemplate):
     def __init__(self):
         super().__init__(invitation_sql)
 
+    def test_reviewer_field(self, reviewer_id, paper_id):
+        return (reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id])
+
+    def insert_one_paper_round_of_review_report(self, tmp_list, journal_id, author_id, paper_id, paper_round, num_of_invitation_accept = -1):
+        if (num_of_invitation_accept == -1):
+            num_of_invitation_accept = journal[journal_id][REVIEWER]
+        reviewer_id_list = list(range(1, account_num+1))
+        random.shuffle(reviewer_id_list)
+        i = 0
+        while (i < num_of_invitation_accept):
+            reviewer_id = reviewer_id_list.pop()
+            if (reviewer_id != author_id and (self.test_reviewer_field(reviewer_id, paper_id))):
+                super().insert(f"({reviewer_id}, {paper_id}, {paper_round}, '2022-06-01', 'ACCEPTED')")
+                i += 1
+                self.add_to_reviewreport_list(tmp_list, reviewer_id, paper_id, paper_round)
+
+                self.add_reviewer_field(reviewer_id, paper_id)
+
+        self.insert_remaining(author_id, paper_id, reviewer_id_list, paper_round)
+
+    def add_to_reviewreport_list(self, tmp_list, reviewer_id, paper_id, paper_round):
+        if (reviewer_id not in tmp_list):
+            tmp_list[reviewer_id] = []
+        tmp_list[reviewer_id].append([paper_id, paper_round])
+
+    def add_reviewer_field(self, reviewer_id, paper_id):
+        if (reviewer_id not in reviewer_field):
+            reviewer_field[reviewer_id] = set()
+        if (len(reviewer_field[reviewer_id]) < 3):
+            reviewer_field[reviewer_id].update(paper_field[paper_id])
+
+    def insert_remaining(self, author_id, paper_id, reviewer_id_list, paper_round):
+        for _ in range(random.randint(2, 5)):
+
+            reviewer_id = reviewer_id_list.pop()
+            if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
+                random_status = "CANCEL"
+                if (random.randint(1, 5) == 1):
+                    random_status = "REJECTED"
+                super().insert(f"({reviewer_id}, {paper_id}, {paper_round}, '2022-06-01', '{random_status}')")
+
+                self.add_reviewer_field(reviewer_id, paper_id)
+
     def insert(self):
-        for author_id, paper_id in accepted_paper_id:
-            reviewer_id_list = list(range(1, account_num+1))
-            random.shuffle(reviewer_id_list)
-            i = 0
-            while (i < 3):
-                reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', 'ACCEPTED')")
-                    i += 1
-                    if (reviewer_id not in accepted_reviewer_paper_id):
-                        accepted_reviewer_paper_id[reviewer_id] = []
-                    accepted_reviewer_paper_id[reviewer_id].append(paper_id)
-                    if (reviewer_id not in reviewer_field):
-                        reviewer_field[reviewer_id] = set()
-                    if (len(reviewer_field[reviewer_id]) < 3):
-                        reviewer_field[reviewer_id].update(paper_field[paper_id])
+        for author_id, paper_id, journal_id in accepted_paper_id:
+            for paper_round in range(1, journal[journal_id][ROUND] + 1):
+                self.insert_one_paper_round_of_review_report(accepted_reviewer_paper_id, journal_id, author_id, paper_id, paper_round)
 
-            for _ in range(random.randint(2, 5)):
+        for author_id, paper_id, journal_id, num_of_pass_paper_round in rejected_paper_id:
+            for paper_round in range(1, num_of_pass_paper_round + 1):
+                self.insert_one_paper_round_of_review_report(accepted_reviewer_paper_id, journal_id, author_id, paper_id, paper_round)
 
-                reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
-                    random_status = "CANCEL"
-                    if (random.randint(1, 5) == 1):
-                        random_status = "REJECTED"
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', '{random_status}')")
+            self.insert_one_paper_round_of_review_report(rejected_reviewer_paper_id, journal_id, author_id, paper_id, num_of_pass_paper_round + 1)
 
-                    if (reviewer_id not in reviewer_field):
-                        reviewer_field[reviewer_id] = set()
-                    if (len(reviewer_field[reviewer_id]) < 3):
-                        reviewer_field[reviewer_id].update(paper_field[paper_id])
+        for author_id, paper_id, journal_id, num_of_pass_paper_round in pending_paper_id:
+            for paper_round in range(1, num_of_pass_paper_round + 1):
+                self.insert_one_paper_round_of_review_report(accepted_reviewer_paper_id, journal_id, author_id, paper_id, paper_round, random.randint(0, journal[journal_id][REVIEWER] - 1))
 
-        for author_id, paper_id in rejected_paper_id:
-            reviewer_id_list = list(range(1, account_num+1))
-            random.shuffle(reviewer_id_list)
-            i = 0
-            while (i < 3):
-                reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', 'ACCEPTED')")
-                    i += 1
-                    if (reviewer_id not in rejected_reviewer_paper_id):
-                        rejected_reviewer_paper_id[reviewer_id] = []
-                    rejected_reviewer_paper_id[reviewer_id].append(paper_id)
+            self.insert_one_paper_round_of_review_report(pending_reviewer_paper_id, journal_id, author_id, paper_id, num_of_pass_paper_round + 1)
 
-                    if (reviewer_id not in reviewer_field):
-                        reviewer_field[reviewer_id] = set()
-                    if (len(reviewer_field[reviewer_id]) < 3):
-                        reviewer_field[reviewer_id].update(paper_field[paper_id])
+        for author_id, paper_id, journal_id, num_of_pass_paper_round in reviewing_paper_id:
+            for paper_round in range(1, num_of_pass_paper_round + 1):
+                self.insert_one_paper_round_of_review_report(accepted_reviewer_paper_id, journal_id, author_id, paper_id, paper_round)
 
-            for _ in range(random.randint(2, 5)):
-                reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
-                    random_status = "CANCEL"
-                    if (random.randint(1, 5) == 1):
-                        random_status = "REJECTED"
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', '{random_status}')")
-                    if (reviewer_id not in reviewer_field):
-                        reviewer_field[reviewer_id] = set()
-                    if (len(reviewer_field[reviewer_id]) < 3):
-                        reviewer_field[reviewer_id].update(paper_field[paper_id])
+            self.insert_one_paper_round_of_review_report(reviewing_reviewer_paper_id, journal_id, author_id, paper_id, num_of_pass_paper_round + 1)
 
-        for author_id, paper_id in pending_paper_id:
-            reviewer_id_list = list(range(1, account_num+1))
-            random.shuffle(reviewer_id_list)
-            i = 0
-            max_num = random.randint(1, 2)
-            while (i < max_num):
-                reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', 'ACCEPTED')")
-                    i += 1
-                    if (reviewer_id not in pending_reviewer_paper_id):
-                        pending_reviewer_paper_id[reviewer_id] = []
-                    pending_reviewer_paper_id[reviewer_id].append(paper_id)
-                    if (reviewer_id not in reviewer_field):
-                        reviewer_field[reviewer_id] = set()
-                    if (len(reviewer_field[reviewer_id]) < 3):
-                        reviewer_field[reviewer_id].update(paper_field[paper_id])
-
-            for _ in range(random.randint(2, 5)):
-                reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
-                    random_status = "PENDING"
-                    if (random.randint(1, 5) == 1):
-                        random_status = "REJECTED"
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', '{random_status}')")
-                    if (reviewer_id not in reviewer_field):
-                        reviewer_field[reviewer_id] = set()
-                    if (len(reviewer_field[reviewer_id]) < 3):
-                        reviewer_field[reviewer_id].update(paper_field[paper_id])
-
-        for author_id, paper_id in reviewing_paper_id:
-            reviewer_id_list = list(range(1, account_num+1))
-            random.shuffle(reviewer_id_list)
-            i = 0
-            while (i < 3):
-                reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', 'ACCEPTED')")
-                    i += 1
-                    if (reviewer_id not in reviewing_reviewer_paper_id):
-                        reviewing_reviewer_paper_id[reviewer_id] = []
-                    reviewing_reviewer_paper_id[reviewer_id].append(paper_id)
-                    if (reviewer_id not in reviewer_field):
-                        reviewer_field[reviewer_id] = set()
-                    if (len(reviewer_field[reviewer_id]) < 3):
-                        reviewer_field[reviewer_id].update(paper_field[paper_id])
-
-            for _ in range(random.randint(2, 5)):
-
-                reviewer_id = reviewer_id_list.pop()
-                if (reviewer_id != author_id and ((reviewer_id not in reviewer_field or len(reviewer_field[reviewer_id]) < 3) or any(field in paper_field[paper_id] for field in reviewer_field[reviewer_id]))):
-                    random_status = "CANCEL"
-                    if (random.randint(1, 5) == 1):
-                        random_status = "REJECTED"
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-01', '{random_status}')")
-                    if (reviewer_id not in reviewer_field):
-                        reviewer_field[reviewer_id] = set()
-                    if (len(reviewer_field[reviewer_id]) < 3):
-                        reviewer_field[reviewer_id].update(paper_field[paper_id])
         
 class ReviewerFieldSql(SqlTemplate):
     def __init__(self):
@@ -362,32 +325,32 @@ class ReviewReportSql(SqlTemplate):
 
     def insert(self):
         for reviewer_id, paper_id_list in accepted_reviewer_paper_id.items():
-            for paper_id in paper_id_list:
+            for paper_id, paper_round in paper_id_list:
                 grade = random.randint(8, 10)
                 confidentiality = random.randint(8, 10)
                 note = lorem.paragraph()
-                super().insert(f"({reviewer_id}, {paper_id}, '2022-06-04', '{grade}', '{confidentiality}', 'ACCEPTED', '{note}', 'DONE')")
+                super().insert(f"({reviewer_id}, {paper_id}, {paper_round}, '2022-06-04', '{grade}', '{confidentiality}', 'ACCEPTED', '{note}', 'DONE')")
 
         for reviewer_id, paper_id_list in rejected_reviewer_paper_id.items():
-            for paper_id in paper_id_list:
+            for paper_id, paper_round in paper_id_list:
                 grade = random.randint(3, 6)
                 confidentiality = random.randint(8, 10)
                 note = lorem.paragraph()
-                super().insert(f"({reviewer_id}, {paper_id}, '2022-06-04', '{grade}', '{confidentiality}', 'REJECTED', '{note}', 'DONE')")
+                super().insert(f"({reviewer_id}, {paper_id}, {paper_round}, '2022-06-04', '{grade}', '{confidentiality}', 'REJECTED', '{note}', 'DONE')")
 
         for reviewer_id, paper_id_list in pending_reviewer_paper_id.items():
-            for paper_id in paper_id_list:
-                super().insert(f"({reviewer_id}, {paper_id}, '2022-06-04', null, null, null, null, 'PENDING')")
+            for paper_id, paper_round in paper_id_list:
+                super().insert(f"({reviewer_id}, {paper_id}, {paper_round}, '2022-06-04', null, null, null, null, 'PENDING')")
 
         for reviewer_id, paper_id_list in reviewing_reviewer_paper_id.items():
-            for paper_id in paper_id_list:
+            for paper_id, paper_round in paper_id_list:
                 if (1 == random.randint(1, 5)):
                     grade = random.randint(8, 10)
                     confidentiality = random.randint(8, 10)
                     note = lorem.paragraph()
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-04', {grade}, {confidentiality}, 'ACCEPTED', '{note}', 'DONE')")
+                    super().insert(f"({reviewer_id}, {paper_id}, {paper_round}, '2022-06-04', {grade}, {confidentiality}, 'ACCEPTED', '{note}', 'DONE')")
                 else:
-                    super().insert(f"({reviewer_id}, {paper_id}, '2022-06-04', null, null, null, null, 'PENDING')")
+                    super().insert(f"({reviewer_id}, {paper_id}, {paper_round}, '2022-06-04', null, null, null, null, 'PENDING')")
 
 class PublishSql(SqlTemplate):
     def __init__(self):

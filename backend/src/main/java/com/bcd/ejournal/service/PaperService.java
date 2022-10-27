@@ -28,4 +28,6 @@ public interface PaperService {
     PaperDetailResponse getPaper(Integer paperId);
 
     Resource downloadFile(Integer paperId) throws IOException;
+
+    void cleanDuePaper();
 }

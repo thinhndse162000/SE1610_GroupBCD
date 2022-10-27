@@ -48,6 +48,8 @@ public class Paper implements Serializable {
     private Integer grade;
     @Enumerated(EnumType.STRING)
     private PaperStatus status;
+    @Column(name = "[Round]")
+    private Integer round;
 
     @ManyToMany
     @JoinTable(name = "PaperField", joinColumns = @JoinColumn(name = "PaperId", referencedColumnName = "PaperId"), inverseJoinColumns = @JoinColumn(name = "FieldId", referencedColumnName = "FieldId"))

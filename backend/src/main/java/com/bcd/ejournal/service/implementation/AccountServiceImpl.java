@@ -14,6 +14,7 @@ import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.EmailDetail;
@@ -150,6 +151,14 @@ public class AccountServiceImpl implements AccountService {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
         return dtoMapper.toAccountProfileResponse(acc);
+    }
+
+    @Override
+    public EducationResponse getEducation(Integer accountId) {
+        Account acc = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NullPointerException("Account not found - " + accountId));
+
+        return dtoMapper.toEducationResponse(acc);
     }
 
     @Override
