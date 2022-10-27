@@ -57,7 +57,8 @@ const Navbar = () => {
                 Profile
               </Link>
             </>
-          )}
+          )
+          }
         </div>
         <div className="btn-container">
           <button

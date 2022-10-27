@@ -11,7 +11,7 @@ import {
 import { clearAlert } from "./utilService";
 import authFetch from "../../utils/authFetch";
 
-export const login =
+export const  login =
   ({ currentUser }) =>
     async (dispatch) => {
       dispatch({ type: SETUP_USER_BEGIN });

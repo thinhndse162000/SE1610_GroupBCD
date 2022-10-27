@@ -174,6 +174,7 @@ export const editPaper = (paper) => async (dispatch) => {
         "Content-Type": "multipart/form-data",
       },
     });
+    await authFetch.put(`/paper/${editPaperId}`, formData);
     dispatch({
       type: SUCCESS,
       payload: { msg: "Edit paper successfully" },

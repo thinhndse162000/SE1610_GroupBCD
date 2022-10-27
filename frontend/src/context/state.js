@@ -25,6 +25,17 @@ const author = {
   },
   paperStatusOptions: ["PENDING", "REVIEWING", "ACCEPTED", "REJECTED", "PUBLISH"],
 };
+const admin = {
+  editJournalID: "",
+  journal:[],
+  newJournal: {
+    name: "",
+    introduction: "",
+    organization: "",
+    issn: "",
+    journalFields: [],
+  },
+};
 
 const reviewer = {
   invitations: [],
@@ -122,4 +133,4 @@ const initialState = {
   manager,
 };
 
-export { initialState, base, reviewer, author, member, manager };
+export { initialState, base, reviewer, author, member, manager, admin };

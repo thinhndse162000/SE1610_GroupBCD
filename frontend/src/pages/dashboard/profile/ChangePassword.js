@@ -1,6 +1,6 @@
-import { min } from 'moment';
+
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, } from 'react-redux';
 import Wrapper from '../../../assets/wrappers/DashboardFormPage';
 import { Alert, FormRow } from '../../../components'
 import { chagePassword } from '../../../context/service/accountService';
@@ -16,9 +16,6 @@ const ChangePassword = () => {
     const [values, setValues] = useState(initialState);
     const [errors, setErrors] = useState(initialState);
     const dispatch = useDispatch();
-
-    const base= useSelector((state) => state.base)
-
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
 
@@ -27,25 +24,24 @@ const ChangePassword = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log('test', values)
+
         setErrors(validateChangePass(values));
-    
+
     };
-     useEffect(() => {
+    useEffect(() => {
         const { oldPassword, newPassword, newPasswordRetype } = values;
         const currentPassword = { oldPassword, newPassword, newPasswordRetype };
         if (Object.getOwnPropertyNames(errors).length === 0) {
-            dispatch(chagePassword({ currentPassword }  ));
+            dispatch(chagePassword({ currentPassword }));
         }
         // eslint-disable-next-line
-      
-        console.log ("Nguyen thi Minh Chua",base)
+
     }, [dispatch, errors])
     return (
         <Wrapper>
             < form className="form" onSubmit={onSubmit}>
                 <h3>Change password</h3>
-                {<Alert /> }
+                {<Alert />}
                 <div className="form-changePassword">
                     <FormRow
                         type="password"

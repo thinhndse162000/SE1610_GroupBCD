@@ -32,7 +32,9 @@ const AuthorAddPaper = () => {
       paperFields,
     },
   } = author;
+
   const { isLoading, showAlert, fields } = base;
+ 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({ notEmpty: true });

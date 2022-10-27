@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { IoBarChartSharp } from "react-icons/io5";
+import { IoBarChartSharp, IoKeySharp } from "react-icons/io5";
 import { MdQueryStats } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 
@@ -66,7 +66,15 @@ const NavLinks = ({ toggleSidebar }) => {
 
     profile: [
       { id: 1, text: "profile", path: "/profile", icon: <IoBarChartSharp /> },
-      { id: 2, text: "Change password", path: "changePassword", icon: <IoBarChartSharp /> },
+      { id: 2, text: "Change password", path: "change-password", icon: <IoKeySharp /> },
+
+   
+    ],
+    admin: [
+      { id: 1, text: "View journal list", path: "/admin", icon: <IoBarChartSharp /> },
+    
+      { id: 2, text: "Submit journal", path: "/admin", icon: <IoBarChartSharp /> },
+    
    
     ]
   };
