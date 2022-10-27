@@ -121,11 +121,8 @@ const ManagerPublishIssue = () => {
     }
   }
 
-  console.log(publishes);
-
   if (confirm) {
     const handleAccessLevelChange = (paperId, value) => {
-      console.log(paperId, value);
       let newPublishes = publishes;
 
       for (let i = 0; i < newPublishes.length; i++) {

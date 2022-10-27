@@ -19,6 +19,7 @@ const Invitation = ({ invitation, type = "compact", link, action = [] }) => {
             Author: {authors.fullName} - {paper.numberOfPage}{" "}
             {paper.numberOfPage > 1 ? "pages" : "page"}
           </p>
+          <p>Round: {paper.round}</p>
           <p>
             Fields:{" "}
             {paper.fields.map((field, index) => (

@@ -13,16 +13,21 @@ const MemberJournalDetail = () => {
   } = useSelector((state) => state);
 
   useEffect(() => {
-    dispatch({ type: MEMBER_JOURNAL_ID, payload: { slug } })
+    dispatch({ type: MEMBER_JOURNAL_ID, payload: { slug } });
     dispatch(getJournalFromMember({ slug }));
   }, [dispatch, slug]);
 
   if (Object.keys(journal).length > 0) {
-    return (
-      <Journal journal={journal} type="full" />
-    );
+    let action = [];
+    action.push({
+      type: "link",
+      to: "subscribe",
+      className: "btn edit-btn",
+      label: "Subscribe",
+    });
+    return <Journal journal={journal} type="full" action={action} />;
   }
-  return <></>
+  return <></>;
 };
 
 export default MemberJournalDetail;

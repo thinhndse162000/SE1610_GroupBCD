@@ -22,6 +22,7 @@ const Paper = ({ paper, type = "compact", link, action = [] }) => {
             {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} -
             Submit date: {date}
           </p>
+          <p>Round: {paper.round}/{paper.journal.numberOfRound} - Number of reviewer per round: {paper.journal.numberOfReviewer}</p>
           <p>
             Fields:{" "}
             {paper.fields.map((field, index) => (
@@ -32,7 +33,9 @@ const Paper = ({ paper, type = "compact", link, action = [] }) => {
             ))}
           </p>
           <p>
-            {paper.status !== "PENDING" && paper.status !== "REVIEWING" && <span>Grade: {paper.grade} - </span>}
+            {paper.status !== "PENDING" && paper.status !== "REVIEWING" && (
+              <span>Grade: {paper.grade} - </span>
+            )}
             <span className={`status ${paper.status.toLowerCase()}`}>
               {paper.status}
             </span>

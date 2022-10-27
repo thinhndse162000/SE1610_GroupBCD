@@ -122,7 +122,7 @@ const base = {
   showSidebar: false,
   viewType: "author",
   fields: [],
-  invitationStatus: ["PENDING", "ACCEPTED", "REJECTED"],
+  invitationStatus: ["PENDING", "ACCEPTED", "REJECTED", "CANCEL", "DUEDATE"],
 };
 
 const initialState = {

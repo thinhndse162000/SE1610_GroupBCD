@@ -66,6 +66,7 @@ const NavLinks = ({ toggleSidebar }) => {
 
     profile: [
       { id: 1, text: "profile", path: "/profile", icon: <IoBarChartSharp /> },
+      { id: 2, text: "Change password", path: "change-password", icon: <IoBarChartSharp /> },
     ]
   };
 

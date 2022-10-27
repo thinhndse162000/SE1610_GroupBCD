@@ -18,6 +18,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import authFetch from "../../../utils/authFetch";
 import validateSubmitPaper from "../../../context/validator/validateSubmitPaper";
+import FormRowFile from "../../../components/form/FormRowFile";
 
 const AuthorAddPaper = () => {
   const { base, author } = useSelector((state) => state);
@@ -103,6 +104,8 @@ const AuthorAddPaper = () => {
       dispatch(createPaper(paper))
     }
 
+    console.log(paperPdfFile)
+
     // if (!paperTitle) {
     //   setSelectValue("");
     //   navigate("/author");
@@ -124,7 +127,7 @@ const AuthorAddPaper = () => {
 
   const handleFileInput = (e) => {
     const name = e.target.name;
-    const fileName = e.target.value;
+    const fileName = e.target.files[0].name;
     const file = e.target.files[0];
     dispatch(
       handleChange({
@@ -225,9 +228,9 @@ const AuthorAddPaper = () => {
             </div>
             {/*Pdf file*/}
             <div>
-              <FormRow
-                type="file"
+              <FormRowFile
                 labelText="PDF file"
+                value={paperPdfFile.fileName}
                 name="paperPdfFile"
                 handleChange={handleFileInput}
               />

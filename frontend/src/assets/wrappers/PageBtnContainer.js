@@ -8,6 +8,7 @@ const Wrapper = styled.section`
   justify-content: end;
   flex-wrap: wrap;
   gap: 1rem;
+
   .btn-container {
     background: var(--primary-100);
     border-radius: var(--borderRadius);

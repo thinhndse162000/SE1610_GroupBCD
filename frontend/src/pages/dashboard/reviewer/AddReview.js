@@ -66,10 +66,7 @@ const AddReview = () => {
       reviewConfidentiality,
       reviewVerdict,
     };
-    console.log(reviewNote)
     setErrors(validateSubmitReview(review))
-    console.log(review)
-    console.log(errors)
     // dispatch(editReview(review));
     return;
   };
