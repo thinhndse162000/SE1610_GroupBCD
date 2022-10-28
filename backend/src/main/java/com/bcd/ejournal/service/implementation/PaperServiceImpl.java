@@ -145,16 +145,18 @@ public class PaperServiceImpl implements PaperService {
         paper.setTitle(request.getTitle());
         paper.setSummary(request.getSummary());
 
-        String fileName = request.getFile().getOriginalFilename();
-        MultipartFile file = request.getFile();
-        paper.setLinkPDF(fileName);
-        // TODO: delete old file if update
-        try {
-            FileUtils.saveFile(uploadDir, fileName, file);
-        } catch (NullPointerException ex) {
-            System.out.println("Null");
-        } catch (IOException ex) {
-            System.out.println("IOexception");
+        if (request.getFile() != null) {
+            String fileName = request.getFile().getOriginalFilename();
+            MultipartFile file = request.getFile();
+            paper.setLinkPDF(fileName);
+            // TODO: delete old file if update
+            try {
+                FileUtils.saveFile(uploadDir, fileName, file);
+            } catch (NullPointerException ex) {
+                System.out.println("Null");
+            } catch (IOException ex) {
+                System.out.println("IOexception");
+            }
         }
 
         paperRepository.save(paper);

@@ -68,15 +68,11 @@ public class Paper implements Serializable {
 	@OneToMany(mappedBy = "paper", fetch = FetchType.LAZY)
 	private List<Invitation> invitations;
 
+    @OneToMany(mappedBy = "paper")
+    private List<ReviewReport> reviewReports;
 
 	public Paper(PaperSubmitRequest model) {
 		this.title = model.getTitle();
 		this.summary = model.getSummary();
 	}
-
-	public Streamable<Order> getReviewReports() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

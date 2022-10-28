@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.domain.dto.request.ReviewReportSearchFilterRequest;
@@ -103,7 +104,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
                 paper.setStatus(PaperStatus.REJECTED);
             }
             // grade is avarage of total grade
-            paper.setGrade(grade / 3);
+            paper.setGrade(grade / journal.getNumberOfReviewer());
 
             paperRepository.save(paper);
         }
@@ -133,7 +134,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     @Override
     public PagingResponse search(ReviewReportSearchFilterRequest req) {
         int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
-        Pageable page = PageRequest.of(pageNum, 10);
+        Pageable page = PageRequest.of(pageNum, 10, Sort.by("reviewReportId").descending());
         Page<ReviewReport> reviewReports = reviewreportRepository.search(req, page);
         PagingResponse response = new PagingResponse();
         response.setResult(reviewReports.stream().map(dtoMapper::toReviewReportDetailResponse)

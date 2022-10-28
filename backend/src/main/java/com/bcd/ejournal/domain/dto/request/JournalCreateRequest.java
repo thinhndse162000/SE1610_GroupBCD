@@ -21,7 +21,7 @@ public class JournalCreateRequest {
     @NotBlank
     private String issn;
     @NotBlank
-    private Integer numOfRound;
+    private Integer numberOfRound;
     @NotBlank
-    private Integer numOfReviewer;
+    private Integer numberOfReviewer;
 }
