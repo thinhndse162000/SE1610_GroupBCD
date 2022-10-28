@@ -99,7 +99,7 @@ class AccountSql(SqlTemplate):
             self.phone += 1
 
             slug = (first_name + '-' + last_name).lower()
-            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MEMBER', 'OPEN', '{slug}')")
+            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MEMBER', 'OPEN', '{slug}', 1)")
             self.author.insert(f"{first_name} {last_name}")
             self.reviewer.insert_account()
 
@@ -114,7 +114,7 @@ class AccountSql(SqlTemplate):
 
             slug = (first_name + '-' + last_name).lower()
 
-            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MANAGER', 'OPEN', '{slug}')")
+            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MANAGER', 'OPEN', '{slug}', 1)")
             self.author.insert(f"{first_name} {last_name}")
             self.reviewer.insert_manager()
 

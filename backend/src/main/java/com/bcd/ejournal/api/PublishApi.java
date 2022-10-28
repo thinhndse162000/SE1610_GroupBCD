@@ -1,7 +1,5 @@
 package com.bcd.ejournal.api;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +30,10 @@ public class PublishApi {
         PublishResponse response = publishService.getPublish(publishId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
+
     @PostMapping("/search")
-    public ResponseEntity<PagingResponse> searchFilter(@RequestBody PublishSearchFilterRequest request ){
-    	PagingResponse responses = publishService.searchByFilter(request);
-    	return new ResponseEntity<>(responses, HttpStatus.OK);
-    	
+    public ResponseEntity<PagingResponse> searchFilter(@RequestBody PublishSearchFilterRequest request) {
+        PagingResponse responses = publishService.searchByFilter(request);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }

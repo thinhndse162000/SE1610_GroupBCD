@@ -45,7 +45,8 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     private String uploadDir;
 
     @Autowired
-    public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
+    public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository,
+            PaperRepository paperRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
         this.reviewreportRepository = reviewreportRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
@@ -61,9 +62,10 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         // check if reviewer ownership
         if (reviewReport.getReviewer().getReviewerId() != accountId) {
             throw new ForbiddenException("Access denied for review report. Id: " + reviewReportId);
-        } 
+        }
         // check if in reviewing process
-        if (reviewReport.getPaper().getStatus() != PaperStatus.REVIEWING && reviewReport.getPaper().getStatus() != PaperStatus.PENDING) {
+        if (reviewReport.getPaper().getStatus() != PaperStatus.REVIEWING
+                && reviewReport.getPaper().getStatus() != PaperStatus.PENDING) {
             throw new MethodNotAllowedException("Paper not in reviewing process. Review report Id: " + reviewReportId);
         }
 
@@ -76,7 +78,8 @@ public class ReviewReportServiceImpl implements ReviewReportService {
 
         // TODO: test this
         // evaluation process
-        List<ReviewReport> reviewReports = reviewreportRepository.findByPaperIdAndStatus(paper.getPaperId(), ReviewReportStatus.DONE);
+        List<ReviewReport> reviewReports = reviewreportRepository.findByPaperIdAndStatus(paper.getPaperId(),
+                ReviewReportStatus.DONE);
 
         if (reviewReports.size() == journal.getNumberOfReviewer()) {
             int accepted = 0;
@@ -88,7 +91,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
                 }
             }
 
-            // accept if two or more reviewer accept 
+            // accept if two or more reviewer accept
             if (accepted >= (journal.getNumberOfReviewer() + 1) / 2) {
                 if (paper.getRound() == journal.getNumberOfRound()) {
                     paper.setStatus(PaperStatus.ACCEPTED);
@@ -118,7 +121,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     @Override
     public ReviewReportDetailResponse getReviewReport(Integer reviewerId, Integer reviewReportId) {
         ReviewReport reviewReport = reviewreportRepository.findById(reviewReportId)
-            .orElseThrow(() -> new NullPointerException("No review report found. Id: " + reviewReportId));
+                .orElseThrow(() -> new NullPointerException("No review report found. Id: " + reviewReportId));
 
         if (reviewReport.getReviewer().getReviewerId() != reviewerId) {
             throw new MethodNotAllowedException("Review not allow to see this");
@@ -127,16 +130,16 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         return dtoMapper.toReviewReportDetailResponse(reviewReport);
     }
 
-	@Override
-	public PagingResponse search(ReviewReportSearchFilterRequest req) {
-		int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
-		Pageable page = PageRequest.of(pageNum, 10);
-		Page<ReviewReport> reviewReports = reviewreportRepository.search(req, page);
+    @Override
+    public PagingResponse search(ReviewReportSearchFilterRequest req) {
+        int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
+        Pageable page = PageRequest.of(pageNum, 10);
+        Page<ReviewReport> reviewReports = reviewreportRepository.search(req, page);
         PagingResponse response = new PagingResponse();
         response.setResult(reviewReports.stream().map(dtoMapper::toReviewReportDetailResponse)
-				.collect(Collectors.toList()));
+                .collect(Collectors.toList()));
         response.setNumOfPage(reviewReports.getTotalPages());
         response.setTotalFound(reviewReports.getTotalElements());
         return response;
-	}
+    }
 }

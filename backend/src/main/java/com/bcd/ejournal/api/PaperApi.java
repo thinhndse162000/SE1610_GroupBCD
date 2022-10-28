@@ -27,6 +27,7 @@ import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.service.PaperService;
 
+
 @RestController
 @RequestMapping(path = "/paper")
 public class PaperApi {
@@ -47,8 +48,10 @@ public class PaperApi {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
     public ResponseEntity<Void> updatePaper(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable(name = "id") Integer paperId, @ModelAttribute PaperUpdateRequest request) {
         paperService.updatePaper(payload.getAccountId(), paperId, request);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -19,7 +19,7 @@ public interface InvitationService {
     List<InvitationPaperResponse> listInvitationFromPaper(Integer accountId, Integer paperId);
 
     void updateStatus(Integer reviewerId, Integer invitationId, InvitationStatus status);
-    
+
     PagingResponse searchFilterInvitation(InvitationSearchFilterRequest filterRequest);
 
     void cleanDueInvitation();

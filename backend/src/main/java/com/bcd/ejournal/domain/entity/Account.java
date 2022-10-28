@@ -51,7 +51,8 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
     private String slug;
-
+    private boolean enable;
+    
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Author author;
@@ -109,5 +110,4 @@ public class Account implements UserDetails {
     public boolean isEnabled() {
         return status == AccountStatus.OPEN;
     }
-
 }

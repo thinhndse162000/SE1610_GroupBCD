@@ -34,6 +34,7 @@ import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.FieldRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PaperRepository;
+import com.bcd.ejournal.service.EmailService;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.DTOMapper;
 import com.bcd.ejournal.utils.FileUtils;
@@ -47,6 +48,9 @@ public class PaperServiceImpl implements PaperService {
     private final DTOMapper dtoMapper;
     @Value("${paper.file.dir}")
     private String uploadDir;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository,
@@ -98,6 +102,8 @@ public class PaperServiceImpl implements PaperService {
         paper.setJournal(journal);
         journal.getPapers().add(paper);
 
+        emailService.sendEmailSumbitPaper(author.getAccount());
+
         paperRepository.save(paper);
     }
 
@@ -132,7 +138,7 @@ public class PaperServiceImpl implements PaperService {
             throw new ForbiddenException("Author does not own paper. Paper Id: " + paperId);
         }
 
-        if (paper.getRound() != 0 || paper.getStatus() != PaperStatus.PENDING) {
+        if (paper.getStatus() != PaperStatus.PENDING) {
             throw new ForbiddenException("Paper cannot be updated. Paper Id: " + paperId);
         }
 
@@ -164,7 +170,7 @@ public class PaperServiceImpl implements PaperService {
         PagingResponse response = new PagingResponse();
 
         response.setResult(papers.stream().map(dtoMapper::toPaperResponse)
-				.collect(Collectors.toList()));
+                .collect(Collectors.toList()));
         response.setNumOfPage(papers.getTotalPages());
         response.setTotalFound(papers.getTotalElements());
 
@@ -174,24 +180,18 @@ public class PaperServiceImpl implements PaperService {
     @Override
     public List<PaperResponse> getAllPaperFromAuthor(Integer authorId) {
         Author author = accountRepository.findById(authorId)
-                .orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId))
-                .getAuthor();
+                .orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId)).getAuthor();
 
         List<Paper> papers = author.getPapers();
-        return papers.stream()
-                .map(dtoMapper::toPaperResponse)
-                .collect(Collectors.toList());
+        return papers.stream().map(dtoMapper::toPaperResponse).collect(Collectors.toList());
     }
 
     @Override
     public List<PaperResponse> getAllPaperFromJournal(Integer journalId) {
         Journal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new NullPointerException("Journal not found. Id: " + journalId));
-
         List<Paper> papers = journal.getPapers();
-        return papers.stream()
-                .map(dtoMapper::toPaperResponse)
-                .collect(Collectors.toList());
+        return papers.stream().map(dtoMapper::toPaperResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -218,7 +218,8 @@ public class PaperServiceImpl implements PaperService {
     }
 
     public void cleanDuePaper() {
-        // Update status to cancel for all paper that is in pending state for more than 6 months
+        // Update status to cancel for all paper that is in pending state for more than
+        // 6 months
         // FIXME: fix for paper that is review for many round, should check accept date
         paperRepository.updatePendingPaperAfter6Months();
         // TODO: Thinh send email to author

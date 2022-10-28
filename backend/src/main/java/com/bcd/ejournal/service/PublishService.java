@@ -19,6 +19,6 @@ public interface PublishService {
     PublishResponse getPublish(Integer publishId);
 
     PublishResponse updateAccessLevel(Integer accountId, Integer publishId, PublishAccessLevel accessLevel);
-    
-    PagingResponse searchByFilter (PublishSearchFilterRequest req);
+
+    PagingResponse searchByFilter(PublishSearchFilterRequest req);
 }

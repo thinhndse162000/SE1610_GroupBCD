@@ -12,8 +12,6 @@ import com.bcd.ejournal.domain.entity.Paper;
 
 @Repository
 public interface PaperRepository extends CrudRepository<Paper, Integer> {
-    @Query("SELECT p FROM Paper p WHERE p.title LIKE %:title%")
-    Iterable<Paper> searchByTitle(String title);
 
     @Query("SELECT p FROM Paper p JOIN p.journal j JOIN p.author a "
             + "WHERE (:#{#req.title} IS NULL OR p.title LIKE %:#{#req.title}%)"
@@ -23,7 +21,6 @@ public interface PaperRepository extends CrudRepository<Paper, Integer> {
             + "AND (:#{#req.status} IS NULL OR p.status = :#{#req.status})")
     Page<Paper> searchAndFilter(PaperSearchRequest req, Pageable page);
 
-    // TODO: have a field in journal and compare that to due date in journal
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Paper p SET p.status = 'CANCEL' WHERE p.submitTime < current_date() + 180 AND p.status = 'PENDING'")
     void updatePendingPaperAfter6Months();

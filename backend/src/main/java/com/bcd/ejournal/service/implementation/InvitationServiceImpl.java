@@ -16,6 +16,7 @@ import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.PagingResponse;
+import com.bcd.ejournal.domain.entity.EmailDetail;
 import com.bcd.ejournal.domain.entity.Invitation;
 import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
@@ -30,6 +31,7 @@ import com.bcd.ejournal.repository.InvitationRepository;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
+import com.bcd.ejournal.service.EmailService;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.utils.DTOMapper;
 
@@ -40,18 +42,23 @@ public class InvitationServiceImpl implements InvitationService {
     private final PaperRepository paperRepository;
     private final ReviewReportRepository reviewReportRepository;
     private final DTOMapper dtoMapper;
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
-    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, DTOMapper dtoMapper) {
+    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository,
+            PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, DTOMapper dtoMapper) {
         this.invitationRepository = invitationRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
         this.reviewReportRepository = reviewReportRepository;
         this.dtoMapper = dtoMapper;
+
     }
 
     @Override
-    public InvitationPaperResponse sendInvitation(Integer accountId, Integer reviewerId, ReviewerInvitationRequest request) {
+    public InvitationPaperResponse sendInvitation(Integer accountId, Integer reviewerId,
+            ReviewerInvitationRequest request) {
         Reviewer reviewer = reviewerRepository.findById(reviewerId)
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. Id: " + reviewerId));
         // check if reviewer invitable
@@ -82,14 +89,18 @@ public class InvitationServiceImpl implements InvitationService {
         invitation.setReviewer(reviewer);
         invitation.setPaper(paper);
 
+        EmailDetail detail = new EmailDetail();
+        detail.setRecipient(reviewer.getAccount().getEmail());
+        emailService.sendEmailInvitaion(detail);
         invitationRepository.save(invitation);
+
         return dtoMapper.toInvitationPaperResponse(invitation);
     }
 
     @Override
     public InvitationReviewerResponse getInvitation(Integer accountId, Integer invitationId) {
         Invitation invitation = invitationRepository.findByIdAndReviewerId(invitationId, accountId)
-            .orElseThrow(() -> new NullPointerException("Invitation not found. Id: " + invitationId));
+                .orElseThrow(() -> new NullPointerException("Invitation not found. Id: " + invitationId));
         return dtoMapper.toInvitationReviewerResponse(invitation);
     }
 
@@ -97,7 +108,7 @@ public class InvitationServiceImpl implements InvitationService {
     public List<InvitationReviewerResponse> listInvitationFromReviewer(Integer reviewerId) {
         Reviewer reviewer = reviewerRepository.findById(reviewerId)
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. Id: " + reviewerId));
-        List<Invitation> invitations = reviewer.getInvitations();
+        List<Invitation> invitations = reviewer.getInvitations1();
         return invitations.stream()
                 .map(dtoMapper::toInvitationReviewerResponse)
                 .collect(Collectors.toList());
@@ -134,7 +145,8 @@ public class InvitationServiceImpl implements InvitationService {
 
         Paper paper = invitation.getPaper();
         Journal journal = paper.getJournal();
-        List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(), InvitationStatus.ACCEPTED);
+        List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(),
+                InvitationStatus.ACCEPTED);
 
         // Create new review report
         ReviewReport reviewReport = new ReviewReport();
@@ -148,27 +160,27 @@ public class InvitationServiceImpl implements InvitationService {
             // update paper status
             paper.setStatus(PaperStatus.REVIEWING);
             paperRepository.save(paper);
-
             // change status of other invitation to cancel
-            invitationRepository.updateInvitationStatusByPaperIdAndRound(paper.getPaperId(), paper.getRound(), InvitationStatus.CANCEL);
+            invitationRepository.updateInvitationStatusByPaperIdAndRound(paper.getPaperId(), paper.getRound(),
+                    InvitationStatus.CANCEL);
         }
     }
 
-	@Override
-	public PagingResponse searchFilterInvitation(InvitationSearchFilterRequest filterRequest) {
-		int pageNum = filterRequest.getPage() != null ? filterRequest.getPage() - 1 : 0;
-		Pageable page = PageRequest.of(pageNum, 10);
-		Page<Invitation> invitation = invitationRepository.searchFilter(filterRequest, page);
+    @Override
+    public PagingResponse searchFilterInvitation(InvitationSearchFilterRequest filterRequest) {
+        int pageNum = filterRequest.getPage() != null ? filterRequest.getPage() - 1 : 0;
+        Pageable page = PageRequest.of(pageNum, 10);
+        Page<Invitation> invitation = invitationRepository.searchFilter(filterRequest, page);
 
         PagingResponse response = new PagingResponse();
 
         response.setResult(invitation.stream().map(dtoMapper::toInvitationReviewerResponse)
-				.collect(Collectors.toList()));
+                .collect(Collectors.toList()));
         response.setNumOfPage(invitation.getTotalPages());
         response.setTotalFound(invitation.getTotalElements());
 
         return response;
-	}
+    }
 
     @Override
     @Transactional

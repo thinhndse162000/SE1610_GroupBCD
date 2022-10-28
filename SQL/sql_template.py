@@ -1,5 +1,5 @@
 account_sql = """INSERT INTO Account
-  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status, slug)
+  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status, slug, [enable])
 VALUES
   """ 
 

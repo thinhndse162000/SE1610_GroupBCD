@@ -20,6 +20,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.util.Streamable;
+
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 
@@ -65,11 +68,15 @@ public class Paper implements Serializable {
 	@OneToMany(mappedBy = "paper", fetch = FetchType.LAZY)
 	private List<Invitation> invitations;
 
-    @OneToMany(mappedBy = "paper")
-    private List<ReviewReport> reviewReports;
 
-    public Paper(PaperSubmitRequest model) {
-        this.title = model.getTitle();
-        this.summary = model.getSummary();
-    }
+	public Paper(PaperSubmitRequest model) {
+		this.title = model.getTitle();
+		this.summary = model.getSummary();
+	}
+
+	public Streamable<Order> getReviewReports() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
