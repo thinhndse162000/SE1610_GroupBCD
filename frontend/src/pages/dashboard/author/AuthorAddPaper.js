@@ -104,12 +104,10 @@ const AuthorAddPaper = () => {
       dispatch(createPaper(paper))
     }
 
-    console.log(paperPdfFile)
-
-    // if (!paperTitle) {
-    //   setSelectValue("");
-    //   navigate("/author");
-    // }
+    if (paperTitle) {
+      setSelectValue("");
+      navigate("/author");
+    }
     // eslint-disable-next-line
   }, [dispatch, errors])
 

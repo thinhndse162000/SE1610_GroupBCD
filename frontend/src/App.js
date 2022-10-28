@@ -118,6 +118,7 @@ function App() {
           }
         >
           <Route index element={<ViewProfle />} />
+          <Route path="change-password" element={<ChangePassword />} />
            </Route>
 
         <Route path="/signup" element={<Signup />} />

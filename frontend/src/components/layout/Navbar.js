@@ -52,7 +52,7 @@ const Navbar = () => {
                 Reviewer
               </Link>
               <Link
-                to="/Profile"
+                to="/profile"
                 onClick={(e) => dispatch(changeView("profile"))}
               >
                 Profile
