@@ -2,6 +2,7 @@ package com.bcd.ejournal.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -11,8 +12,6 @@ import com.bcd.ejournal.domain.entity.Paper;
 
 @Repository
 public interface PaperRepository extends CrudRepository<Paper, Integer> {
-    @Query("SELECT p FROM Paper p WHERE p.title LIKE %:title%")
-    Iterable<Paper> searchByTitle(String title);
 
     @Query("SELECT p FROM Paper p JOIN p.journal j JOIN p.author a "
             + "WHERE (:#{#req.title} IS NULL OR p.title LIKE %:#{#req.title}%)"
@@ -21,4 +20,8 @@ public interface PaperRepository extends CrudRepository<Paper, Integer> {
             + "AND (:#{#req.startDate} IS NULL OR p.submitTime > :#{#req.startDate})"
             + "AND (:#{#req.status} IS NULL OR p.status = :#{#req.status})")
     Page<Paper> searchAndFilter(PaperSearchRequest req, Pageable page);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Paper p SET p.status = 'CANCEL' WHERE p.submitTime < current_date() + 180 AND p.status = 'PENDING'")
+    void updatePendingPaperAfter6Months();
 }

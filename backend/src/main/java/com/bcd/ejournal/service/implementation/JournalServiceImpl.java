@@ -1,5 +1,6 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -17,6 +18,7 @@ import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Issue;
@@ -43,7 +45,8 @@ public class JournalServiceImpl implements JournalService {
 
     @Autowired
     public JournalServiceImpl(JournalRepository journalRepository, IssueRepository issueRepository,
-            AccountRepository accountRepository, PaperRepository paperRepository,ModelMapper modelMapper, DTOMapper dtoMapper) {
+            AccountRepository accountRepository, PaperRepository paperRepository, ModelMapper modelMapper,
+            DTOMapper dtoMapper) {
         this.journalRepository = journalRepository;
         this.issueRepository = issueRepository;
         this.accountRepository = accountRepository;
@@ -63,8 +66,9 @@ public class JournalServiceImpl implements JournalService {
         Journal journal = modelMapper.map(request, Journal.class);
         journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
-        journal = journalRepository.save(journal);
         journal.setSlug(request.getName().toLowerCase());
+        journal = journalRepository.save(journal);
+
         return modelMapper.map(journal, JournalResponse.class);
     }
 
@@ -94,37 +98,44 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<JournalResponse> search(JournalSearchRequest request) {
+    public PagingResponse search(JournalSearchRequest request) {
         int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10);
-        System.out.println(request.getName());
-        Page<Journal> journals = journalRepository.searchRequest(request, page);
+        if (request.getFieldIds() == null) {
+            request.setFieldIds(new ArrayList<>());
+        }
 
-        return journals.stream()
+        Page<Journal> journals = journalRepository.searchRequest(request, Long.valueOf(request.getFieldIds().size()),
+                page);
+
+        PagingResponse response = new PagingResponse();
+        response.setNumOfPage(journals.getTotalPages());
+        response.setTotalFound(journals.getTotalElements());
+
+        response.setResult(journals.stream()
                 .map((journal) -> modelMapper.map(journal, JournalResponse.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        return response;
     }
 
     @Override
     public List<IssueResponse> listAllIssues(Integer journalId) {
         Iterable<Issue> issues = issueRepository.findAllByJournalId(journalId);
-        return StreamSupport.stream(issues.spliterator(), false)
-                .map(dtoMapper::toIssueResponse)
+        return StreamSupport.stream(issues.spliterator(), false).map(dtoMapper::toIssueResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<IssueResponse> listAllIssues(String slug) {
         Iterable<Issue> issues = issueRepository.findAllByJournalSlug(slug);
-        return StreamSupport.stream(issues.spliterator(), false)
-                .map(dtoMapper::toIssueResponse)
+        return StreamSupport.stream(issues.spliterator(), false).map(dtoMapper::toIssueResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<IssueResponse> listAllIssuesFromManager(Integer accountId) {
         Account acc = accountRepository.findById(accountId)
-            .orElseThrow(() -> new NullPointerException("Manager not found. Id: " + accountId));
+                .orElseThrow(() -> new NullPointerException("Manager not found. Id: " + accountId));
         List<Issue> issues = acc.getJournal().getIssues();
         return issues.stream()
                 .map(dtoMapper::toIssueResponse)
@@ -164,13 +175,9 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<PaperResponse> getAllPaper(Integer accountId, PaperSearchRequest request) {
+    public PagingResponse getAllPaper(Integer accountId, PaperSearchRequest request) {
         Account acc = accountRepository.findById(accountId)
                 .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
-
-        if (acc.getRole() != AccountRole.MANAGER) {
-            throw new ForbiddenException("Unauthorized action");
-        }
 
         int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10, Sort.by("submitTime").descending());
@@ -178,9 +185,13 @@ public class JournalServiceImpl implements JournalService {
         request.setJournalId(acc.getJournal().getJournalId());
 
         Page<Paper> papers = paperRepository.searchAndFilter(request, page);
+        PagingResponse response = new PagingResponse();
 
-        return papers.stream()
-                .map(dtoMapper::toPaperResponse)
-                .collect(Collectors.toList());
+        response.setResult(papers.stream().map(dtoMapper::toPaperResponse)
+                .collect(Collectors.toList()));
+        response.setNumOfPage(papers.getTotalPages());
+        response.setTotalFound(papers.getTotalElements());
+
+        return response;
     }
 }

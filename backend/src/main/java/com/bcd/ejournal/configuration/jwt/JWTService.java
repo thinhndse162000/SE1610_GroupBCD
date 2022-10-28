@@ -38,6 +38,25 @@ public class JWTService implements JWTSerializer, JWTDeserializer {
         return message.concat(".").concat(signature);
     }
     
+    public String jwtShrotDuration(Account account) {
+        AccountJWTPayload payload = AccountJWTPayload.of(account, now().getEpochSecond() + 300);
+        String payloadBase64 = Base64URL.encode(payload.toString());
+
+        final String message = JWT_HEADER.concat(".").concat(payloadBase64);
+
+        final String signature = Base64URL.encode(HmacSHA256.sign(secret, message));
+        return message.concat(".").concat(signature);
+    }
+    public String jwtEmailVerify(Account account) {
+        AccountJWTPayload payload = AccountJWTPayload.of(account, now().getEpochSecond() + 300);
+        String payloadBase64 = Base64URL.encode(payload.toString());
+
+        final String message = JWT_HEADER.concat(".").concat(payloadBase64);
+
+        final String signature = Base64URL.encode(HmacSHA256.sign(secret, message));
+        return message.concat(".").concat(signature);
+    }
+    
     @Override
     public JWTPayload jwtPayloadFromJWT(String jwtToken) {
         // Check structure
@@ -60,10 +79,6 @@ public class JWTService implements JWTSerializer, JWTDeserializer {
         try {
             final String decodedPayload = Base64URL.decode(splintedTokens[1]);
             final JWTPayload jwtPayload = objectMapper.readValue(decodedPayload, AccountJWTPayload.class);
-            // Check expired
-            if (jwtPayload.isExpired()) {
-                throw new IllegalArgumentException("Token expired");
-            }
             return jwtPayload;
         } catch (Exception exception) {
             throw new IllegalArgumentException(exception);

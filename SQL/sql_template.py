@@ -1,5 +1,5 @@
 account_sql = """INSERT INTO Account
-  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status, slug)
+  (email, password, phone, firstName, lastName, organization, DateOfBirth, role, status, slug, [enable])
 VALUES
   """ 
 
@@ -19,7 +19,7 @@ VALUES
   """
 
 journal_sql = """INSERT INTO Journal
-  (name, Introduction, organization, issn, status, slug)
+  (name, Introduction, organization, NumberOfRound, NumberOfReviewer, issn, status, slug, price)
 VALUES
   """
 
@@ -49,12 +49,12 @@ VALUES
   """
 
 paper_sql = """INSERT INTO Paper
-  (title, abstract, SubmitTime, LinkPDF, NumberOfPage, Grade, Status, JournalID, authorID)
+  (title, abstract, SubmitTime, LinkPDF, NumberOfPage, [Round], Grade, Status, JournalID, authorID)
 VALUES
   """
 
 invitation_sql = """INSERT INTO Invitation
-  (ReviewerId, PaperId, InviteDate, status)
+  (ReviewerId, PaperId, [Round], InviteDate, status)
 VALUES
   """
 
@@ -64,7 +64,7 @@ VALUES
   """
 
 reviewreport_sql = """INSERT INTO ReviewReport
-  (ReviewerId, PaperID, ReviewDate, grade, Confidentiality, verdict, Note, status)
+  (ReviewerId, PaperID, [Round], ReviewDate, grade, Confidentiality, verdict, Note, status)
 VALUES
   """
 

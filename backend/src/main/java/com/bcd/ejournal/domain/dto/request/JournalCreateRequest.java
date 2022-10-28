@@ -20,4 +20,8 @@ public class JournalCreateRequest {
     private String organization;
     @NotBlank
     private String issn;
+    @NotBlank
+    private Integer numOfRound;
+    @NotBlank
+    private Integer numOfReviewer;
 }

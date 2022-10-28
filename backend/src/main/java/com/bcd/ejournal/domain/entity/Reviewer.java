@@ -40,8 +40,9 @@ public class Reviewer {
     private Account account;
 
     @OneToMany(mappedBy = "reviewer")
-    private List<Invitation> invitations;
+    private List<Invitation> invitations1;
 
     @OneToMany(mappedBy = "reviewer")
     private List<ReviewReport> reviewReports;
+
 }

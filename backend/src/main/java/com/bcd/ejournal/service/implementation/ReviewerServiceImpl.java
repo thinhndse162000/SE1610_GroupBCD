@@ -26,6 +26,7 @@ public class ReviewerServiceImpl implements ReviewerService {
     @Override
     public List<ReviewerResponse> searchReviewerAvailable(Integer paperId, String name) {
         List<Reviewer> reviewer = reviewerRepository.findAvailableReviewer(paperId);
+
         return reviewer.stream()
                 .map(dtoMapper::toReviewerResponse)
                 .filter(reviewerResponse -> reviewerResponse.getFullName().contains(name))

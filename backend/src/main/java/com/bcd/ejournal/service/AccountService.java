@@ -4,14 +4,16 @@ import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountLoginRequest;
 import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
+import com.bcd.ejournal.domain.dto.request.TokenRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
 
 public interface AccountService {
     AccountTokenResponse login(AccountLoginRequest req);
 
-    AccountTokenResponse signup(AccountSignupRequest req);
+    void signup(AccountSignupRequest req);
 
     void changePassword(Integer id, AccountChangePasswordRequest req);
 
@@ -19,7 +21,11 @@ public interface AccountService {
 
     AccountProfileResponse getProfile(Integer id);
 
+    EducationResponse getEducation(Integer accountId);
+
     void archiveAccount(Integer id);
 
     AuthorResponse getAuthorFromSlug(String slug);
+    
+    void verify(TokenRequest request);
 }
