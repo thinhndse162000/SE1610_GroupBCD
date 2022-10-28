@@ -99,7 +99,7 @@ class AccountSql(SqlTemplate):
             self.phone += 1
 
             slug = (first_name + '-' + last_name).lower()
-            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MEMBER', 'OPEN', '{slug}', 1)")
+            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name} {i}', 'FPT', '2001-01-01', 'MEMBER', 'OPEN', '{slug}', 1)")
             self.author.insert(f"{first_name} {last_name}")
             self.reviewer.insert_account()
 
@@ -114,7 +114,7 @@ class AccountSql(SqlTemplate):
 
             slug = (first_name + '-' + last_name).lower()
 
-            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name}', 'FPT', '2001-01-01', 'MANAGER', 'OPEN', '{slug}', 1)")
+            super().insert(f"('{email}', '{password}', '{phone}', '{first_name}', '{last_name} {i+account_num}', 'FPT', '2001-01-01', 'MANAGER', 'OPEN', '{slug}', 1)")
             self.author.insert(f"{first_name} {last_name}")
             self.reviewer.insert_manager()
 
@@ -162,7 +162,7 @@ class JournalSql(SqlTemplate):
 
                 journal[id] = [num_of_paper_round, num_of_reviewer];
 
-                super().insert(f"('{name.format(field_name)}', 'This is {name.format(field_name)}', 'FPT', {num_of_paper_round}, {num_of_reviewer}, '123-{self.issn}', 'OPEN', '{slug}', 10000)")
+                super().insert(f"('{name.format(field_name)} {id-1}', 'This is {name.format(field_name)}', 'FPT', {num_of_paper_round}, {num_of_reviewer}, '123-{self.issn}', 'OPEN', '{slug}', 10000)")
 
                 self.journal_field.insert(id, random.choice(list(range(1,i+1)) + list(range(i+2, len(fields)))))
                 self.journal_field.insert(id, i+1)
