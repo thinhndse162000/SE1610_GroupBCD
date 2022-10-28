@@ -18,7 +18,7 @@ const combinedReducer = combineReducers({
 });
 
 const reducer = (state, action) => {
-  switch (action.type) {
+   switch (action.type) {
     case LOGOUT_USER:
       return {
         ...initialState,

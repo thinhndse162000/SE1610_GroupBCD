@@ -19,7 +19,7 @@ export const getInvitation = () => async (dispatch) => {
     dispatch(
       handleChange({ name: "invitations", value: data, type: "reviewer" })
     );
-  } catch (error) {
+  } catch (error) { 
     if (error.response.status === 401) return;
     dispatch({
       type: ERROR,

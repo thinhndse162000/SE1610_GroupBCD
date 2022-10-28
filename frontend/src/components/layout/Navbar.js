@@ -26,7 +26,7 @@ const Navbar = () => {
           <h3 className="logo-text">dashboard</h3>
         </div>
         <div className="navigation-link">
-          {role === "MANAGER" ? (
+          {   role === "MANAGER" ? (
             <Link
               to="/manager"
               onClick={(e) => dispatch(changeView("manager"))}

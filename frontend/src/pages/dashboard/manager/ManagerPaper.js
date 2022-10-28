@@ -31,7 +31,7 @@ const ManagerPaper = () => {
   useEffect(() => {
     dispatch(getSentPaper({}));
     dispatch(getJournalFromManager());
-    console.log("data")
+
   }, [dispatch]);
 
   const handleInputChange = (e) => {

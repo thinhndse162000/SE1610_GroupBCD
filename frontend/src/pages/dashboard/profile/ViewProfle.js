@@ -9,9 +9,9 @@ const ViewProfle = () => {
   const {
     member: { profile },
   } = useSelector((state) => state);
-const test= useSelector((state) => state);
+  const test = useSelector((state) => state);
 
-console.log ("test", test)
+  console.log("test", test)
   const dispatch = useDispatch();
   const { slug } = useParams();
   useEffect(() => {
@@ -19,7 +19,7 @@ console.log ("test", test)
   }, [dispatch, slug]);
 
   return (
-   <Wrapper className="full-page">
+    <Wrapper className="full-page">
       <form className="form" onSubmit={(e) => { e.preventDefault() }}>
         <h3>profile</h3>
         {/* {showAlert && <Alert />} */}
@@ -30,7 +30,7 @@ console.log ("test", test)
             name="email"
             value={profile.email}
             disabled="true"
-            // handleChange={(e) => setName(e.target.value)}
+          // handleChange={(e) => setName(e.target.value)}
           />
 
           <FormRow
@@ -39,7 +39,7 @@ console.log ("test", test)
             name="firstName"
             value={profile.firstName}
             disabled="true"
-            // handleChange={(e) => setLastName(e.target.value)}
+          // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <FormRow
@@ -48,7 +48,7 @@ console.log ("test", test)
             name="PhoneNumber"
             value={profile.phone}
             disabled="true"
-            // handleChange={(e) => setLastName(e.target.value)}
+          // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <FormRow
@@ -57,7 +57,7 @@ console.log ("test", test)
             name="dateOfBirth"
             value={profile.dateOfBirth}
             disabled="true"
-            // handleChange={(e) => setLastName(e.target.value)}
+          // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <FormRow
@@ -66,7 +66,7 @@ console.log ("test", test)
             name="lastName"
             value={profile.lastName}
             disabled="true"
-            // handleChange={(e) => setLastName(e.target.value)}
+          // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <FormRow
@@ -74,19 +74,19 @@ console.log ("test", test)
             name="Organization"
             value={profile.organization}
             disabled="true"
-            // handleChange={(e) => setLastName(e.target.value)}
+          // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <button
             className="btn btn-block"
             type="submit"
-            // disabled={isLoading}
+          // disabled={isLoading}
           >
             {/* {isLoading ? 'Please Wait...' : 'save changes'} */}
             Save
           </button>
         </div>
-      </form> 
+      </form>
     </Wrapper>
   );
 };

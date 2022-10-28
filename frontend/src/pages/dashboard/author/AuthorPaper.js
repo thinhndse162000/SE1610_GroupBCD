@@ -49,48 +49,49 @@ const AuthorPaper = () => {
       />
       {isLoading ? (
         <Loading center />
-      ) : papers.length > 0 ? (
-        <>
-          <ContainerWrapper>
-            <h3>All Papers</h3>
-            <div className="container">
-              {papers.map((paper, index) => {
-                let action = [];
-                if (paper.status === "PENDING") {
-                  action.push({
-                    type: "link",
-                    to: "submit-paper",
-                    className: "btn edit-btn",
-                    label: "Edit",
-                    onClick: () => dispatch(setEditPaper(paper.paperId)),
-                  });
-                  // action.push({
-                  //   type: "button",
-                  //   className: "btn delete-btn",
-                  //   label: "Delete",
-                  //   onClick: () => dispatch(deletePaper(paper.paperId)),
-                  // });
-                }
-                return (
-                  <Paper
-                    key={index}
-                    paper={paper}
-                    link={`paper-detail/${paper.paperId}`}
-                    action={action}
-                  />
-                );
-              })}
-            </div>
-          </ContainerWrapper>
-          <PageBtnContainer
-            page={page}
-            numOfPage={numOfPage}
-            changePage={handlePageChange}
-          />
-        </>
-      ) : (
-        <p>There are no papers</p>
-      )}
+      ) : papers.length > 0 ?
+        (
+          <>
+            <ContainerWrapper>
+              <h3>All Papers</h3>
+              <div className="container">
+                {papers.map((paper, index) => {
+                  let action = [];
+                  if (paper.status === "PENDING") {
+                    action.push({
+                      type: "link",
+                      to: "submit-paper",
+                      className: "btn edit-btn",
+                      label: "Edit",
+                      onClick: () => dispatch(setEditPaper(paper.paperId)),
+                    });
+                    // action.push({
+                    //   type: "button",
+                    //   className: "btn delete-btn",
+                    //   label: "Delete",
+                    //   onClick: () => dispatch(deletePaper(paper.paperId)),
+                    // });
+                  }
+                  return (
+                    <Paper
+                      key={index}
+                      paper={paper}
+                      link={`paper-detail/${paper.paperId}`}
+                      action={action}
+                    />
+                  );
+                })}
+              </div>
+            </ContainerWrapper>
+            <PageBtnContainer
+              page={page}
+              numOfPage={numOfPage}
+              changePage={handlePageChange}
+            />
+          </>
+        ) : (
+          <p>There are no papers</p>
+        )}
     </>
   );
 };

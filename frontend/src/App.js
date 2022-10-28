@@ -30,8 +30,8 @@ import {
   MemberAuthorProfile,
 } from "./pages/dashboard";
 import ManagerJournal from "./pages/dashboard/admin/ManagerJournal";
+import ViewJournalList from "./pages/dashboard/admin/ViewJournalList";
 import ChangePassword from "./pages/dashboard/profile/ChangePassword";
-import Education from "./pages/dashboard/profile/Education";
 import ViewProfle from "./pages/dashboard/profile/ViewProfle";
 
 function App() {
@@ -118,8 +118,7 @@ function App() {
         >
           <Route index element={<ViewProfle />} />
           <Route path="change-password" element={<ChangePassword />} />
-          <Route path="education" element={<Education />} />
-
+      
         </Route>
         <Route
           path="/admin"
@@ -130,6 +129,8 @@ function App() {
           }
         >
           <Route index element={<ManagerJournal />} /> 
+          <Route path="admin-Journal" element={<ViewJournalList />} />
+      
           {/* <Route path="changePassword" element={<ChangePassword />} /> */}
         </Route>
 

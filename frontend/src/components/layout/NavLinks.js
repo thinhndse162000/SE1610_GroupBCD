@@ -71,7 +71,7 @@ const NavLinks = ({ toggleSidebar }) => {
    
     ],
     admin: [
-      { id: 1, text: "View journal list", path: "/admin", icon: <IoBarChartSharp /> },
+      { id: 1, text: "View journal list", path: "admin-Journal", icon: <IoBarChartSharp /> },
     
       { id: 2, text: "Submit journal", path: "/admin", icon: <IoBarChartSharp /> },
     

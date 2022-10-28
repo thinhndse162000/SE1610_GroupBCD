@@ -1,8 +1,10 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 
 const Journal = ({ journal, type = "compact" }) => {
   const { name, introduction, organization, issn, slug } = journal;
+
   /*
         {
         "journalId": "2",
@@ -14,7 +16,12 @@ const Journal = ({ journal, type = "compact" }) => {
   return (
     <Wrapper>
       <header>
-        <div className="info">
+        
+        <div className="info"
+  
+  
+        >
+        
           <Link to={`/journal/${slug}`}>
             <h3>{name}</h3>
           </Link>

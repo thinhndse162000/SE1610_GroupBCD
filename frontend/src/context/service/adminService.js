@@ -8,8 +8,11 @@ export const createJournal = ({ journal }) =>
         dispatch({ type: LOADING });
         try {
           console.log ("Test",journal)
-            const { data } = await authFetch.post("/journal",
-                journal
+            const { data } = await authFetch.post("/journal/",
+                journal,
+         
+                
+          
             );
 
             dispatch({
