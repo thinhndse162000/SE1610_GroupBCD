@@ -165,7 +165,9 @@ export const editPaper = (paper) => async (dispatch) => {
   try {
     const { editPaperId, paperTitle, paperSummary, paperPdfFile } = paper;
     let formData = new FormData();
-    formData.append("file", paperPdfFile.file);
+    if (paperPdfFile.file != null && paperPdfFile.file !== "") {
+      formData.append("file", paperPdfFile.file);
+    }
     formData.append("title", paperTitle);
     formData.append("summary", paperSummary);
 
