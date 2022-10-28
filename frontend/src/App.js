@@ -7,6 +7,7 @@ import {
   Login,
   ManagerProtectedRoute,
   ForgotPassword,
+  VerifySignup,
 } from "./pages";
 import {
   SharedLayout,
@@ -28,6 +29,7 @@ import {
   MemberIssueDetail,
   MemberPublishDetail,
   MemberAuthorProfile,
+  MemberCheckout,
 } from "./pages/dashboard";
 import ManagerJournal from "./pages/dashboard/admin/ManagerJournal";
 import ViewJournalList from "./pages/dashboard/admin/ViewJournalList";
@@ -50,6 +52,7 @@ function App() {
           <Route path="journal/:slug" element={<MemberJournalDetail />} />
           <Route path="journal/:slug/issue" element={<MemberIssues />} />
           <Route path="journal/:slug/publish" element={<MemberPublishes />} />
+          <Route path="journal/:slug/subscribe" element={<MemberCheckout />} />
           <Route path="issue/:issueId" element={<MemberIssueDetail />} />
           <Route path="publish/:publishId" element={<MemberPublishDetail />} />
           <Route
@@ -67,7 +70,7 @@ function App() {
           }
         >
           <Route index element={<AuthorPaper />} />
-
+          <Route path="paper-detail/:paperId" element={<AuthorPaperDetail />} />
           <Route path="submit-paper" element={<AuthorAddPaper />} />
         </Route>
 
@@ -131,13 +134,13 @@ function App() {
           <Route index element={<ManagerJournal />} /> 
           <Route path="admin-Journal" element={<ViewJournalList />} />
       
-          {/* <Route path="changePassword" element={<ChangePassword />} /> */}
         </Route>
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/auth/verify/:token" element={<VerifySignup />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter >

@@ -1,31 +1,38 @@
 package com.bcd.ejournal.service.implementation;
 
-import com.bcd.ejournal.domain.dto.request.ReviewReportSearchRequest;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import com.bcd.ejournal.domain.dto.request.ReviewReportSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewReportSubmitRequest;
-import com.bcd.ejournal.domain.dto.response.*;
-import com.bcd.ejournal.domain.entity.*;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
+import com.bcd.ejournal.domain.dto.response.ReviewReportDetailResponse;
+import com.bcd.ejournal.domain.entity.Journal;
+import com.bcd.ejournal.domain.entity.Paper;
+import com.bcd.ejournal.domain.entity.ReviewReport;
+import com.bcd.ejournal.domain.entity.Reviewer;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportVerdict;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
 import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.PaperRepository;
-import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
 import com.bcd.ejournal.service.ReviewReportService;
 import com.bcd.ejournal.utils.DTOMapper;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
 
 @Service
 public class ReviewReportServiceImpl implements ReviewReportService {
@@ -33,18 +40,17 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     private final ReviewReportRepository reviewreportRepository;
     private final ReviewerRepository reviewerRepository;
     private final PaperRepository paperRepository;
-    private final RequestMapper reviewMapper;
     private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
-    public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, RequestMapper reviewMapper, ModelMapper modelMapper, DTOMapper dtoMapper) {
+    public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository,
+            PaperRepository paperRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
         this.reviewreportRepository = reviewreportRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
-        this.reviewMapper = reviewMapper;
         this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
     }
@@ -57,9 +63,10 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         // check if reviewer ownership
         if (reviewReport.getReviewer().getReviewerId() != accountId) {
             throw new ForbiddenException("Access denied for review report. Id: " + reviewReportId);
-        } 
+        }
         // check if in reviewing process
-        if (reviewReport.getPaper().getStatus() != PaperStatus.REVIEWING && reviewReport.getPaper().getStatus() != PaperStatus.PENDING) {
+        if (reviewReport.getPaper().getStatus() != PaperStatus.REVIEWING
+                && reviewReport.getPaper().getStatus() != PaperStatus.PENDING) {
             throw new MethodNotAllowedException("Paper not in reviewing process. Review report Id: " + reviewReportId);
         }
 
@@ -68,12 +75,14 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         reviewReport.setStatus(ReviewReportStatus.DONE);
         reviewreportRepository.save(reviewReport);
         Paper paper = reviewReport.getPaper();
+        Journal journal = paper.getJournal();
 
         // TODO: test this
         // evaluation process
-        List<ReviewReport> reviewReports = reviewreportRepository.findByPaperIdAndStatus(paper.getPaperId(), ReviewReportStatus.DONE);
+        List<ReviewReport> reviewReports = reviewreportRepository.findByPaperIdAndStatus(paper.getPaperId(),
+                ReviewReportStatus.DONE);
 
-        if (reviewReports.size() == 3) {
+        if (reviewReports.size() == journal.getNumberOfReviewer()) {
             int accepted = 0;
             int grade = 0;
             for (ReviewReport report : reviewReports) {
@@ -83,25 +92,22 @@ public class ReviewReportServiceImpl implements ReviewReportService {
                 }
             }
 
-            // accept if two or more reviewer accept 
-            if (accepted >= 2) {
-                paper.setStatus(PaperStatus.ACCEPTED);
+            // accept if two or more reviewer accept
+            if (accepted >= (journal.getNumberOfReviewer() + 1) / 2) {
+                if (paper.getRound() == journal.getNumberOfRound()) {
+                    paper.setStatus(PaperStatus.ACCEPTED);
+                } else {
+                    paper.setRound(paper.getRound() + 1);
+                    paper.setStatus(PaperStatus.PENDING);
+                }
             } else {
                 paper.setStatus(PaperStatus.REJECTED);
             }
             // grade is avarage of total grade
-            paper.setGrade(grade / 3);
+            paper.setGrade(grade / journal.getNumberOfReviewer());
 
             paperRepository.save(paper);
         }
-    }
-
-    @Override
-    public List<ReviewReport> searchByRequest(ReviewReportSearchRequest reportSearchRequest) {
-        // TODO: fix bug, its not mapping Object
-        // TODO: authorization
-        List<ReviewReport> rs = reviewMapper.searchReview(reportSearchRequest);
-        return rs;
     }
 
     @Override
@@ -116,12 +122,25 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     @Override
     public ReviewReportDetailResponse getReviewReport(Integer reviewerId, Integer reviewReportId) {
         ReviewReport reviewReport = reviewreportRepository.findById(reviewReportId)
-            .orElseThrow(() -> new NullPointerException("No review report found. Id: " + reviewReportId));
+                .orElseThrow(() -> new NullPointerException("No review report found. Id: " + reviewReportId));
 
         if (reviewReport.getReviewer().getReviewerId() != reviewerId) {
             throw new MethodNotAllowedException("Review not allow to see this");
         }
 
         return dtoMapper.toReviewReportDetailResponse(reviewReport);
+    }
+
+    @Override
+    public PagingResponse search(ReviewReportSearchFilterRequest req) {
+        int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
+        Pageable page = PageRequest.of(pageNum, 10, Sort.by("reviewReportId").descending());
+        Page<ReviewReport> reviewReports = reviewreportRepository.search(req, page);
+        PagingResponse response = new PagingResponse();
+        response.setResult(reviewReports.stream().map(dtoMapper::toReviewReportDetailResponse)
+                .collect(Collectors.toList()));
+        response.setNumOfPage(reviewReports.getTotalPages());
+        response.setTotalFound(reviewReports.getTotalElements());
+        return response;
     }
 }

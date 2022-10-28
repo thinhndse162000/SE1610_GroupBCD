@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
@@ -44,6 +45,14 @@ public class DTOMapper {
         return paperResponse;
     }
 
+    public EducationResponse toEducationResponse(Account account) {
+        EducationResponse educationResponse = new EducationResponse();
+        modelMapper.map(account.getReviewer(), educationResponse);
+        modelMapper.map(account.getAuthor(), educationResponse);
+
+        return educationResponse;
+    }
+
     public AuthorResponse toAuthorResponse(Author author) {
         AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
         authorResponse.setFullName(author.getAccount().getFullName());
@@ -68,7 +77,7 @@ public class DTOMapper {
     public ReviewReportResponse toReviewReportResponse(ReviewReport reviewReport) {
         ReviewReportResponse response = modelMapper.map(reviewReport, ReviewReportResponse.class);
         Account acc = reviewReport.getReviewer().getAccount();
-        response.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName()));
+        response.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName(), acc.getReviewer().getFields()));
         return response;
     }
 
@@ -78,7 +87,7 @@ public class DTOMapper {
 
         ReviewReportResponse tmp = modelMapper.map(reviewReport, ReviewReportResponse.class);
         Account acc = reviewReport.getReviewer().getAccount();
-        tmp.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName()));
+        tmp.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName(), acc.getReviewer().getFields()));
         response.setReview(tmp);
 
         return response;
@@ -88,14 +97,14 @@ public class DTOMapper {
         ReviewerResponse response = new ReviewerResponse();
         response.setReviewerId(reviewer.getReviewerId());
         response.setFullName(reviewer.getAccount().getFullName());
+        response.setFields(reviewer.getFields());
         return response;
     }
 
     public InvitationPaperResponse toInvitationPaperResponse(Invitation invitation) {
         InvitationPaperResponse response = modelMapper.map(invitation, InvitationPaperResponse.class);
         Reviewer reviewer = invitation.getReviewer();
-        response.setReviewerId(reviewer.getReviewerId());
-        response.setReviewerName(reviewer.getAccount().getFullName());
+        response.setReviewer(toReviewerResponse(reviewer));
         return response;
     }
 

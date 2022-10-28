@@ -37,7 +37,7 @@ const reviewerReducer = (state = reviewer, action) => {
         reviewReports: action.payload.reviewReports,
       };
     case SET_EDIT_REVIEW:
-      const reviewReport = state.reviewReports.find(
+      const reviewReport = state.searchReview.result.find(
         (reviewReport) =>
           reviewReport.review.reviewReportId === action.payload.id
       );
@@ -58,16 +58,20 @@ const reviewerReducer = (state = reviewer, action) => {
         },
       };
     case HANDLE_INVITATION_CHANGE:
-      const invitations = state.invitations.map((invitation) => {
+      const invitations = state.searchInvitation.result.map((invitation) => {
         if (invitation.invitationId === action.payload.id) {
           return { ...invitation, status: action.payload.status };
         }
         return invitation;
       });
+
       if (state.invitationDetail.invitationId === action.payload.id) {
         return {
           ...state,
-          invitations,
+          searchInvitation: {
+            ...state.searchInvitation,
+            result: invitations,
+          },
           invitationDetail: {
             ...state.invitationDetail,
             status: action.payload.status,
@@ -76,9 +80,47 @@ const reviewerReducer = (state = reviewer, action) => {
       } else {
         return {
           ...state,
-          invitations,
+          searchInvitation: {
+            ...state.searchInvitation,
+            result: invitations
+          },
         };
       }
+
+    case "HANDLE_REVIEWER_SEARCHINVITATION_CHANGE":
+      return {
+        ...state,
+        searchInvitation: {
+          ...state.searchInvitation,
+          [action.payload.name]: action.payload.value,
+        }
+      }
+    case "HANDLE_REVIEWER_SPREAD_SEARCHINVITATION_CHANGE":
+      return {
+        ...state,
+        searchInvitation: {
+          ...state.searchInvitation,
+          ...action.payload.value,
+        }
+      }
+
+    case "HANDLE_REVIEWER_SEARCHREVIEW_CHANGE":
+      return {
+        ...state,
+        searchReview: {
+          ...state.searchReview,
+          [action.payload.name]: action.payload.value,
+        }
+      }
+    case "HANDLE_REVIEWER_SPREAD_SEARCHREVIEW_CHANGE":
+      return {
+        ...state,
+        searchReview: {
+          ...state.searchReview,
+          ...action.payload.value,
+        }
+      }
+
     default:
       return state;
   }

@@ -2,9 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 
-const Journal = ({ journal, type = "compact" }) => {
-  const { name, introduction, organization, issn, slug } = journal;
-
+const Journal = ({ journal, type = "compact", action = [] }) => {
+  const {
+    name,
+    introduction,
+    organization,
+    issn,
+    slug,
+    numberOfRound,
+    numberOfReviewer,
+  } = journal;
   /*
         {
         "journalId": "2",
@@ -29,6 +36,21 @@ const Journal = ({ journal, type = "compact" }) => {
             <strong>ISSN</strong>: {issn} - <strong>Organization</strong>:{" "}
             {organization}
           </p>
+          <p>
+    {/* TODO: fix this upper case*/}
+            Number of round: {numberOfRound} - Number of reviewer per round:{" "}
+            {numberOfReviewer}
+          </p>
+
+          <p>
+            Fields:{" "}
+            {journal.fields.map((field, index) => (
+              <span key={index}>
+                {field.fieldName}
+                {index !== journal.fields.length - 1 && ","}{" "}
+              </span>
+            ))}
+          </p>
         </div>
       </header>
       {type === "full" && (
@@ -37,6 +59,31 @@ const Journal = ({ journal, type = "compact" }) => {
             <h5>Introduction</h5>
             <p>{introduction}</p>
           </div>
+          <footer>
+            <div className="actions">
+              {action.map((act, index) => {
+                return act.type === "link" ? (
+                  <Link
+                    key={index}
+                    to={act.to}
+                    className={act.className}
+                    onClick={act.onClick}
+                  >
+                    {act.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={index}
+                    type="button"
+                    className={act.className}
+                    onClick={act.onClick}
+                  >
+                    {act.label}
+                  </button>
+                );
+              })}
+            </div>
+          </footer>
         </div>
       )}
     </Wrapper>

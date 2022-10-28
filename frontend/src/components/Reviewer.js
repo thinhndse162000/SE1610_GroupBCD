@@ -7,6 +7,7 @@ const Reviewer = ({ reviewer, action = [] }) => {
       <div className="content">
         <div className="content-center">
           <h5>{reviewer.fullName}</h5>
+          <p><strong>Fields:</strong> {reviewer.fields.map((field, index) => <span key={index}>{field.fieldName}{index !== reviewer.fields.length - 1 && ","} </span>)}</p>
         </div>
         <footer>
           <div className="actions">

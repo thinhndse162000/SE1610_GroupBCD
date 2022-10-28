@@ -9,6 +9,7 @@ import {
   MemberIssueDetail,
   MemberPublishDetail,
   MemberAuthorProfile,
+  MemberCheckout,
 } from "./member";
 import {
   AddReview,
@@ -40,4 +41,5 @@ export {
   MemberPublishDetail,
   MemberAuthorProfile,
   ManagerPublishIssue,
+  MemberCheckout,
 };

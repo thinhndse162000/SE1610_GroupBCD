@@ -50,15 +50,6 @@ const AddReview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // if (
-    //   !reviewNote ||
-    //   !reviewGrade ||
-    //   !reviewConfidentiality ||
-    //   !reviewVerdict
-    // ) {
-    //   dispatch(displayAlert());
-    //   return;
-    // }
     const review = {
       editReviewId,
       reviewNote,
@@ -66,13 +57,22 @@ const AddReview = () => {
       reviewConfidentiality,
       reviewVerdict,
     };
-    console.log(reviewNote)
     setErrors(validateSubmitReview(review))
-    console.log(review)
-    console.log(errors)
-    // dispatch(editReview(review));
     return;
   };
+
+  useEffect(() => {
+    if (Object.getOwnPropertyNames(errors).length === 0) {
+      const review = {
+        editReviewId,
+        reviewNote,
+        reviewGrade,
+        reviewConfidentiality,
+        reviewVerdict,
+      };
+      dispatch(editReview(review))
+    }
+  }, [dispatch, errors])
 
   if (editReviewId) {
     return (

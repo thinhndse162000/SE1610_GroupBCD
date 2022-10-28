@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
@@ -63,10 +64,10 @@ public class AuthorApi {
     }
 
     @PostMapping("/paper/search")
-    public ResponseEntity<List<PaperResponse>> searchPaper(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody PaperSearchRequest request) {
+    public ResponseEntity<PagingResponse> searchPaper(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody PaperSearchRequest request) {
         Integer authorId = payload.getAccountId();
         request.setAuthorId(authorId);
-        List<PaperResponse> papers = paperService.searchByRequest(request);
+        PagingResponse papers = paperService.searchByRequest(request);
         return new ResponseEntity<>(papers, HttpStatus.OK);
     }
 

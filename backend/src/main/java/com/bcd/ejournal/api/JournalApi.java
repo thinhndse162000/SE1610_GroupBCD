@@ -24,10 +24,10 @@ import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
 import com.bcd.ejournal.domain.enums.PublishAccessLevel;
-import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.service.IssueService;
 import com.bcd.ejournal.service.JournalService;
 import com.bcd.ejournal.service.PublishService;
@@ -72,8 +72,8 @@ public class JournalApi {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<JournalResponse>> searchJournal(@RequestBody JournalSearchRequest request) {
-        List<JournalResponse> responses = journalService.search(request);
+    public ResponseEntity<PagingResponse> searchJournal(@RequestBody JournalSearchRequest request) {
+        PagingResponse responses = journalService.search(request);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
@@ -120,20 +120,10 @@ public class JournalApi {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @GetMapping("/paper/accepted")
-    public ResponseEntity<List<PaperResponse>> getAllAcceptedPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload) {
-        Integer accountId = payload.getAccountId();
-        PaperSearchRequest request = new PaperSearchRequest();
-        request.setStatus(PaperStatus.ACCEPTED);
-
-        List<PaperResponse> responses = journalService.getAllPaper(accountId, request);
-        return new ResponseEntity<>(responses, HttpStatus.OK);
-    }
-
     @PostMapping("/paper/search")
-    public ResponseEntity<List<PaperResponse>> searchPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody PaperSearchRequest request) {
+    public ResponseEntity<PagingResponse> searchPaperSentToJournal(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody PaperSearchRequest request) {
         Integer accountId = payload.getAccountId();
-        List<PaperResponse> responses = journalService.getAllPaper(accountId, request);
+        PagingResponse responses = journalService.getAllPaper(accountId, request);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 

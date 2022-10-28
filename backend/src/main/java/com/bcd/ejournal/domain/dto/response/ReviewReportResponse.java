@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class ReviewReportResponse {
     private Integer reviewReportId;
+    private Integer round;
     private Timestamp reviewDate;
     private Integer grade;
     private Integer confidentiality;

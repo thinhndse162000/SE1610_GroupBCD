@@ -22,6 +22,7 @@ public class PaperResponse {
     private String summary;
     private Timestamp submitTime;
     private String linkPDF;
+    private Integer round;
     private int numberOfPage;
     private int grade;
     private List<Field> fields;

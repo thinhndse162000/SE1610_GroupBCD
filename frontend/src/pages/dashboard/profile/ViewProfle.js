@@ -29,8 +29,8 @@ const ViewProfle = () => {
             type="text"
             name="email"
             value={profile.email}
-            disabled="true"
-          // handleChange={(e) => setName(e.target.value)}
+            disabled={true}
+            // handleChange={(e) => setName(e.target.value)}
           />
 
           <FormRow
@@ -38,8 +38,8 @@ const ViewProfle = () => {
             labelText="First name"
             name="firstName"
             value={profile.firstName}
-            disabled="true"
-          // handleChange={(e) => setLastName(e.target.value)}
+            disabled={true}
+            // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <FormRow
@@ -47,8 +47,8 @@ const ViewProfle = () => {
             labelText="Phone number"
             name="PhoneNumber"
             value={profile.phone}
-            disabled="true"
-          // handleChange={(e) => setLastName(e.target.value)}
+            disabled={true}
+            // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <FormRow
@@ -56,8 +56,8 @@ const ViewProfle = () => {
             labelText="Date of birth"
             name="dateOfBirth"
             value={profile.dateOfBirth}
-            disabled="true"
-          // handleChange={(e) => setLastName(e.target.value)}
+            disabled={true}
+            // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <FormRow
@@ -65,16 +65,16 @@ const ViewProfle = () => {
             labelText="last name"
             name="lastName"
             value={profile.lastName}
-            disabled="true"
-          // handleChange={(e) => setLastName(e.target.value)}
+            disabled={true}
+            // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <FormRow
             type="text"
             name="Organization"
             value={profile.organization}
-            disabled="true"
-          // handleChange={(e) => setLastName(e.target.value)}
+            disabled={true}
+            // handleChange={(e) => setLastName(e.target.value)}
           />
 
           <button

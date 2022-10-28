@@ -20,8 +20,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-    console.log({values})
-    console.log ('test',values)
   };
 
   const onSubmit = (e) => {
@@ -76,19 +74,16 @@ const Login = () => {
             Signup
           </button>
         </p>
-    {/*
-      <p>
-      Forgot password?
-      <button
-      type="button"
-      onClick={() => navigate("/forgot-password")}
-      className="member-btn"
-      >
-      Forgot password
-      </button>
-      </p>
-      */
-    }
+        <p>
+          Forgot password?
+          <button
+            type="button"
+            onClick={() => navigate("/forgot-password")}
+            className="member-btn"
+          >
+            Forgot password
+          </button>
+        </p>
       </form>
     </Wrapper>
   );

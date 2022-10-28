@@ -27,6 +27,17 @@ const Publish = ({
           <Link to={`/author-profile/${paper.authors.slug}`}>
             <p>Author: {paper.authors.fullName}</p>
           </Link>
+
+          <p>
+            Fields:{" "}
+            {paper.fields.map((field, index) => (
+              <span key={index}>
+                {field.fieldName}
+                {index !== paper.fields.length - 1 && ","}{" "}
+              </span>
+            ))}
+          </p>
+
           <p>
             {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} -{" "}
             <span>Access Level: {publish.accessLevel}</span>
