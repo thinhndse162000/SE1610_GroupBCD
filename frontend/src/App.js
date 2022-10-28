@@ -7,6 +7,7 @@ import {
   Login,
   ManagerProtectedRoute,
   ForgotPassword,
+  VerifySignup,
 } from "./pages";
 import {
   SharedLayout,
@@ -28,8 +29,10 @@ import {
   MemberIssueDetail,
   MemberPublishDetail,
   MemberAuthorProfile,
+  MemberCheckout,
 } from "./pages/dashboard";
-import ViewProfle from "./pages/ViewProfle";
+import ChangePassword from "./pages/dashboard/profile/ChangePassword";
+import ViewProfle from "./pages/dashboard/profile/ViewProfle";
 
 function App() {
   return (
@@ -47,6 +50,7 @@ function App() {
           <Route path="journal/:slug" element={<MemberJournalDetail />} />
           <Route path="journal/:slug/issue" element={<MemberIssues />} />
           <Route path="journal/:slug/publish" element={<MemberPublishes />} />
+          <Route path="journal/:slug/subscribe" element={<MemberCheckout />} />
           <Route path="issue/:issueId" element={<MemberIssueDetail />} />
           <Route path="publish/:publishId" element={<MemberPublishDetail />} />
           <Route
@@ -64,7 +68,6 @@ function App() {
           }
         >
           <Route index element={<AuthorPaper />} />
-
           <Route path="paper-detail/:paperId" element={<AuthorPaperDetail />} />
           <Route path="submit-paper" element={<AuthorAddPaper />} />
         </Route>
@@ -115,12 +118,13 @@ function App() {
           }
         >
           <Route index element={<ViewProfle />} />
-        </Route>
+           </Route>
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/auth/verify/:token" element={<VerifySignup />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>

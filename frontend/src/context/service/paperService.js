@@ -5,7 +5,6 @@ import {
   LOADING_ALERT,
   SUCCESS,
   ERROR,
-  AUTHOR_PAPER,
   SUCCESS_NO_MESSAGE,
   PAPER_DETAIL,
 } from "../actions";
@@ -28,17 +27,18 @@ export const getAuthorPaper =
         title,
         startDate,
         endDate,
-        status,
+        status: status === "ALL" ? null : status,
         fields,
         page,
       });
       dispatch({ type: SUCCESS_NO_MESSAGE });
-      dispatch({
-        type: AUTHOR_PAPER,
-        payload: {
-          papers: data,
-        },
-      });
+      dispatch(
+        handleChange({
+          name: "randome",
+          value: data,
+          type: "author_spread_search",
+        })
+      );
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
@@ -201,9 +201,17 @@ export const search =
       // search
       let data = {};
       if (type === "Journal") {
-        data = await authFetch.post("/journal/search", { name: keyword, fields, page });
+        data = await authFetch.post("/journal/search", {
+          name: keyword,
+          fieldIds: fields.map(field => field.fieldId),
+          page,
+        });
       } else {
-        data = await authFetch.post("/paper/search", { title: keyword, fields, page });
+        data = await authFetch.post("/paper/search", {
+          title: keyword,
+          fields,
+          page,
+        });
       }
       dispatch({
         type: SUCCESS_NO_MESSAGE,
@@ -212,7 +220,7 @@ export const search =
         handleChange({
           name: "result",
           value: data.data,
-          type: "member_search",
+          type: "member_spread_search",
         })
       );
     } catch (error) {

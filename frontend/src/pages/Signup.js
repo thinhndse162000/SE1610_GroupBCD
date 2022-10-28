@@ -38,14 +38,6 @@ const Signup = () => {
     // eslint-disable-next-line
   }, [dispatch, errors])
 
-  useEffect(() => {
-    if (user) {
-      setTimeout(() => {
-        navigate("/author");
-      }, 1000);
-    }
-  }, [user, navigate]);
-
   return (
     <Wrapper className="full-page">
       <form className="form form-signup" onSubmit={onSubmit}>

@@ -16,6 +16,15 @@ const memberReducer = (state = member, action) => {
           [action.payload.name]: action.payload.value,
         }
       };
+
+    case "HANDLE_MEMBER_SPREAD_SEARCH_CHANGE":
+      return {
+        ...state,
+        search: {
+          ...state.search,
+          ...action.payload.value,
+        }
+      };
     case MEMBER_JOURNAL_ID:
       if (state.journalSlug !== action.payload.slug) {
         return {

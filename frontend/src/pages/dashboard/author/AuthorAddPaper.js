@@ -13,12 +13,12 @@ import {
   clearPaperValues,
 } from "../../../context/service/paperService";
 import {
-  displayAlert,
   handleChange,
 } from "../../../context/service/utilService";
 import { useNavigate } from "react-router-dom";
 import authFetch from "../../../utils/authFetch";
 import validateSubmitPaper from "../../../context/validator/validateSubmitPaper";
+import FormRowFile from "../../../components/form/FormRowFile";
 
 const AuthorAddPaper = () => {
   const { base, author } = useSelector((state) => state);
@@ -32,6 +32,7 @@ const AuthorAddPaper = () => {
       paperFields,
     },
   } = author;
+
   const { isLoading, showAlert, fields } = base;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -47,9 +48,11 @@ const AuthorAddPaper = () => {
   });
 
   useEffect(() => {
-    paperJournal["journalName"] = "";
-    paperJournal["journalId"] = "";
-    setSelectValue("");
+    if (editPaperId === "") {
+      paperJournal["journalId"] = "";
+      paperJournal["journalName"] = "";
+      setSelectValue("");
+    }
     // eslint-disable-next-line
   }, [paperFields]);
 
@@ -88,6 +91,7 @@ const AuthorAddPaper = () => {
     };
     setErrors(validateSubmitPaper(paper))
   };
+
   useEffect(() => {
     const paper = {
       paperTitle,
@@ -99,6 +103,8 @@ const AuthorAddPaper = () => {
     if (Object.getOwnPropertyNames(errors).length === 0) {
       dispatch(createPaper(paper))
     }
+
+    console.log(paperPdfFile)
 
     // if (!paperTitle) {
     //   setSelectValue("");
@@ -121,7 +127,7 @@ const AuthorAddPaper = () => {
 
   const handleFileInput = (e) => {
     const name = e.target.name;
-    const fileName = e.target.value;
+    const fileName = e.target.files[0].name;
     const file = e.target.files[0];
     dispatch(
       handleChange({
@@ -139,9 +145,8 @@ const AuthorAddPaper = () => {
       const { data } = await authFetch.post("/journal/search", {
         name: inputValue,
       });
-      console.log(data);
-      requestResults = data.map((journal) => ({
-        label: journal.name,
+      requestResults = data.result.map((journal) => ({
+        label: `${journal.name} (${journal.numberOfRound} ${journal.numberOfRound === 1 ? "round" : "rounds"}, ${journal.numberOfReviewer} reviews per round)`,
         value: journal.journalId,
       }));
     } catch (error) { }
@@ -223,9 +228,9 @@ const AuthorAddPaper = () => {
             </div>
             {/*Pdf file*/}
             <div>
-              <FormRow
-                type="file"
+              <FormRowFile
                 labelText="PDF file"
+                value={paperPdfFile.fileName}
                 name="paperPdfFile"
                 handleChange={handleFileInput}
               />

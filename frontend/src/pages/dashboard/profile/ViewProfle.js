@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Wrapper from "../assets/wrappers/Profile";
-import { FormRow } from "../components";
-import { getAccountProfile } from "../context/service/accountService";
+import Wrapper from "../../../assets/wrappers/Profile";
+import { FormRow } from "../../../components";
+import { getAccountProfile } from "../../../context/service/accountService";
 
 const ViewProfle = () => {
   const {
     member: { profile },
   } = useSelector((state) => state);
+const test= useSelector((state) => state);
 
+console.log ("test", test)
   const dispatch = useDispatch();
   const { slug } = useParams();
   useEffect(() => {
@@ -17,7 +19,7 @@ const ViewProfle = () => {
   }, [dispatch, slug]);
 
   return (
-    <Wrapper className="full-page">
+   <Wrapper className="full-page">
       <form className="form" onSubmit={(e) => { e.preventDefault() }}>
         <h3>profile</h3>
         {/* {showAlert && <Alert />} */}
@@ -27,7 +29,7 @@ const ViewProfle = () => {
             type="text"
             name="email"
             value={profile.email}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setName(e.target.value)}
           />
 
@@ -36,7 +38,7 @@ const ViewProfle = () => {
             labelText="First name"
             name="firstName"
             value={profile.firstName}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -45,7 +47,7 @@ const ViewProfle = () => {
             labelText="Phone number"
             name="PhoneNumber"
             value={profile.phone}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -54,7 +56,7 @@ const ViewProfle = () => {
             labelText="Date of birth"
             name="dateOfBirth"
             value={profile.dateOfBirth}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -63,7 +65,7 @@ const ViewProfle = () => {
             labelText="last name"
             name="lastName"
             value={profile.lastName}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -71,7 +73,7 @@ const ViewProfle = () => {
             type="text"
             name="Organization"
             value={profile.organization}
-            disabled="true"
+            disabled={true}
             // handleChange={(e) => setLastName(e.target.value)}
           />
 
@@ -84,7 +86,7 @@ const ViewProfle = () => {
             Save
           </button>
         </div>
-      </form>
+      </form> 
     </Wrapper>
   );
 };

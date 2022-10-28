@@ -25,6 +25,7 @@ const PaperReviewDetail = ({
             <h5>{paper.title}</h5>
           )}
           <p>Author: {paper.authors.fullName}</p>
+          <p>Round: {review.round}</p>
         </div>
 
         {type === "full" && (
