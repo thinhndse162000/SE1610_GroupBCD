@@ -5,5 +5,6 @@ import Login from "./Login";
 import ProtectedRoute from "./ProtectedRoute";
 import ManagerProtectedRoute from "./ManagerProtectedRoute";
 import ForgotPassword from "./ForgotPassword";
+import VerifySignup from "./VerifySignup"
 
-export { Landing, Error, Signup, Login, ProtectedRoute, ManagerProtectedRoute, ForgotPassword };
+export { Landing, Error, Signup, Login, ProtectedRoute, ManagerProtectedRoute, ForgotPassword, VerifySignup };

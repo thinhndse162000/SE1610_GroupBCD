@@ -7,6 +7,7 @@ import {
   Login,
   ManagerProtectedRoute,
   ForgotPassword,
+  VerifySignup,
 } from "./pages";
 import {
   SharedLayout,
@@ -123,6 +124,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/auth/verify/:token" element={<VerifySignup />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>

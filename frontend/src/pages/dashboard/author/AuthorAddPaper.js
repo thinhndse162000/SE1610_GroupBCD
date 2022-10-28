@@ -145,8 +145,8 @@ const AuthorAddPaper = () => {
       const { data } = await authFetch.post("/journal/search", {
         name: inputValue,
       });
-      requestResults = data.map((journal) => ({
-        label: journal.name,
+      requestResults = data.result.map((journal) => ({
+        label: `${journal.name} (${journal.numberOfRound} ${journal.numberOfRound === 1 ? "round" : "rounds"}, ${journal.numberOfReviewer} reviews per round)`,
         value: journal.journalId,
       }));
     } catch (error) { }

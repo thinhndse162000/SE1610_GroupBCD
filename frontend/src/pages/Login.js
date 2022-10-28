@@ -20,8 +20,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-    console.log({values})
-    console.log ('test',values)
   };
 
   const onSubmit = (e) => {
