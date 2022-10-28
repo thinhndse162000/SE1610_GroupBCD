@@ -138,7 +138,7 @@ public class IssueServiceImpl implements IssueService {
                 throw new ConflictException("Start date cannot be before previous issue end date: " + latestIssue.getEndDate());
             }
             // First issue of new year
-            if (latestIssue.getYear() != currentYear) {
+            if (!latestIssue.getYear().equals(currentYear)) {
                 issue.setVolume(latestIssue.getVolume() + 1);
                 issue.setIssue(1);
             } else {

@@ -152,6 +152,7 @@ public class InvitationServiceImpl implements InvitationService {
         ReviewReport reviewReport = new ReviewReport();
         reviewReport.setReviewReportId(0);
         reviewReport.setPaper(paper);
+        reviewReport.setRound(paper.getRound());
         reviewReport.setReviewer(invitation.getReviewer());
         reviewReport.setStatus(ReviewReportStatus.PENDING);
 
