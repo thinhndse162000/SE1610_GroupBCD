@@ -114,35 +114,36 @@ const ViewJournalList = () => {
             <ContainerWrapper>
               <div className="container">
                 {result.map((journal, index) => {
-              
-                  return (<><Journal
-                    key={index} journal={journal} />
+
+                  return (<>
+                    <Journal
+                      key={index} journal={journal} />
                     <Link
-                      key={index}
-                     to="/admin"
-                    className="btn edit-btn"
-                    onClick={()=> dispatch(setEditJournal(journal.journalId))}
+                      to="/admin"
+                      className="btn edit-btn"
+                      onClick={() => dispatch(setEditJournal(journal.journalId))}
                     >
-                    Edit
-                  </Link>
+                      Edit
+                    </Link>
+
                   </>
-              )
+                  )
                 })}
-            </div>
+              </div>
             </ContainerWrapper>
+          ) : (
+            <p>No result found</p>
+          )}.
+          <PageBtnContainer
+            page={page}
+            numOfPage={numOfPage}
+            changePage={handlePageChange}
+          />
+        </>
       ) : (
         <p>No result found</p>
-      )}
-      <PageBtnContainer
-        page={page}
-        numOfPage={numOfPage}
-        changePage={handlePageChange}
-      />
-    </>
-  ) : (
-    <p>No result found</p>
-  )
-}
+      )
+      }
     </div >
   );
 }

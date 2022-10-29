@@ -53,7 +53,7 @@ const ManagerJournal = () => {
       numberOfReviewer,
     }
     setErrors(validateCreateJournal(journal));
-    dispatch(createJournal({ journal }));
+   
   }
 
   const selectFieldOptions = fields.map((field) => ({
