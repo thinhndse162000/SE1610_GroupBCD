@@ -28,13 +28,24 @@ const author = {
 };
 const admin = {
   editJournalID: "",
-  journal:[],
+  journal: [],
   newJournal: {
     name: "",
     introduction: "",
     organization: "",
     issn: "",
     journalFields: [],
+    numberOfRound:"",
+    numberOfReviewer:"",
+  },
+  search: {
+    keyword: "",
+    type: "Journal",
+    fields: [],
+    result: [],
+    page: 1,
+    numOfPage: 1,
+    totalFound: 0,
   },
 };
 

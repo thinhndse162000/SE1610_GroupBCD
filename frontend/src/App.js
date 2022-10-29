@@ -133,6 +133,7 @@ function App() {
         >
           <Route index element={<ManagerJournal />} /> 
           <Route path="admin-Journal" element={<ViewJournalList />} />
+          <Route path="submit-journal" element={<ManagerJournal />} />
       
         </Route>
 

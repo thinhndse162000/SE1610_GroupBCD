@@ -41,9 +41,5 @@ public class ReviewReportApi {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/searchFilter")
-    public ResponseEntity<List<ReviewReportResponse>> searchFilter(@RequestBody ReviewReportSearchFilterRequest req) {
-        List<ReviewReportResponse> responses = reportService.searchFilter(req);
-        return new ResponseEntity<>(responses, HttpStatus.OK);
+    
     }
-}

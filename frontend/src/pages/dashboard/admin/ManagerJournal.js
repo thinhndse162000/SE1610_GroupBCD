@@ -16,6 +16,8 @@ const ManagerJournal = () => {
     organization: "",
     issn: "",
     journalFields: [],
+    numberOfRound: 0,
+    numberOfReviewer: 0,
   };
 
   const {
@@ -26,6 +28,8 @@ const ManagerJournal = () => {
       organization,
       issn,
       journalFields,
+      numberOfRound,
+      numberOfReviewer,
     },
   } = admin;
 
@@ -45,9 +49,11 @@ const ManagerJournal = () => {
       organization,
       issn,
       journalFields,
+      numberOfRound,
+      numberOfReviewer,
     }
     setErrors(validateCreateJournal(journal));
-
+    dispatch(createJournal({ journal }));
   }
 
   const selectFieldOptions = fields.map((field) => ({
@@ -61,6 +67,9 @@ const ManagerJournal = () => {
       introduction,
       organization,
       issn,
+      journalFields,
+      numberOfRound,
+      numberOfReviewer,
     }
 
     if (Object.getOwnPropertyNames(errors).length === 0) {
@@ -80,80 +89,93 @@ const ManagerJournal = () => {
   }, [dispatch, errors])
   return (
     <Wrapper>
-    < form className="form" >
+      < form className="form" >
 
-      <h3>{editJournalID ? "edit journal" : "Create Journal"}</h3>
-      {<Alert />}
-      <div className="form">
-        <FormRow
-          type="text"
-          labelText="Name"
-          name="name"
-          value={name}
-          handleChange={handleInput}
-        />
-        {errors.name && <p>{errors.name}</p>}
-        <FormRow
-          type="text"
-          labelText="Introduction"
-          name="introduction"
-          value={introduction}
-          handleChange={handleInput}
-        />
-        {errors.introduction && <p>{errors.introduction}</p>}
-        <FormRow
-          type="text"
-          labelText="Organization"
-          name="organization"
-          value={organization}
-          handleChange={handleInput}
-        />
-        {errors.organization && <p>{errors.organization}</p>}
-        <FormRow
-          type="text"
-          labelText="ISSN"
-          name="issn"
-          value={issn}
-          handleChange={handleInput}
-        />
-        {errors.issn && <p>{errors.issn}</p>}
-        <FormDropdown
-          labelText="Field"
+        <h3>{editJournalID ? "edit journal" : "Create Journal"}</h3>
+        {<Alert />}
+        <div className="form">
+          <FormRow
+            type="text"
+            labelText="Name"
+            name="name"
+            value={name}
+            handleChange={handleInput}
+          />
+          {errors.name && <p>{errors.name}</p>}
+          <FormRow
+            type="text"
+            labelText="Introduction"
+            name="introduction"
+            value={introduction}
+            handleChange={handleInput}
+          />
+          {errors.introduction && <p>{errors.introduction}</p>}
+          <FormRow
+            type="text"
+            labelText="Organization"
+            name="organization"
+            value={organization}
+            handleChange={handleInput}
+          />
+          {errors.organization && <p>{errors.organization}</p>}
+          <FormRow
+            type="text"
+            labelText="ISSN"
+            name="issn"
+            value={issn}
+            handleChange={handleInput}
+          />
+          {errors.issn && <p>{errors.issn}</p>}
+          <FormDropdown
+            labelText="Field"
 
-          value={journalFields.map((field) => ({
-            label: field.fieldName,
-            value: field.fieldId,
-          }))}
-          isMulti={true}
-          options={selectFieldOptions}
-          handleChange={(e) => {
-            const tmp = e.map((x) => ({
-              fieldId: x.value,
-              fieldName: x.label,
-            }));
-            console.log("tmp".tmp)
-            dispatch(
-              handleChange({
-                name: "journalFields",
-                value: tmp,
-                type: "admin",
-              })
-            );
-          }}
-          type="select"
-        />
-        {errors.journalFields && <p>{errors.journalFields}</p>}
-
-        <button
-          className="btn btn-block"
-          type="submit"
-          onClick={onSubmit}
-        // disabled={isLoading}
-        >
-          {editJournalID ? "edit" : "submit"}
-        </button>
-      </div>
-    </form>
+            value={journalFields.map((field) => ({
+              label: field.fieldName,
+              value: field.fieldId,
+            }))}
+            isMulti={true}
+            options={selectFieldOptions}
+            handleChange={(e) => {
+              const tmp = e.map((x) => ({
+                fieldId: x.value,
+                fieldName: x.label,
+              }));
+              console.log("tmp".tmp)
+              dispatch(
+                handleChange({
+                  name: "journalFields",
+                  value: tmp,
+                  type: "admin",
+                })
+              );
+            }}
+            type="select"
+          />
+          {errors.journalFields && <p>{errors.journalFields}</p>}
+          <FormRow
+            type="number"
+            labelText="Number of round"
+            name="numberOfRound"
+            value={numberOfRound}
+            handleChange={handleInput}
+          />
+          <FormRow
+            type="number"
+            labelText="Number of reviewer"
+            name="numberOfReviewer"
+            value={numberOfReviewer}
+            handleChange={handleInput}
+          />
+          <button
+            className="btn btn-block"
+            type="submit"
+            onClick={onSubmit}
+          // disabled={isLoading}
+          >
+            {editJournalID ? "edit" : "submit"}
+          </button>
+        </div>
+      </form>
     </Wrapper>
   )
 }
