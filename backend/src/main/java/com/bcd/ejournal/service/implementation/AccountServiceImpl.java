@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.configuration.jwt.JWTService;
 import com.bcd.ejournal.configuration.jwt.payload.JWTPayload;
+import com.bcd.ejournal.domain.dto.request.AccountChangeForgotPassword;
 import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountLoginRequest;
 import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
@@ -189,6 +190,19 @@ public class AccountServiceImpl implements AccountService {
             e.printStackTrace();
         }
 		
+	}
+
+	@Override
+	public void forgotPassword(String token,  AccountChangeForgotPassword req) {
+		if (!req.getNewPassword().equals(req.getNewPasswordRetype())) {
+            throw new DataIntegrityViolationException("Password mismatch");
+        }
+		JWTPayload payload = jwtService.jwtPayloadFromJWT(token);
+        Account acc = accountRepository.findById(payload.getAccountId())
+        		.filter(Account::isEnabled)
+                .orElse(null);
+        acc.setPassword(passwordEncoder.encode(req.getNewPassword()));
+        accountRepository.save(acc);
 	}
 
 

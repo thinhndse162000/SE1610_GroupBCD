@@ -1,5 +1,6 @@
 package com.bcd.ejournal.service;
 
+import com.bcd.ejournal.domain.dto.request.AccountChangeForgotPassword;
 import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountLoginRequest;
 import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
@@ -25,4 +26,6 @@ public interface AccountService {
     AuthorResponse getAuthorFromSlug(String slug);
     
     void verify(TokenRequest request);
+    
+    void forgotPassword(String token, AccountChangeForgotPassword req);
 }

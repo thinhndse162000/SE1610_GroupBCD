@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
+import com.bcd.ejournal.domain.dto.request.AccountChangeForgotPassword;
 import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountEmailVerify;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
@@ -49,13 +51,17 @@ public class AccountApi {
     public void verifyEmail(@RequestBody AccountEmailVerify req){
     	emailService.sendEmailForgetPassword(req);
     }
-    @PutMapping("/password?token={token}")
+    @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal AccountJWTPayload jwt, @Valid @RequestBody AccountChangePasswordRequest request) {
         accountService.changePassword(jwt.getAccountId(), request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
-    
+    @PutMapping("/forgot")
+    public ResponseEntity<Void> forgotPassowrd(@RequestParam String token,@RequestBody AccountChangeForgotPassword req){
+    	accountService.forgotPassword(token, req);
+    	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
     @DeleteMapping
     public ResponseEntity<Void> archiveAccount(@AuthenticationPrincipal AccountJWTPayload jwt) {
         accountService.archiveAccount(jwt.getAccountId());
