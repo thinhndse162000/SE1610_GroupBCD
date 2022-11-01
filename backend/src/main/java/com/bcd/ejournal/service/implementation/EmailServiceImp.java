@@ -15,16 +15,18 @@ import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.configuration.jwt.JWTService;
 import com.bcd.ejournal.domain.dto.request.AccountEmailVerify;
-import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.EmailDetail;
+import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.service.EmailService;
 
 @Service
 public class EmailServiceImp implements EmailService {
-
-    @Autowired
-    private JavaMailSender javaMailSender;
+	@Autowired
+	private JavaMailSender javaMailSender;
+	
+	@Autowired
+	private AccountRepository accountRepository;
 
     @Autowired
     private JWTService jwtService;
@@ -164,10 +166,7 @@ public class EmailServiceImp implements EmailService {
             // Sending the mail
             javaMailSender.send(mailMessage);
             return "Mail Sent Successfully...";
-        }
-
-        // Catch block to handle the exceptions
-        catch (Exception e) {
+        } catch (Exception e) {
             return "Error while Sending Mail";
         }
     }
@@ -192,10 +191,7 @@ public class EmailServiceImp implements EmailService {
             // Sending the mail
             javaMailSender.send(mailMessage);
             return "Mail Sent Successfully...";
-        }
-
-        // Catch block to handle the exceptions
-        catch (Exception e) {
+        } catch (Exception e) {
             return "Error while Sending Mail";
         }
     }

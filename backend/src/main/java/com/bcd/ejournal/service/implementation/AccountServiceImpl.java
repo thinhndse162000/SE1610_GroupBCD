@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.configuration.jwt.JWTService;
 import com.bcd.ejournal.configuration.jwt.payload.JWTPayload;
+import com.bcd.ejournal.domain.dto.request.AccountChangeForgotPassword;
 import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountLoginRequest;
 import com.bcd.ejournal.domain.dto.request.AccountSignupRequest;
@@ -59,7 +60,8 @@ public class AccountServiceImpl implements AccountService {
         if (passwordEncoder.matches(password, acc.getPassword())) {
             if (!acc.isEnable()) {
                 sendVerifyEmail(acc);
-                throw new UnauthorizedException("Please verify your account first. An email has been sent to your mail");
+                throw new UnauthorizedException(
+                        "Please verify your account first. An email has been sent to your mail");
             }
             AccountTokenResponse response = new AccountTokenResponse();
             response.setToken(jwtService.jwtFromAccount(acc));
@@ -115,10 +117,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private void sendVerifyEmail(Account acc) {
-            EmailDetail detail = new EmailDetail();
-            detail.setToken("Your Acc account has been Created \n\nClick this link to login\n\n"
-                    + "http://localhost:3000/auth/verify/" + jwtService.jwtShrotDuration(acc));
-            emailService.sendEmailSignup(detail, acc.getEmail());
+        EmailDetail detail = new EmailDetail();
+        detail.setToken("Your Acc account has been Created \n\nClick this link to login\n\n"
+                + "http://localhost:3000/auth/verify/" + jwtService.jwtShrotDuration(acc));
+        emailService.sendEmailSignup(detail, acc.getEmail());
     }
 
     @Override
@@ -198,9 +200,22 @@ public class AccountServiceImpl implements AccountService {
                 throw new UnauthorizedException("Your verify link has expired");
             } else if (account != null) {
                 accountRepository.updateEnable(account);
-            } 
+            }
         } catch (IllegalArgumentException e) {
             throw new UnauthorizedException(e.getMessage());
         }
+    }
+
+    @Override
+    public void forgotPassword(String token, AccountChangeForgotPassword req) {
+        if (!req.getNewPassword().equals(req.getNewPasswordRetype())) {
+            throw new DataIntegrityViolationException("Password mismatch");
+        }
+        JWTPayload payload = jwtService.jwtPayloadFromJWT(token);
+        Account acc = accountRepository.findById(payload.getAccountId())
+                .filter(Account::isEnabled)
+                .orElse(null);
+        acc.setPassword(passwordEncoder.encode(req.getNewPassword()));
+        accountRepository.save(acc);
     }
 }
