@@ -13,6 +13,7 @@ export const createJournal =
   ({ journal }) =>
   async (dispatch) => {
     dispatch({ type: LOADING });
+    console.log(journal)
     try {
       await authFetch.post("/journal/", journal);
       dispatch({
@@ -29,6 +30,7 @@ export const createJournal =
     }
     dispatch(clearAlert());
   };
+
 export const editJournal =
   ({ journal }) =>
   async (dispatch) => {

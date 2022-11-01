@@ -36,7 +36,7 @@ const ManagerJournal = () => {
     },
   } = admin;
 
-  const [errors, setErrors] = useState(initialState);
+  const [errors, setErrors] = useState({ noError: true });
   const dispatch = useDispatch();
   const handleInput = (e) => {
     const name = e.target.name;
@@ -62,13 +62,15 @@ const ManagerJournal = () => {
     label: field.fieldName,
     value: field.fieldId,
   }));
+
   useEffect(() => {
+    console.log(journalFields)
     const journal = {
       name,
       introduction,
       organization,
       issn,
-      journalFields,
+      fieldId: journalFields.map((f) => f.fieldId),
       numberOfRound,
       numberOfReviewer,
     };
@@ -81,7 +83,9 @@ const ManagerJournal = () => {
           introduction,
           organization,
           issn,
-          journalFields,
+          fieldId: journalFields.map((f) => f.fieldId),
+          numberOfRound,
+          numberOfReviewer,
         };
         dispatch(editJournal({ journal }));
       } else dispatch(createJournal({ journal }));
@@ -156,6 +160,8 @@ const ManagerJournal = () => {
             value={numberOfRound}
             handleChange={handleInput}
           />
+          {errors.numberOfRound && <p>{errors.numberOfRound}</p>}
+
           <FormRow
             type="number"
             labelText="Number of reviewer"
@@ -163,6 +169,8 @@ const ManagerJournal = () => {
             value={numberOfReviewer}
             handleChange={handleInput}
           />
+          {errors.numberOfReviewer && <p>{errors.numberOfReviewer}</p>}
+
           <button
             className="btn btn-block"
             type="submit"

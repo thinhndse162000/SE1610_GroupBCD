@@ -18,15 +18,29 @@ export default function validateCreateJournal(values) {
   }
 
   if (!values.introduction) {
-    errors.introduction = "introduction is required.";
-  } else if (values.introduction.length < 8) {
-    errors.introduction = "Password needs to be 8 characters or more.";
-  } else if (values.introduction.length > 500) {
-    errors.introduction = "Password cannot exceed more than 20 characters.";
+    errors.introduction = "Introduction is required.";
+  } else if (values.introduction.length > 1000) {
+    errors.introduction = "Introduction cannot exceed more than 1000 characters.";
   }
 
   if (!values.issn) {
     errors.issn = "ISSN is required.";
+  }
+
+  if (!values.journalFields) {
+    errors.journalFields = "Journal field is required";
+  }
+
+  if (!values.numberOfRound) {
+    errors.numberOfRound = "Number of review round is required";
+  } else if (!(0 < values.numberOfRound && values.numberOfRound < 10)) {
+    errors.numberOfRound = "Number of review round must be between 1 to 10";
+  }
+
+  if (!values.numberOfReviewer) {
+    errors.numberOfReviewer = "Number of reviewer per round is required";
+  } else if (values.numberOfReviewer % 2 == 0) {
+    errors.numberOfReviewer = "Number of reviewer per round must be odd";
   }
 
   return errors;

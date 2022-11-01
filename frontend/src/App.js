@@ -35,6 +35,7 @@ import ManagerJournal from "./pages/dashboard/admin/ManagerJournal";
 import ViewJournalList from "./pages/dashboard/admin/ViewJournalList";
 import ChangePassword from "./pages/dashboard/profile/ChangePassword";
 import ViewProfle from "./pages/dashboard/profile/ViewProfle";
+import VerifyForgotPassword from "./pages/VerifyForgotPassword";
 
 function App() {
   return (
@@ -140,6 +141,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/account/password" element={<VerifyForgotPassword />} />
         <Route path="/auth/verify/:token" element={<VerifySignup />} />
         <Route path="*" element={<Error />} />
       </Routes>
