@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FormDropdown,
@@ -50,7 +50,7 @@ const ViewJournalList = () => {
   useEffect(() => {
     dispatch(search({ keyword, fields, page }));
     // eslint-disable-next-line
-  }, [dispatch, page]);
+  }, [dispatch, page, ]);
 
   const handleClick = (journalId) => {
     dispatch(setEditJournal(journalId));
@@ -59,6 +59,34 @@ const ViewJournalList = () => {
   const handlePageChange = (page) => {
     dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
   };
+  // Dtrag
+
+  const dragItem = useRef()
+  const dragOverItem = useRef()
+
+  const [results, setResults] = useState(result);
+
+  console.log("results", results)
+  const handleSort = () => {
+    //duplicate items
+    let _results = [...results]
+    console.log("dragItem", dragItem)
+    console.log("dragOverItem", dragOverItem)
+
+    //remove and save the dragged item content
+    const draggedItemContent = _results.splice(dragItem.current, 1)[0]
+
+    //switch the position
+    _results.splice(dragOverItem.current, 0, draggedItemContent)
+
+    //reset the position ref
+    dragItem.current = null
+    dragOverItem.current = null
+
+    //update the actual array
+    setResults = (_results)
+  }
+
   return (
     <div>
       <SearchWrapper>
@@ -102,11 +130,11 @@ const ViewJournalList = () => {
       </SearchWrapper>
 
       {result.length > 0 && (
-        <PageBtnContainer
+        page.length > 1 && (<PageBtnContainer
           page={page}
           numOfPage={numOfPage}
           changePage={handlePageChange}
-        />
+        />)
       )}
       {isLoading ? (
         <Loading center />
@@ -114,7 +142,7 @@ const ViewJournalList = () => {
         <>
           <ContainerWrapper>
             <div className="container">
-              {result.map((journal, index) => {
+              {results.map((journal, index) => {
                 let action = [];
                 action.push({
                   type: "link",
@@ -124,17 +152,26 @@ const ViewJournalList = () => {
                   onClick: () => dispatch(setEditJournal(journal.journalId)),
                 });
 
+
+
                 return (
-                  <Journal key={index} journal={journal} action={action} />
+
+                  <Journal
+                    draggable
+                    onDragStart={(e) => (dragItem.current = index)}
+                    onDragEnter={(e) => (dragOverItem.current = index)}
+                    onDragEnd={handleSort}
+                    onDragOver={(e) => e.preventDefault()}
+                    key={index} journal={journal} action={action} />
                 );
               })}
             </div>
           </ContainerWrapper>
-          <PageBtnContainer
+          {page.length > 1 && (<PageBtnContainer
             page={page}
             numOfPage={numOfPage}
             changePage={handlePageChange}
-          />
+          />)}
         </>
       ) : (
         <p>No result found</p>

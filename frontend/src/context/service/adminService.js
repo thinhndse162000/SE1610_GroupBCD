@@ -62,7 +62,7 @@ export const search =
         fieldIds: fields.map((field) => field.fieldId),
         page,
       });
-
+      console.log("data",  data)
       dispatch({
         type: SUCCESS_NO_MESSAGE,
       });
