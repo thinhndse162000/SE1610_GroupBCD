@@ -28,6 +28,7 @@ import com.bcd.ejournal.domain.enums.AccountRole;
 import com.bcd.ejournal.domain.enums.JournalStatus;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
 import com.bcd.ejournal.repository.AccountRepository;
+import com.bcd.ejournal.repository.FieldRepository;
 import com.bcd.ejournal.repository.IssueRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PaperRepository;
@@ -42,17 +43,19 @@ public class JournalServiceImpl implements JournalService {
     private final PaperRepository paperRepository;
     private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
+    private final FieldRepository fieldRepository;
 
     @Autowired
     public JournalServiceImpl(JournalRepository journalRepository, IssueRepository issueRepository,
             AccountRepository accountRepository, PaperRepository paperRepository, ModelMapper modelMapper,
-            DTOMapper dtoMapper) {
+            DTOMapper dtoMapper, FieldRepository fieldRepository) {
         this.journalRepository = journalRepository;
         this.issueRepository = issueRepository;
         this.accountRepository = accountRepository;
         this.paperRepository = paperRepository;
         this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
+        this.fieldRepository = fieldRepository;
     }
 
     @Override
@@ -63,10 +66,19 @@ public class JournalServiceImpl implements JournalService {
         request.setOrganization(request.getOrganization().trim());
         request.setIssn(request.getIssn().trim());
 
-        Journal journal = modelMapper.map(request, Journal.class);
+        Journal journal = new Journal();
+        journal.setName(request.getName());
+        journal.setIntroduction(request.getIntroduction());
+        journal.setOrganization(request.getOrganization());
+        journal.setNumberOfRound(request.getNumberOfRound());
+        journal.setNumberOfReviewer(request.getNumberOfReviewer());
+        journal.setPrice(1000);
+        journal.setIssn(request.getIssn());
         journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
         journal.setSlug(request.getName().toLowerCase());
+
+        journal.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
         journal = journalRepository.save(journal);
 
         return modelMapper.map(journal, JournalResponse.class);
