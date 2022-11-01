@@ -131,9 +131,8 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<ManagerJournal />} /> 
-          <Route path="admin-Journal" element={<ViewJournalList />} />
-          <Route path="submit-journal" element={<ManagerJournal />} />
+          <Route index element={<ViewJournalList />} />
+          <Route path="create-journal" element={<ManagerJournal />} />
       
         </Route>
 

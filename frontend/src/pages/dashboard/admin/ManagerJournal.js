@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { Alert, FormDropdown, FormRow } from '../../../components';
-import { createJournal, editJournal } from '../../../context/service/adminService';
-import { handleChange } from '../../../context/service/utilService';
-import validateCreateJournal from '../../../context/validator/validateCreateJournal';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert, FormDropdown, FormRow } from "../../../components";
+import {
+  createJournal,
+  editJournal,
+} from "../../../context/service/adminService";
+import { handleChange } from "../../../context/service/utilService";
+import validateCreateJournal from "../../../context/validator/validateCreateJournal";
 import Wrapper from "../../../assets/wrappers/DashboardFormPage";
+
 const ManagerJournal = () => {
   const { base, admin } = useSelector((state) => state);
-  console.log("admin", admin)
   const { isLoading, showAlert, fields } = base;
   // Bin
   const initialState = {
@@ -40,7 +43,7 @@ const ManagerJournal = () => {
     const value = e.target.value;
     dispatch(handleChange({ name, value, type: "admin" }));
   };
-  console.log("error", errors)
+
   const onSubmit = (e) => {
     e.preventDefault();
     const journal = {
@@ -51,18 +54,16 @@ const ManagerJournal = () => {
       journalFields,
       numberOfRound,
       numberOfReviewer,
-    }
+    };
     setErrors(validateCreateJournal(journal));
-   
-  }
+  };
 
   const selectFieldOptions = fields.map((field) => ({
     label: field.fieldName,
     value: field.fieldId,
   }));
   useEffect(() => {
-    const journal =
-    {
+    const journal = {
       name,
       introduction,
       organization,
@@ -70,7 +71,7 @@ const ManagerJournal = () => {
       journalFields,
       numberOfRound,
       numberOfReviewer,
-    }
+    };
 
     if (Object.getOwnPropertyNames(errors).length === 0) {
       if (editJournalID) {
@@ -81,16 +82,14 @@ const ManagerJournal = () => {
           organization,
           issn,
           journalFields,
-        }
+        };
         dispatch(editJournal({ journal }));
-      } else
-        dispatch(createJournal({ journal }));
+      } else dispatch(createJournal({ journal }));
     }
-  }, [dispatch, errors])
+  }, [dispatch, errors]);
   return (
     <Wrapper>
-      < form className="form" >
-
+      <form className="form">
         <h3>{editJournalID ? "edit journal" : "Create Journal"}</h3>
         {<Alert />}
         <div className="form">
@@ -128,7 +127,6 @@ const ManagerJournal = () => {
           {errors.issn && <p>{errors.issn}</p>}
           <FormDropdown
             labelText="Field"
-
             value={journalFields.map((field) => ({
               label: field.fieldName,
               value: field.fieldId,
@@ -140,7 +138,6 @@ const ManagerJournal = () => {
                 fieldId: x.value,
                 fieldName: x.label,
               }));
-              console.log("tmp".tmp)
               dispatch(
                 handleChange({
                   name: "journalFields",
@@ -170,14 +167,14 @@ const ManagerJournal = () => {
             className="btn btn-block"
             type="submit"
             onClick={onSubmit}
-          // disabled={isLoading}
+            // disabled={isLoading}
           >
             {editJournalID ? "edit" : "submit"}
           </button>
         </div>
       </form>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default ManagerJournal
+export default ManagerJournal;

@@ -11,7 +11,6 @@ const ViewProfle = () => {
   } = useSelector((state) => state);
   const test = useSelector((state) => state);
 
-  console.log("test", test)
   const dispatch = useDispatch();
   const { slug } = useParams();
   useEffect(() => {
@@ -20,11 +19,15 @@ const ViewProfle = () => {
 
   return (
     <Wrapper className="full-page">
-      <form className="form" onSubmit={(e) => { e.preventDefault() }}>
+      <form
+        className="form"
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
         <h3>profile</h3>
         {/* {showAlert && <Alert />} */}
         <div className="form-profile">
-
           <FormRow
             type="text"
             name="email"
@@ -80,7 +83,7 @@ const ViewProfle = () => {
           <button
             className="btn btn-block"
             type="submit"
-          // disabled={isLoading}
+            // disabled={isLoading}
           >
             {/* {isLoading ? 'Please Wait...' : 'save changes'} */}
             Save

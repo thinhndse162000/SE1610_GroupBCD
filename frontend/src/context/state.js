@@ -40,7 +40,6 @@ const admin = {
   },
   search: {
     keyword: "",
-    type: "Journal",
     fields: [],
     result: [],
     page: 1,

@@ -67,6 +67,7 @@ public class JournalServiceImpl implements JournalService {
         journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
         journal.setSlug(request.getName().toLowerCase());
+        journal.setPrice(1000);
         journal = journalRepository.save(journal);
 
         return modelMapper.map(journal, JournalResponse.class);

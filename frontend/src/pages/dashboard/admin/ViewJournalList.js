@@ -1,29 +1,32 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { FormDropdown, FormRow, FormRowSelect, Journal, Loading, PageBtnContainer } from '../../../components';
-import { search, setEditJournal } from '../../../context/service/adminService';
-import { handleChange } from '../../../context/service/utilService';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  FormDropdown,
+  FormRow,
+  FormRowSelect,
+  Journal,
+  Loading,
+  PageBtnContainer,
+} from "../../../components";
+import { search, setEditJournal } from "../../../context/service/adminService";
+import { handleChange } from "../../../context/service/utilService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
-import { Link } from 'react-router-dom';
 
 const ViewJournalList = () => {
   const {
-    isLoading,
-    base: { fields: fieldOptions },
+    base: { fields: fieldOptions, isLoading },
     admin: {
-      search: { keyword, result, type, fields, page, numOfPage },
+      search: { keyword, result, fields, page, numOfPage },
     },
-    admin
   } = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  // console.log("Test1", admin)
   const selectFieldOptions = fieldOptions.map((field) => ({
     label: field.fieldName,
     value: field.fieldId,
   }));
-  // 1
+
   const handleInputChange = (e) => {
     if (isLoading) return;
     dispatch(
@@ -38,24 +41,23 @@ const ViewJournalList = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (page === 1) {
-      dispatch(search({ keyword, type, fields, page }));
+      dispatch(search({ keyword, fields, page }));
     } else {
       handlePageChange(1);
     }
   };
 
   useEffect(() => {
-    dispatch(search({ keyword, type, fields, page }));
+    dispatch(search({ keyword, fields, page }));
     // eslint-disable-next-line
   }, [dispatch, page]);
 
   const handleClick = (journalId) => {
-    dispatch(setEditJournal(journalId))
+    dispatch(setEditJournal(journalId));
   };
+
   const handlePageChange = (page) => {
-    dispatch(
-      handleChange({ name: "page", value: page, type: "admin_search" })
-    );
+    dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
   };
   return (
     <div>
@@ -86,7 +88,7 @@ const ViewJournalList = () => {
                   handleChange({
                     name: "fields",
                     value: tmp,
-                    type: "member_search",
+                    type: "admin_search",
                   })
                 );
               }}
@@ -110,30 +112,24 @@ const ViewJournalList = () => {
         <Loading center />
       ) : result.length > 0 ? (
         <>
-          {type === "Journal" ? (
-            <ContainerWrapper>
-              <div className="container">
-                {result.map((journal, index) => {
+          <ContainerWrapper>
+            <div className="container">
+              {result.map((journal, index) => {
+                let action = [];
+                action.push({
+                  type: "link",
+                  className: "btn edit-btn",
+                  to: "/admin/create-journal",
+                  label: "edit",
+                  onClick: () => dispatch(setEditJournal(journal.journalId)),
+                });
 
-                  return (<>
-                    <Journal
-                      key={index} journal={journal} />
-                    <Link
-                      to="/admin"
-                      className="btn edit-btn"
-                      onClick={() => dispatch(setEditJournal(journal.journalId))}
-                    >
-                      Edit
-                    </Link>
-
-                  </>
-                  )
-                })}
-              </div>
-            </ContainerWrapper>
-          ) : (
-            <p>No result found</p>
-          )}.
+                return (
+                  <Journal key={index} journal={journal} action={action} />
+                );
+              })}
+            </div>
+          </ContainerWrapper>
           <PageBtnContainer
             page={page}
             numOfPage={numOfPage}
@@ -142,10 +138,9 @@ const ViewJournalList = () => {
         </>
       ) : (
         <p>No result found</p>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
-}
+};
 
-export default ViewJournalList
+export default ViewJournalList;
