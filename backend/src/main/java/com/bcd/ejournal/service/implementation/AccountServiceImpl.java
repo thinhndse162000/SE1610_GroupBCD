@@ -212,10 +212,13 @@ public class AccountServiceImpl implements AccountService {
             throw new DataIntegrityViolationException("Password mismatch");
         }
         JWTPayload payload = jwtService.jwtPayloadFromJWT(token);
+        System.out.println(payload.getAccountId());
         Account acc = accountRepository.findById(payload.getAccountId())
                 .filter(Account::isEnabled)
                 .orElse(null);
-        acc.setPassword(passwordEncoder.encode(req.getNewPassword()));
-        accountRepository.save(acc);
+        if (acc != null) {
+            acc.setPassword(passwordEncoder.encode(req.getNewPassword()));
+            accountRepository.save(acc);
+        }
     }
 }
