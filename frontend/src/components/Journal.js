@@ -22,6 +22,7 @@ const Journal = ({ journal, type = "compact", action = [] }) => {
     */
   return (
     <Wrapper>
+
       <header>
         <div className="info">
           <Link to={`/journal/${slug}`}>
@@ -82,6 +83,7 @@ const Journal = ({ journal, type = "compact", action = [] }) => {
         </footer>
       </div>
     </Wrapper>
+
   );
 };
 
