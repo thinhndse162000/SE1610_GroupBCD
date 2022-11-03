@@ -33,7 +33,7 @@ const AuthorAddPaper = () => {
     },
   } = author;
 
-  const { isLoading, showAlert, fields } = base;
+  const { isLoading, showAlert, fields, alertType } = base;
  
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,16 +59,6 @@ const AuthorAddPaper = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(paperTitle, paperSummary, paperJournal, paperPdfFile);
-    // if (
-    //   !paperTitle ||
-    //   !paperSummary ||
-    //   !paperJournal.journalId ||
-    //   !paperPdfFile
-    // ) {
-    //   dispatch(displayAlert());
-    //   return;
-    // }
     if (editPaperId) {
       const paper = {
         editPaperId,
@@ -104,13 +94,14 @@ const AuthorAddPaper = () => {
     if (Object.getOwnPropertyNames(errors).length === 0) {
       dispatch(createPaper(paper))
     }
-
-    if (paperTitle) {
-      setSelectValue("");
-      navigate("/author");
-    }
     // eslint-disable-next-line
   }, [dispatch, errors])
+
+  useEffect(() => {
+    if (alertType === "success") {
+      navigate("/author")
+    }
+  }, [navigate, alertType])
 
   const handleClear = (e) => {
     e.preventDefault();

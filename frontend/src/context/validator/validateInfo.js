@@ -12,9 +12,10 @@ export default function validateInfo(values) {
   } else if ((parseInt(bday[0]) - year) > 0) {
     errors.dateOfBirth = "Your date of birth is not valid."
   }
+
   if (!values.email) {
     errors.email = "Email is required.";
-  } else if (!/\S+@[A-Za-z]+\.com/.test(values.email)) {
+  } else if (!/\S+@[A-Za-z]+\./.test(values.email)) {
     errors.email = "Email address is invalid.";
   }
 

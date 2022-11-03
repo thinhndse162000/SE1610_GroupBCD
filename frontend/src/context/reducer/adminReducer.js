@@ -15,6 +15,7 @@ const adminReducer = (state = admin, action) => {
           introduction: "",
           organization: "",
           issn: "",
+          managerEmail: "",
           journalFields: [],
           numberOfRound: "",
           numberOfReviewer: "",
@@ -31,6 +32,22 @@ const adminReducer = (state = admin, action) => {
         search: {
           ...state.search,
           [action.payload.name]: action.payload.value,
+        },
+      };
+
+    case "HANDLE_JOURNAL_CHANGE":
+      let journals = state.search.result.map((journal) => {
+        if (journal.journalId === action.payload.id) {
+          return { ...journal, status: action.payload.status };
+        }
+        return journal;
+      });
+
+      return {
+        ...state,
+        search: {
+          ...state.search,
+          result: journals,
         },
       };
 
@@ -62,6 +79,7 @@ const adminReducer = (state = admin, action) => {
         fields,
         organization,
         issn,
+        managerEmail,
         numberOfRound,
         numberOfReviewer,
       } = journal1;
@@ -74,6 +92,7 @@ const adminReducer = (state = admin, action) => {
           introduction: introduction,
           organization: organization,
           issn: issn,
+          managerEmail,
           journalFields: fields,
           numberOfRound: numberOfRound,
           numberOfReviewer: numberOfReviewer,

@@ -19,7 +19,7 @@ const initialState = {
 const Signup = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
-  const { user, isLoading, showAlert } = useSelector((state) => state.base);
+  const { user, isLoading, showAlert, alertType } = useSelector((state) => state.base);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -37,6 +37,12 @@ const Signup = () => {
     }
     // eslint-disable-next-line
   }, [dispatch, errors])
+
+  useEffect(() => {
+    if (alertType === "success") {
+      navigate("/login")
+    }
+  }, [alertType])
 
   return (
     <Wrapper className="full-page">

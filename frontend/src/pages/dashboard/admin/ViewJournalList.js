@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  Alert,
   FormDropdown,
   FormRow,
   FormRowSelect,
@@ -8,14 +9,19 @@ import {
   Loading,
   PageBtnContainer,
 } from "../../../components";
-import { search, setEditJournal } from "../../../context/service/adminService";
+import {
+  archiveJournal,
+  openJournal,
+  search,
+  setEditJournal,
+} from "../../../context/service/adminService";
 import { handleChange } from "../../../context/service/utilService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
 
 const ViewJournalList = () => {
   const {
-    base: { fields: fieldOptions, isLoading },
+    base: { fields: fieldOptions, isLoading, showAlert },
     admin: {
       search: { keyword, result, fields, page, numOfPage },
     },
@@ -59,6 +65,7 @@ const ViewJournalList = () => {
   const handlePageChange = (page) => {
     dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
   };
+
   return (
     <div>
       <SearchWrapper>
@@ -108,6 +115,7 @@ const ViewJournalList = () => {
           changePage={handlePageChange}
         />
       )}
+      {showAlert && <Alert />}
       {isLoading ? (
         <Loading center />
       ) : result.length > 0 ? (
@@ -123,6 +131,31 @@ const ViewJournalList = () => {
                   label: "edit",
                   onClick: () => dispatch(setEditJournal(journal.journalId)),
                 });
+
+                if (journal.status === "OPEN") {
+                  action.push({
+                    type: "button",
+                    className: "btn delete-btn",
+                    label: "Archive journal",
+                    onClick: () => {
+                      if (window.confirm(`Are you sure to archive journal ${journal.name}? `)) {
+                        dispatch(archiveJournal({ journalId: journal.journalId }));
+                      }
+                    },
+                  });
+                } else if (journal.status === "ARCHIVED") {
+                  action.push({
+                    type: "button",
+                    className: "btn edit-btn",
+                    label: "Open journal",
+                    onClick: () => {
+                      if (window.confirm(`Are you sure to open journal ${journal.name}? `)) {
+                        dispatch(openJournal({ journalId: journal.journalId }));
+                      }
+                    },
+                  });
+
+                }
 
                 return (
                   <Journal key={index} journal={journal} action={action} />

@@ -44,6 +44,10 @@ export const clearAlert = () => (dispatch) => {
   }, 5000);
 };
 
+export const clearAlertNow = () => (dispatch) => {
+  dispatch({ type: CLEAR_ALERT });
+}
+
 export const handleChange =
   ({ name, value, type }) =>
   (dispatch) => {
