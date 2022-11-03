@@ -40,11 +40,17 @@ const MemberPublishDetail = () => {
             <div className="two-row">
               <div>
                 <h3>Journal</h3>
-                <Journal journal={publish.issue.journal} />
+                <Journal
+                  link={`/journal/${publish.issue.journal.slug}`}
+                  journal={publish.issue.journal}
+                />
               </div>
               <div>
                 <h3>Issue</h3>
-                <Issue issue={publish.issue} link={`/issue/${publish.issue.issueId}`}/>
+                <Issue
+                  issue={publish.issue}
+                  link={`/issue/${publish.issue.issueId}`}
+                />
               </div>
             </div>
             <h3>Publish</h3>

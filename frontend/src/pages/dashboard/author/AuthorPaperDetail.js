@@ -66,6 +66,7 @@ const AuthorPaperDetail = () => {
         <ContainerWrapper>
           <div className="container">
             <h3>Reviews for round: {currentRound}</h3>
+            {paperDetail.reviews.length === 0 && <p>No review found</p>}
             {paperDetail.reviews.map((review, index) => {
               if (review.round === currentRound) {
                 return <ReviewReport key={index} review={review} />;

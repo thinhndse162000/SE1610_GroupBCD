@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 
-const Journal = ({ journal, type = "compact", action = [] }) => {
+const Journal = ({ journal, link, type = "compact", action = [] }) => {
   const {
     name,
     introduction,
@@ -24,9 +24,13 @@ const Journal = ({ journal, type = "compact", action = [] }) => {
     <Wrapper>
       <header>
         <div className="info">
-          <Link to={`/journal/${slug}`}>
+          {link != null ? (
+            <Link to={link}>
+              <h3>{name}</h3>
+            </Link>
+          ) : (
             <h3>{name}</h3>
-          </Link>
+          )}
           <p>
             <strong>ISSN</strong>: {issn} - <strong>Organization</strong>:{" "}
             {organization}
