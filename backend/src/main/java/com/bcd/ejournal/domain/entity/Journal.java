@@ -53,4 +53,7 @@ public class Journal implements Serializable {
 
     @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
     private List<Paper> papers;
+    
+    @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
+    private List<Invoice> invoices;
 }

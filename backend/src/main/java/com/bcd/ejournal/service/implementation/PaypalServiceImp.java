@@ -1,7 +1,5 @@
 package com.bcd.ejournal.service.implementation;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +22,6 @@ public class PaypalServiceImp implements PaypalService{
 	@Autowired
 	private APIContext paypalApiContext;
 	
-
-
 	@Override
 	public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
 		Payment payment = new Payment();
@@ -35,36 +31,34 @@ public class PaypalServiceImp implements PaypalService{
 		return payment.execute(paypalApiContext, paymentExecute);
 	}
 
-
-
 	@Override
-	public Payment createPayment(Double total, String currency, String method, String intent, String description,
-			String cancelUrl, String successUrl) throws PayPalRESTException {
+	public Payment createPayment(
+			double total,
+			String currency,
+			String method,
+			String intent,
+			String description,
+			String cancelUrl,
+			String successUrl) throws PayPalRESTException{
 		Amount amount = new Amount();
 		amount.setCurrency(currency);
-		total = new BigDecimal(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
 		amount.setTotal(String.format("%.2f", total));
-
 		Transaction transaction = new Transaction();
 		transaction.setDescription(description);
 		transaction.setAmount(amount);
-
-		List<Transaction> transactions = new ArrayList<>();
+		List transactions = new ArrayList<>();
 		transactions.add(transaction);
-
 		Payer payer = new Payer();
 		payer.setPaymentMethod(method.toString());
-
 		Payment payment = new Payment();
 		payment.setIntent(intent.toString());
-		payment.setPayer(payer);  
+		payment.setPayer(payer);
 		payment.setTransactions(transactions);
 		RedirectUrls redirectUrls = new RedirectUrls();
 		redirectUrls.setCancelUrl(cancelUrl);
 		redirectUrls.setReturnUrl(successUrl);
 		payment.setRedirectUrls(redirectUrls);
-
+		paypalApiContext.setMaskRequestId(true);
 		return payment.create(paypalApiContext);
 	}
-
 }

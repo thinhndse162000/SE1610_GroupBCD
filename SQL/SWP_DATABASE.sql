@@ -97,7 +97,8 @@ CREATE TABLE Invoice(
 	JournalId int not null ,
 	PaymentMethod VARCHAR(50) not null,
 	PaymentTime DATETIME not null,
-	endDate DATE not null
+	endDate DATE not null,
+	amount BIGINT
 	CONSTRAINT UQ_Invoice UNIQUE(AccountId,JournalId)
 )
 go
