@@ -11,6 +11,7 @@ issue = IssueSql()
 
 account.insert_account()
 account.insert_manager()
+account.insert_admin()
 journal.insert()
 paper.insert()
 invitation.insert()

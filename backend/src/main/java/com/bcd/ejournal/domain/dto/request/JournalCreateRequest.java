@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,10 +24,12 @@ public class JournalCreateRequest {
     private String organization;
     @NotBlank
     private String issn;
+    @NotBlank
+    private String managerEmail;
     @NotEmpty
     private List<Integer> fieldId;
-    @NotBlank
+    @NotNull
     private Integer numberOfRound;
-    @NotBlank
+    @NotNull
     private Integer numberOfReviewer;
 }

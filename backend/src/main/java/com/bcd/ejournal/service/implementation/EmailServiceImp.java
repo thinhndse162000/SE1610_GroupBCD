@@ -12,6 +12,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.configuration.jwt.JWTService;
@@ -36,6 +37,7 @@ public class EmailServiceImp implements EmailService {
     private String sender;
 
     @Override
+    @Async
     public String sendSimpleMail(EmailDetail details) {
         // TODO Auto-generated method stub
         try {
@@ -45,7 +47,6 @@ public class EmailServiceImp implements EmailService {
 
             // Setting up necessary details
             mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
             mailMessage.setText(details.getMsgBody());
             mailMessage.setSubject(details.getSubject());
 
@@ -61,8 +62,8 @@ public class EmailServiceImp implements EmailService {
     }
 
     @Override
+    @Async
     public String sendMailWithAttachment(EmailDetail details) {
-        // TODO Auto-generated method stub
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
 
@@ -95,6 +96,7 @@ public class EmailServiceImp implements EmailService {
     }
 
     @Override
+    @Async
     public String sendEmailSignup(EmailDetail detail, String email) {
         try {
             String subject = "Sign Up ";
@@ -119,6 +121,7 @@ public class EmailServiceImp implements EmailService {
     }
 
     @Override
+    @Async
     public String sendEmailInvitaion(EmailDetail details) {
         try {
 
@@ -147,6 +150,7 @@ public class EmailServiceImp implements EmailService {
     }
 
     @Override
+    @Async
     public String sendEmailSumbitPaper(Account acc) {
         try {
             EmailDetail details = new EmailDetail();
@@ -173,6 +177,7 @@ public class EmailServiceImp implements EmailService {
     }
 
     @Override
+    @Async
     public String sendEmailForgetPassword(AccountEmailVerify req) {
         try {
             Optional<Account> accountOpt = accountRepository.findByEmail(req.getEmail());

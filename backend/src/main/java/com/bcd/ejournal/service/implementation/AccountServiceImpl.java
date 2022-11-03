@@ -143,18 +143,13 @@ public class AccountServiceImpl implements AccountService {
         Account acc = accountRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Account not found - " + id));
 
-        req.setFirstName(req.getFirstName().trim());
-        req.setLastName(req.getLastName().trim());
         req.setOrganization(req.getOrganization().trim());
         req.setPhone(req.getPhone().trim());
 
-        // TODO: validate date of birth
         modelMapper.map(req, acc);
-        String slug = req.getFirstName() + "-" + req.getLastName();
-        acc.setSlug(slug.toLowerCase());
 
         acc = accountRepository.save(acc);
-        return modelMapper.map(acc, AccountProfileResponse.class);
+        return dtoMapper.toAccountProfileResponse(acc);
     }
 
     @Override
