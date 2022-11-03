@@ -101,6 +101,12 @@ public class JournalApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping("/{journalId}/open")
+    public ResponseEntity<Void> openJournal(@PathVariable Integer journalId) {
+        journalService.openJournal(journalId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/{journalId}/publish")
     public ResponseEntity<List<PublishResponse>> getAllPaper(@PathVariable Integer journalId) {
         List<PublishResponse> responses = publishService.getPublishFromJournal(journalId);
