@@ -47,7 +47,7 @@ public class PaypalApi {
 		
 			e.printStackTrace();
 		}
-		return null;
+		return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
 	}
 	
 	 @GetMapping(value = CANCEL_URL)
@@ -70,6 +70,6 @@ public class PaypalApi {
 	        } catch (PayPalRESTException e) {
 	         System.out.println(e.getMessage());
 	        }
-	        return null;
+	        return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
 	    }
 }
