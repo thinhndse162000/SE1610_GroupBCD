@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -170,7 +171,7 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public PagingResponse searchFilterInvitation(InvitationSearchFilterRequest filterRequest) {
         int pageNum = filterRequest.getPage() != null ? filterRequest.getPage() - 1 : 0;
-        Pageable page = PageRequest.of(pageNum, 10);
+        Pageable page = PageRequest.of(pageNum, 10, Sort.by("inviteDate").descending());
         Page<Invitation> invitation = invitationRepository.searchFilter(filterRequest, page);
 
         PagingResponse response = new PagingResponse();
