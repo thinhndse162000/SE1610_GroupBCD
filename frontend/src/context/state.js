@@ -6,12 +6,27 @@ const author = {
   submittedPapers: [],
   editPaperId: "",
   paperDetail: {},
+  editPaper: {
+    paperTitle: "",
+    paperSummary: "",
+    paperJournal: {}, 
+    paperPdfFile: { fileName: "", file: "" },
+    paperFields: [],
+  },
+
   newPaper: {
     paperTitle: "",
     paperSummary: "",
-    paperJournal: { journalName: "", journalId: "" },
+    paperJournal: {}, 
     paperPdfFile: { fileName: "", file: "" },
     paperFields: [],
+  },
+  searchJournal: {
+    keyword: "",
+    result: [],
+    page: 1,
+    numOfPage: 1,
+    totalFound: 0,
   },
   search: {
     keyword: "",

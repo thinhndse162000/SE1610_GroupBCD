@@ -33,31 +33,41 @@ const authorReducer = (state = author, action) => {
         newPaper: {
           ...state.newPaper,
           [action.payload.name]: action.payload.value,
-        }
-      }
+        },
+      };
+
+    case "HANDLE_AUTHOR_EDIT_CHANGE":
+      return {
+        ...state,
+        editPaper: {
+          ...state.editPaper,
+          [action.payload.name]: action.payload.value,
+        },
+      };
     case HANDLE_AUTHOR_SEARCH_CHANGE:
       return {
         ...state,
         search: {
           ...state.search,
           [action.payload.name]: action.payload.value,
-        }
-      }
+        },
+      };
+
     case "HANDLE_AUTHOR_SPREAD_SEARCH_CHANGE":
       return {
         ...state,
         search: {
           ...state.search,
           ...action.payload.value,
-        }
-      }
+        },
+      };
+
     case SET_EDIT_PAPER:
       const paper = state.search.result.find(
         (paper) => paper.paperId === action.payload.id
       );
 
       const { paperId, title, summary, linkPDF, journal, fields } = paper;
-      // TODO: link PDF
       return {
         ...state,
         editPaperId: paperId,
@@ -68,13 +78,41 @@ const authorReducer = (state = author, action) => {
             fileName: linkPDF,
             file: "",
           },
-          paperJournal: {
-            journalId: journal.journalId,
-            journalName: journal.name,
-          },
+          paperJournal: journal,
           paperFields: fields,
         },
       };
+
+    case "EDIT_PAPER":
+      return {
+        ...state,
+        editPaper: {
+          paperPdfFile: {
+            fileName: action.payload.editPaper.linkPDF,
+            file: "",
+          },
+          ...action.payload.editPaper,
+        }
+      };
+
+    case "HANDLE_AUTHOR_SPREAD_JOURNAL_CHANGE":
+      return {
+        ...state,
+        searchJournal: {
+          ...state.searchJournal,
+          ...action.payload.value,
+        }
+      }
+
+    case "HANDLE_AUTHOR_JOURNAL_CHANGE":
+      return {
+        ...state,
+        searchJournal: {
+          ...state.searchJournal,
+          [action.payload.name]: action.payload.value,
+        }
+      }
+
     case AUTHOR_PAPER:
       return {
         ...state,
@@ -84,7 +122,7 @@ const authorReducer = (state = author, action) => {
       return {
         ...state,
         paperDetail: action.payload.paperDetail,
-      }
+      };
     default:
       return state;
   }

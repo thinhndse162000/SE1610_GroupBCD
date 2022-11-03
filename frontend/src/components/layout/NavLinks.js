@@ -88,7 +88,7 @@ const NavLinks = ({ toggleSidebar }) => {
 
       {
         id: 2,
-        text: "Submit journal",
+        text: "Create journal",
         path: "create-journal",
         icon: <IoBarChartSharp />,
       },
