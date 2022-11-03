@@ -51,7 +51,7 @@ export const editJournal =
     }
     dispatch(clearAlert());
   };
-export const search =
+export const  search =
   ({ keyword, fields, page }) =>
   async (dispatch) => {
     dispatch({ type: LOADING });
@@ -62,7 +62,7 @@ export const search =
         fieldIds: fields.map((field) => field.fieldId),
         page,
       });
-
+    
       dispatch({
         type: SUCCESS_NO_MESSAGE,
       });

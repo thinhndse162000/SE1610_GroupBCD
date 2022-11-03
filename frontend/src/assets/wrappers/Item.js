@@ -6,7 +6,7 @@ const Wrapper = styled.article`
   display: grid;
   grid-template-rows: 1fr auto;
   box-shadow: var(--shadow-2);
-
+  
   header {
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--grey-100);
@@ -21,11 +21,13 @@ const Wrapper = styled.article`
     h5 {
       margin-bottom: 0.25rem;
     }
+    
     p {
       margin: 0;
       text-transform: capitalize;
       color: var(--grey-400);
       letter-spacing: var(--letterSpacing);
+   
     }
   }
   .pending {

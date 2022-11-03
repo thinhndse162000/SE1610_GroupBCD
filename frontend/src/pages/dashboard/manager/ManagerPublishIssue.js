@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FormRow,
@@ -47,6 +47,26 @@ const ManagerPublishIssue = () => {
   // Edit access level of chosen accepted paper
   // Publish new issue
 
+  const dragItem = useRef()
+  const dragOverItem = useRef()
+
+  const [results, setResults] = useState(publishes);
+
+  const handleSort = () => {
+    let _results = [...results]
+    const draggedItemContent = _results.splice(dragItem.current, 1)[0]
+    _results.splice(dragOverItem.current, 0, draggedItemContent)
+    dragItem.current = null
+    dragOverItem.current = null
+    setResults(_results)
+    dispatch(
+      handleChange({
+        name: "publishes",
+        value: results,
+        type: "manager_publishissue",
+      })
+    );
+ }
   const handleSelect = (paper) => {
     var checkbox = document.getElementById(`paper-${paper.paperId}`);
     let newPublishes = publishes;
@@ -163,27 +183,35 @@ const ManagerPublishIssue = () => {
         <ContainerWrapper>
           <h3>Selected papers</h3>
           <div className="container">
-            {publishes.map((tmpPub, index) => {
+            {results.map((tmpPub, index) => {
               return (
-                <ItemWrapper key={index}>
-                  <header>
-                    <div className="info">
-                      <h5>{tmpPub.paper.title}</h5>
-                    </div>
-                    <FormRowSelect
-                      labelText="Access level"
-                      name="accessLevel"
-                      value={tmpPub.accessLevel}
-                      handleChange={(e) =>
-                        handleAccessLevelChange(
-                          tmpPub.paper.paperId,
-                          e.target.value
-                        )
-                      }
-                      list={["OPEN", "PRIVATE"]}
-                    />
-                  </header>
-                </ItemWrapper>
+                <div
+                  key={index + 1000}
+                  draggable
+                  onDragStart={(e) => (dragItem.current = index)}
+                  onDragEnter={(e) => (dragOverItem.current = index)}
+                  onDragEnd={handleSort}
+                  onDragOver={(e) => e.preventDefault()}>
+                  <ItemWrapper key={index}>
+                    <header>
+                      <div className="info">
+                        <h5>{tmpPub.paper.title}</h5>
+                      </div>
+                      <FormRowSelect
+                        labelText="Access level"
+                        name="accessLevel"
+                        value={tmpPub.accessLevel}
+                        handleChange={(e) =>
+                          handleAccessLevelChange(
+                            tmpPub.paper.paperId,
+                            e.target.value
+                          )
+                        }
+                        list={["OPEN", "PRIVATE"]}
+                      />
+                    </header>
+                  </ItemWrapper>
+                </div>
               );
             })}
           </div>

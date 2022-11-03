@@ -12,6 +12,7 @@ import { search, setEditJournal } from "../../../context/service/adminService";
 import { handleChange } from "../../../context/service/utilService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
+import JournalAdmin from "../../../components/JournalAdmin";
 
 const ViewJournalList = () => {
   const {
@@ -56,152 +57,135 @@ const ViewJournalList = () => {
     dispatch(setEditJournal(journalId));
   };
 
-const handlePageChange = (page) => {
-  dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
-};
-// Dtrag
+  const handlePageChange = (page) => {
+    dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
+  };
+  // Dtrag
 
-const dragItem = useRef()
-const dragOverItem = useRef()
+  const dragItem = useRef()
+  const dragOverItem = useRef()
 
-const [results, setResults] = useState(result);
-console.log("dragItem", dragItem.current)
-console.log("dragOverItem", dragOverItem.current)
+  const [results, setResults] = useState(result);
+ 
 
-const handleSort = () => {
-  //duplicate items
-  let _results = [...results]
-  //remove and save the dragged item content
-  const draggedItemContent = _results.splice(dragItem.current, 1)[0]
-  console.log("dragItem", dragItem.current)
-  console.log("dragOverItem", dragOverItem.current)
-  console.log("results", results)
-  console.log("_results", _results)
+  const handleSort = () => {
 
-  //switch the position
-  _results.splice(dragOverItem.current, 0, draggedItemContent)
-  console.log("results2", results)
-  console.log("_results2", _results)
+    let _results = [...results]
 
-  //reset the position ref
-  dragItem.current = null
-  dragOverItem.current = null
-  console.log("results3", results)
-  console.log("_results3", _results)
-  setResults(_results)
-  //update the actual array
-  // setResults = (_results)
-}
+    const draggedItemContent = _results.splice(dragItem.current, 1)[0]
 
-return (
-  <div>
-    <SearchWrapper>
-      <form className="form">
-        <div className="journal-form">
-          <FormRow
-            labelText="Keyword"
-            type="text"
-            name="keyword"
-            value={keyword}
-            handleChange={handleInputChange}
-          />
-          <FormDropdown
-            labelText="Field"
-            value={fields.map((field) => ({
-              label: field.fieldName,
-              value: field.fieldId,
-            }))}
-            isMulti={true}
-            options={selectFieldOptions}
-            handleChange={(e) => {
-              const tmp = e.map((x) => ({
-                fieldId: x.value,
-                fieldName: x.label,
-              }));
-              dispatch(
-                handleChange({
-                  name: "fields",
-                  value: tmp,
-                  type: "admin_search",
-                })
-              );
-            }}
-            type="select"
-          />
-          <button className="btn" disabled={isLoading} onClick={handleSearch}>
-            Search
-          </button>
-        </div>
-      </form>
-    </SearchWrapper>
+    _results.splice(dragOverItem.current, 0, draggedItemContent)
 
-    {result.length > 0 && (
-      page.length > 1 && (<PageBtnContainer
-        page={page}
-        numOfPage={numOfPage}
-        changePage={handlePageChange}
-      />)
-    )}
-    {isLoading ? (
-      <Loading center />
-    ) : result.length > 0 ? (
-      <>
-        <ContainerWrapper>
-          <div className="container">
-            {results.map((journal, index) => {
-              let action = [];
-              action.push({
-                onDragStart: (e) => (dragItem.current = index),
-                onDragEnter: (e) => (dragOverItem.current = index),
-                onDragEnd: handleSort,
-                onDragOver: (e) => e.preventDefault(),
-                type: "link",
-                className: "btn edit-btn",
-                to: "/admin/create-journal",
-                label: "edit",
-                onClick: () => dispatch(setEditJournal(journal.journalId)),
-              });
+    dragItem.current = null
+    dragOverItem.current = null
+    setResults(_results)
+    console.log(results)
+    dispatch(
+      handleChange({
+        name: "result",
+        value: results,
+        type: "admin_spread_search",
+      })
+    );
+  }
 
-
-
-              return (<div
-                key={index + 1000}
-                draggable
-                onDragStart={(e) => (dragItem.current = index)}
-                onDragEnter={(e) => (dragOverItem.current = index)}
-                onDragEnd={handleSort}
-                onDragOver={(e) => e.preventDefault()}>
-
-                <Journal
-
-
-                  key={index} journal={journal} action={action} />
-              </div>
-                // <div
-                //   key={index}
-                //   draggable
-                //   onDragStart={(e) => (dragItem.current = index)}
-                //   onDragEnter={(e) => (dragOverItem.current = index)}
-                //   onDragEnd={handleSort}
-                //   onDragOver={(e) => e.preventDefault()}>
-
-                // </div>
-
-              );
-            })}
+  return (
+    <div>
+      <SearchWrapper>
+        <form className="form">
+          <div className="journal-form">
+            <FormRow
+              labelText="Keyword"
+              type="text"
+              name="keyword"
+              value={keyword}
+              handleChange={handleInputChange}
+            />
+            <FormDropdown
+              labelText="Field"
+              value={fields.map((field) => ({
+                label: field.fieldName,
+                value: field.fieldId,
+              }))}
+              isMulti={true}
+              options={selectFieldOptions}
+              handleChange={(e) => {
+                const tmp = e.map((x) => ({
+                  fieldId: x.value,
+                  fieldName: x.label,
+                }));
+                dispatch(
+                  handleChange({
+                    name: "fields",
+                    value: tmp,
+                    type: "admin_search",
+                  })
+                );
+              }}
+              type="select"
+            />
+            <button className="btn" disabled={isLoading} onClick={handleSearch}>
+              Search
+            </button>
           </div>
-        </ContainerWrapper>
-        {page.length > 1 && (<PageBtnContainer
+        </form>
+      </SearchWrapper>
+
+      {result.length > 0 && (
+        page.length > 1 && (<PageBtnContainer
           page={page}
           numOfPage={numOfPage}
           changePage={handlePageChange}
-        />)}
-      </>
-    ) : (
-      <p>No result found</p>
-    )}
-  </div>
-);
+        />)
+      )}
+      {isLoading ? (
+        <Loading center />
+      ) : result.length > 0 ? (
+        <>
+          <ContainerWrapper>
+            <div className="container">
+              {results.map((journal, index) => {
+                let action = [];
+                action.push({
+                  onDragStart: (e) => (dragItem.current = index),
+                  onDragEnter: (e) => (dragOverItem.current = index),
+                  onDragEnd: handleSort,
+                  onDragOver: (e) => e.preventDefault(),
+                  type: "link",
+                  className: "btn edit-btn",
+                  to: "/admin/create-journal",
+                  label: "edit",
+                  onClick: () => dispatch(setEditJournal(journal.journalId)),
+                });
+                return (<div 
+               
+                  className="container-journal"
+                  key={index + 1000}
+                  draggable
+                  onDragStart={(e) => (dragItem.current = index)}
+                  onDragEnter={(e) => (dragOverItem.current = index)}
+                  onDragEnd={handleSort}
+                  onDragOver={(e) => e.preventDefault()}>
+                  <JournalAdmin
+                    key={index} journal={journal} action={action} />
+                </div>
+
+
+                );
+              })}
+            </div>
+          </ContainerWrapper>
+          {page.length > 1 && (<PageBtnContainer
+            page={page}
+            numOfPage={numOfPage}
+            changePage={handlePageChange}
+          />)}
+        </>
+      ) : (
+        <p>No result found</p>
+      )}
+    </div>
+  );
 };
 
 export default ViewJournalList;

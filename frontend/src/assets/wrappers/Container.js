@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const Wrapper = styled.section`
+
   margin-top: 1rem;
   h2 {
     text-transform: none;
@@ -13,6 +14,7 @@ const Wrapper = styled.section`
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
 
   .two-row {
     display: grid;
