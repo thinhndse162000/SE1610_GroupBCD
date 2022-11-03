@@ -40,6 +40,4 @@ public class ReviewReportApi {
         PagingResponse response = reportService.search(req);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    
-    }
+}
