@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { IoBarChartSharp } from "react-icons/io5";
+import { IoBarChartSharp, IoKeySharp } from "react-icons/io5";
 import { MdQueryStats } from "react-icons/md";
 import { FaWpforms } from "react-icons/fa";
 
@@ -14,8 +14,6 @@ const NavLinks = ({ toggleSidebar }) => {
   const links = {
     author: [
       { id: 1, text: "papers", path: "/author", icon: <IoBarChartSharp /> },
-      // TODO: line below
-      // { id: 2, text: 'reviews', path: `paper-detail/:id`, icon: <MdQueryStats /> },
       {
         id: 2,
         text: "submit paper",
@@ -61,13 +59,40 @@ const NavLinks = ({ toggleSidebar }) => {
 
     manager: [
       { id: 1, text: "papers", path: "/manager", icon: <IoBarChartSharp /> },
-      { id: 2, text: "publish issue", path: "publish", icon: <IoBarChartSharp /> },
+      {
+        id: 2,
+        text: "publish issue",
+        path: "publish",
+        icon: <IoBarChartSharp />,
+      },
     ],
 
     profile: [
       { id: 1, text: "profile", path: "/profile", icon: <IoBarChartSharp /> },
-      { id: 2, text: "Change password", path: "change-password", icon: <IoBarChartSharp /> },
-    ]
+      { id: 2, text: "reviewing setting", path: "reviewing", icon: <IoBarChartSharp /> },
+      {
+        id: 3,
+        text: "Change password",
+        path: "change-password",
+        icon: <IoKeySharp />,
+      },
+    ],
+
+    admin: [
+      {
+        id: 1,
+        text: "View journal list",
+        path: "/admin",
+        icon: <IoBarChartSharp />,
+      },
+
+      {
+        id: 2,
+        text: "Submit journal",
+        path: "create-journal",
+        icon: <IoBarChartSharp />,
+      },
+    ],
   };
 
   return (

@@ -34,7 +34,6 @@ export const login =
       addUserToLocalStorage({ user: fullName, token, role });
       window.location.reload();
     } catch (error) {
-      console.log(error)
       dispatch({
         type: SETUP_USER_ERROR,
         payload: { msg: error.response.data.message },
@@ -53,7 +52,7 @@ export const signup =
       dispatch({
         type: SUCCESS,
         payload: {
-          msg: "Account create successfully. A verify link has been send to your email. Please verify your email"
+          msg: "Account create successfully. A verify link has been send to your email. Please verify your email",
         },
       });
     } catch (error) {
@@ -75,13 +74,15 @@ export const verifyAccount =
       dispatch({
         type: SUCCESS,
         payload: {
-          msg: "Verify account successfully. Please login again to the system"
+          msg: "Verify account successfully. Please login again to the system",
         },
       });
     } catch (error) {
       dispatch({
         type: ERROR,
-        payload: { msg: "Your verify link has expired. A new email has been sent" },
+        payload: {
+          msg: "Your verify link has expired. A new email has been sent",
+        },
       });
     }
     dispatch(clearAlert());
@@ -92,3 +93,51 @@ export const logoutUser = () => (dispatch) => {
   removeUserFromLocalStorage();
   window.location.reload();
 };
+
+export const sendEmailForgotPassword =
+  ({ email }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      await authFetch.post("/account/email", { email });
+
+      dispatch({
+        type: SUCCESS,
+        payload: { msg: "An email has been sent to your mail" },
+      });
+    } catch (error) {
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };
+
+export const verifyForgotPassword =
+  ({ token, newPassword, newPasswordRetype }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      await authFetch.put(
+        "/account/forgot",
+        { newPassword, newPasswordRetype },
+        {
+          params: {
+            token,
+          },
+        }
+      );
+
+      dispatch({
+        type: SUCCESS,
+        payload: { msg: "Your password has bene update. Please login again" },
+      });
+    } catch (error) {
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };

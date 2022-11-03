@@ -31,8 +31,12 @@ import {
   MemberAuthorProfile,
   MemberCheckout,
 } from "./pages/dashboard";
+import ManagerJournal from "./pages/dashboard/admin/ManagerJournal";
+import ViewJournalList from "./pages/dashboard/admin/ViewJournalList";
 import ChangePassword from "./pages/dashboard/profile/ChangePassword";
 import ViewProfle from "./pages/dashboard/profile/ViewProfle";
+import ViewReviewingSetting from "./pages/dashboard/profile/ViewReviewingSetting";
+import VerifyForgotPassword from "./pages/VerifyForgotPassword";
 
 function App() {
   return (
@@ -97,9 +101,9 @@ function App() {
         <Route
           path="/manager"
           element={
-            <ManagerProtectedRoute>
+            <ProtectedRoute>
               <SharedLayout viewType="manager" />
-            </ManagerProtectedRoute>
+            </ProtectedRoute>
           }
         >
           <Route index element={<ManagerPaper />} />
@@ -118,17 +122,32 @@ function App() {
           }
         >
           <Route index element={<ViewProfle />} />
+          <Route path="reviewing" element={<ViewReviewingSetting />} />
           <Route path="change-password" element={<ChangePassword />} />
-           </Route>
+      
+        </Route>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <SharedLayout viewType="admin" />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<ViewJournalList />} />
+          <Route path="create-journal" element={<ManagerJournal />} />
+      
+        </Route>
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/account/password" element={<VerifyForgotPassword />} />
         <Route path="/auth/verify/:token" element={<VerifySignup />} />
         <Route path="*" element={<Error />} />
       </Routes>
-    </BrowserRouter>
+    </BrowserRouter >
   );
 }
 

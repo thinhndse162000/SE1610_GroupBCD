@@ -11,12 +11,13 @@ import {
   Paper,
   SearchAuthorPaperContainer,
   PageBtnContainer,
+  Alert,
 } from "../../../components";
 import { handleChange } from "../../../context/service/utilService";
 
 const AuthorPaper = () => {
   const {
-    base: { isLoading },
+    base: { isLoading, showAlert },
     author: {
       search: {
         keyword,
@@ -67,6 +68,7 @@ const AuthorPaper = () => {
           changePage={handlePageChange}
         />
       )}
+      {showAlert && <Alert />}
       {isLoading ? (
         <Loading center />
       ) : papers.length > 0 ? (
@@ -84,12 +86,12 @@ const AuthorPaper = () => {
                     label: "Edit",
                     onClick: () => dispatch(setEditPaper(paper.paperId)),
                   });
-                  action.push({
-                    type: "button",
-                    className: "btn delete-btn",
-                    label: "Delete",
-                    onClick: () => dispatch(deletePaper(paper.paperId)),
-                  });
+                  // action.push({
+                  //   type: "button",
+                  //   className: "btn delete-btn",
+                  //   label: "Delete",
+                  //   onClick: () => dispatch(deletePaper(paper.paperId)),
+                  // });
                 }
                 return (
                   <Paper

@@ -85,7 +85,6 @@ public class JournalServiceImpl implements JournalService {
         journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
         journal.setSlug(request.getName().toLowerCase());
-
         journal.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 
         journal.setManager(account);

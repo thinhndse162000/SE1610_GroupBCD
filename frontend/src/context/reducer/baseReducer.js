@@ -24,7 +24,7 @@ import { base } from "../state";
 const baseReducer = (state = base, action) => {
   switch (action.type) {
     case LOADING:
-      return { ...state, isLoading: true, showAlert: false };
+      return { ...state, isLoading: true };
     case LOADING_ALERT:
       return { ...state, isLoading: true };
     case ERROR:
@@ -47,8 +47,6 @@ const baseReducer = (state = base, action) => {
       return {
         ...state,
         isLoading: false,
-        showAlert: false,
-
       };
     case DISPLAY_ALERT:
       return {

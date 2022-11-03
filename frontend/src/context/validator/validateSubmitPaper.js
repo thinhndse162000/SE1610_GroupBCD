@@ -1,4 +1,3 @@
-
 export default function validateSubmitPaper(values) {
     const { paperTitle, paperSummary, paperFields, paperJournal, paperPdfFile } = values;
     let errors = {};

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Wrapper from "../../../assets/wrappers/DashboardFormPage";
-import { Alert, FormRow } from "../../../components";
-import { chagePassword } from "../../../context/service/accountService";
-
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector, } from 'react-redux';
+import Wrapper from '../../../assets/wrappers/DashboardFormPage';
+import { Alert, FormRow } from '../../../components'
+import { chagePassword } from '../../../context/service/accountService';
 import validateChangePass from "../../../context/validator/validateChangePass";
 
 const ChangePassword = () => {
@@ -78,4 +77,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default ChangePassword

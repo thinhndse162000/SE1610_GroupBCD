@@ -1,54 +1,73 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Wrapper from "../../../assets/wrappers/Profile";
-import { FormRow } from "../../../components";
-import { getAccountProfile } from "../../../context/service/accountService";
+import { Alert, FormRow } from "../../../components";
+import {
+  getAccountProfile,
+  updateProfile,
+} from "../../../context/service/accountService";
+import { handleChange } from "../../../context/service/utilService";
+import validateProfile from "../../../context/validator/validateProfile";
 
 const ViewProfle = () => {
   const {
     member: { profile },
+    base: { isLoading, showAlert }
   } = useSelector((state) => state);
-const test= useSelector((state) => state);
 
-console.log ("test", test)
+  const [errors, setErrors] = useState({ notEmpty: true });
+
   const dispatch = useDispatch();
   const { slug } = useParams();
+
   useEffect(() => {
     dispatch(getAccountProfile());
   }, [dispatch, slug]);
 
-  return (
-   <Wrapper className="full-page">
-      <form className="form" onSubmit={(e) => { e.preventDefault() }}>
-        <h3>profile</h3>
-        {/* {showAlert && <Alert />} */}
-        <div className="form-profile">
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const checkProfile = {
+      phone: profile.phone,
+      organization: profile.organization,
+    };
+    setErrors(validateProfile(checkProfile));
+  };
 
+  const handleInput = (e) => {
+    e.preventDefault();
+    dispatch(
+      handleChange({
+        name: e.target.name,
+        value: e.target.value,
+        type: "member_profile",
+      })
+    );
+  };
+
+  useEffect(() => {
+    const checkProfile = {
+      phone: profile.phone,
+      organization: profile.organization,
+    };
+
+    if (Object.getOwnPropertyNames(errors).length === 0) {
+      dispatch(updateProfile(checkProfile));
+    }
+  }, [dispatch, errors]);
+
+  return (
+    <Wrapper className="full-page">
+      <form className="form" onSubmit={handleSubmit}>
+        <h3>profile</h3>
+        {showAlert && <Alert />}
+        <div className="form-profile">
           <FormRow
             type="text"
             name="email"
             value={profile.email}
             disabled={true}
-            // handleChange={(e) => setName(e.target.value)}
-          />
-
-          <FormRow
-            type="text"
-            labelText="First name"
-            name="firstName"
-            value={profile.firstName}
-            disabled={true}
-            // handleChange={(e) => setLastName(e.target.value)}
-          />
-
-          <FormRow
-            type="text"
-            labelText="Phone number"
-            name="PhoneNumber"
-            value={profile.phone}
-            disabled={true}
-            // handleChange={(e) => setLastName(e.target.value)}
+            handleChange={handleInput}
           />
 
           <FormRow
@@ -57,7 +76,16 @@ console.log ("test", test)
             name="dateOfBirth"
             value={profile.dateOfBirth}
             disabled={true}
-            // handleChange={(e) => setLastName(e.target.value)}
+            handleChange={handleInput}
+          />
+
+          <FormRow
+            type="text"
+            labelText="First name"
+            name="firstName"
+            value={profile.firstName}
+            disabled={true}
+            handleChange={handleInput}
           />
 
           <FormRow
@@ -66,16 +94,29 @@ console.log ("test", test)
             name="lastName"
             value={profile.lastName}
             disabled={true}
-            // handleChange={(e) => setLastName(e.target.value)}
+            handleChange={handleInput}
           />
 
-          <FormRow
-            type="text"
-            name="Organization"
-            value={profile.organization}
-            disabled={true}
-            // handleChange={(e) => setLastName(e.target.value)}
-          />
+          <div>
+            <FormRow
+              type="text"
+              labelText="Phone number"
+              name="phone"
+              value={profile.phone}
+              handleChange={handleInput}
+            />
+            {errors.phone && <p>{errors.phone}</p>}
+          </div>
+
+          <div>
+            <FormRow
+              type="text"
+              name="organization"
+              value={profile.organization}
+              handleChange={handleInput}
+            />
+            {errors.organization && <p>{errors.organization}</p>}
+          </div>
 
           <button
             className="btn btn-block"
@@ -86,7 +127,7 @@ console.log ("test", test)
             Save
           </button>
         </div>
-      </form> 
+      </form>
     </Wrapper>
   );
 };

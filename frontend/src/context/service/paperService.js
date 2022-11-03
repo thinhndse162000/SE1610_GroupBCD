@@ -8,11 +8,12 @@ import {
   SUCCESS_NO_MESSAGE,
   PAPER_DETAIL,
 } from "../actions";
-import { clearAlert, handleChange } from "./utilService";
+import { clearAlert, clearAlertNow, handleChange } from "./utilService";
 import authFetch from "../../utils/authFetch";
 import fileDownload from "js-file-download";
 
 export const setEditPaper = (id) => (dispatch) => {
+  dispatch(clearAlertNow());
   dispatch({ type: SET_EDIT_PAPER, payload: { id } });
 };
 
@@ -176,6 +177,7 @@ export const editPaper = (paper) => async (dispatch) => {
         "Content-Type": "multipart/form-data",
       },
     });
+
     dispatch({
       type: SUCCESS,
       payload: { msg: "Edit paper successfully" },

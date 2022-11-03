@@ -26,6 +26,28 @@ const author = {
   },
   paperStatusOptions: ["PENDING", "REVIEWING", "ACCEPTED", "REJECTED", "PUBLISH"],
 };
+const admin = {
+  editJournalID: "",
+  journal: [],
+  newJournal: {
+    name: "",
+    introduction: "",
+    organization: "",
+    issn: "",
+    managerEmail: "",
+    journalFields: [],
+    numberOfRound: 0,
+    numberOfReviewer: 0,
+  },
+  search: {
+    keyword: "",
+    fields: [],
+    result: [],
+    page: 1,
+    numOfPage: 1,
+    totalFound: 0,
+  },
+};
 
 const reviewer = {
   invitations: [],
@@ -74,7 +96,18 @@ const member = {
   journalDetailId: '',
   journalSlug: '',
   journal: {},
-  profile: {},
+  profile: {
+    email: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    organization: "",
+    dateOfBirth: "",
+  },
+  reviewerSetting: {
+    fields: [],
+    invitable: false,
+  },
   issuePublishes: {},
   publish: null,
   authorProfile: null,
@@ -133,4 +166,4 @@ const initialState = {
   manager,
 };
 
-export { initialState, base, reviewer, author, member, manager };
+export { initialState, base, reviewer, author, member, manager, admin };

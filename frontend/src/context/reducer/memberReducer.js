@@ -25,6 +25,24 @@ const memberReducer = (state = member, action) => {
           ...action.payload.value,
         }
       };
+
+    case "HANDLE_MEMBER_PROFILE_CHANGE":
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          [action.payload.name]: action.payload.value,
+        }
+      };
+
+    case "HANDLE_MEMBER_REVIEWERSETTING_CHANGE":
+      return {
+        ...state,
+        reviewerSetting: {
+          ...state.reviewerSetting,
+          [action.payload.name]: action.payload.value,
+        }
+      };
     case MEMBER_JOURNAL_ID:
       if (state.journalSlug !== action.payload.slug) {
         return {
