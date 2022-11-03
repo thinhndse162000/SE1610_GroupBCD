@@ -118,6 +118,13 @@ class AccountSql(SqlTemplate):
             self.author.insert(f"{first_name} {last_name}")
             self.reviewer.insert_manager()
 
+    def insert_admin(self):
+        password = self.hash_password("admin")
+        phone = self.phone
+        self.phone += 1
+        super().insert(f"('admin@gmail.com', '{password}', '{phone}', 'Admin', 'Admin', 'FPT', '2001-01-01', 'ADMIN', 'OPEN', 'random-thing', 1)")
+
+
 class FieldSql(SqlTemplate):
     def __init__(self):
         super().__init__(field_sql)
