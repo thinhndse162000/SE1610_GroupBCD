@@ -20,6 +20,7 @@ import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Invitation;
 import com.bcd.ejournal.domain.entity.Issue;
+import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.Publish;
 import com.bcd.ejournal.domain.entity.ReviewReport;
@@ -35,14 +36,23 @@ public class DTOMapper {
     }
 
     public AccountProfileResponse toAccountProfileResponse(Account account) {
-        return modelMapper.map(account, AccountProfileResponse.class);
+
+        AccountProfileResponse response = modelMapper.map(account, AccountProfileResponse.class);
+        response.setPhone(response.getPhone().trim());
+        return response;
     }
 
     public PaperResponse toPaperResponse(Paper paper) {
         PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
-        paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
+        paperResponse.setJournal(toJournalResponse(paper.getJournal()));
         paperResponse.setAuthors(toAuthorResponse(paper.getAuthor()));
         return paperResponse;
+    }
+
+    public JournalResponse toJournalResponse(Journal journal) {
+        JournalResponse response = modelMapper.map(journal, JournalResponse.class);
+        response.setManagerEmail(journal.getManager().getEmail());
+        return response;
     }
 
     public EducationResponse toEducationResponse(Account account) {
@@ -62,7 +72,7 @@ public class DTOMapper {
 
     public IssueResponse toIssueResponse(Issue issue) {
         IssueResponse issueResponse = modelMapper.map(issue, IssueResponse.class);
-        issueResponse.setJournal(modelMapper.map(issue.getJournal(), JournalResponse.class));
+        issueResponse.setJournal(toJournalResponse(issue.getJournal()));
         issueResponse.setNumberOfPaper(issue.getPublishes().size());
         return issueResponse;
     }
@@ -77,7 +87,7 @@ public class DTOMapper {
     public ReviewReportResponse toReviewReportResponse(ReviewReport reviewReport) {
         ReviewReportResponse response = modelMapper.map(reviewReport, ReviewReportResponse.class);
         Account acc = reviewReport.getReviewer().getAccount();
-        response.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName(), acc.getReviewer().getFields()));
+        response.setReviewer(toReviewerResponse(acc.getReviewer()));
         return response;
     }
 
@@ -87,7 +97,7 @@ public class DTOMapper {
 
         ReviewReportResponse tmp = modelMapper.map(reviewReport, ReviewReportResponse.class);
         Account acc = reviewReport.getReviewer().getAccount();
-        tmp.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName(), acc.getReviewer().getFields()));
+        tmp.setReviewer(toReviewerResponse(acc.getReviewer()));
         response.setReview(tmp);
 
         return response;
@@ -98,6 +108,7 @@ public class DTOMapper {
         response.setReviewerId(reviewer.getReviewerId());
         response.setFullName(reviewer.getAccount().getFullName());
         response.setFields(reviewer.getFields());
+        response.setInvitable(reviewer.isInvitable());
         return response;
     }
 

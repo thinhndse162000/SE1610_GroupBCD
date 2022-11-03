@@ -211,3 +211,35 @@ export const createIssue =
     }
     dispatch(clearAlert());
   };
+
+export const searchJournal =
+  ({ keyword, fields, page }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      // search
+      const { data } = await authFetch.post("/journal/search", {
+        name: keyword,
+        fieldIds: fields.map((field) => field.fieldId),
+        page,
+      });
+
+      dispatch({
+        type: SUCCESS_NO_MESSAGE,
+      });
+
+      dispatch(
+        handleChange({
+          name: "result",
+          value: data,
+          type: "author_spread_journal",
+        })
+      );
+    } catch (error) {
+      dispatch({
+        type: ERROR,
+        msg: error.response.data.message,
+      });
+    }
+    dispatch(clearAlert());
+  };

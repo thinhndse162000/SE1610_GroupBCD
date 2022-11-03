@@ -49,7 +49,6 @@ const VerifyForgotPassword = () => {
 
   useEffect(() => {
     if (Object.getOwnPropertyNames(errors).length === 0) {
-      console.log("ok")
       dispatch(verifyForgotPassword({ token, ...values }));
     }
     // eslint-disable-next-line

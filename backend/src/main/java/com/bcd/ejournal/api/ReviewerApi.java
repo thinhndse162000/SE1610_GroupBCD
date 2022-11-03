@@ -21,6 +21,7 @@ import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.InvitationSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.request.InvitationUpdateStatusRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
+import com.bcd.ejournal.domain.dto.request.ReviewerUpdateFieldRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.PagingResponse;
@@ -43,6 +44,24 @@ public class ReviewerApi {
         this.invitationService = invitationService;
         this.reviewReportService = reviewReportService;
         this.reviewerService = reviewerService;
+    }
+
+    @GetMapping
+    public ResponseEntity<ReviewerResponse> getReviewerSetting(@AuthenticationPrincipal AccountJWTPayload payload) {
+        ReviewerResponse response = reviewerService.getReviewerSetting(payload.getAccountId());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/invitable/{invitable}")
+    public ResponseEntity<Void> updateInvitable(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable Boolean invitable) {
+        reviewerService.updateInvitable(payload.getAccountId(), invitable);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/field")
+    public ResponseEntity<Void> updateFields(@AuthenticationPrincipal AccountJWTPayload payload, @RequestBody ReviewerUpdateFieldRequest request) {
+        reviewerService.updateField(payload.getAccountId(), request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{id}/invitation")

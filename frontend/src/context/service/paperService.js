@@ -8,11 +8,12 @@ import {
   SUCCESS_NO_MESSAGE,
   PAPER_DETAIL,
 } from "../actions";
-import { clearAlert, handleChange } from "./utilService";
+import { clearAlert, clearAlertNow, handleChange } from "./utilService";
 import authFetch from "../../utils/authFetch";
 import fileDownload from "js-file-download";
 
 export const setEditPaper = (id) => (dispatch) => {
+  dispatch(clearAlertNow());
   dispatch({ type: SET_EDIT_PAPER, payload: { id } });
 };
 
@@ -97,6 +98,27 @@ export const getPaperDetail = (paperId) => async (dispatch) => {
   dispatch(clearAlert());
 };
 
+export const getEditPaper = (paperId) => async (dispatch) => {
+  dispatch({ type: LOADING });
+  try {
+    const { data } = await authFetch.get(`/author/paper/${paperId}`);
+    dispatch({ type: SUCCESS_NO_MESSAGE });
+    dispatch({
+      type: "EDIT_PAPER",
+      payload: {
+        editPaper: data.paper,
+      },
+    });
+  } catch (error) {
+    if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
+  }
+  dispatch(clearAlert());
+};
+
 export const getPaper = (paperId) => async (dispatch) => {
   dispatch({ type: LOADING });
   try {
@@ -163,7 +185,7 @@ export const createPaper = (paper) => async (dispatch) => {
 export const editPaper = (paper) => async (dispatch) => {
   dispatch({ type: LOADING_ALERT });
   try {
-    const { editPaperId, paperTitle, paperSummary, paperPdfFile } = paper;
+    const { paperId, paperTitle, paperSummary, paperPdfFile } = paper;
     let formData = new FormData();
     if (paperPdfFile.file != null && paperPdfFile.file !== "") {
       formData.append("file", paperPdfFile.file);
@@ -171,7 +193,7 @@ export const editPaper = (paper) => async (dispatch) => {
     formData.append("title", paperTitle);
     formData.append("summary", paperSummary);
 
-    await authFetch.put(`/paper/${editPaperId}`, formData, {
+    await authFetch.put(`/paper/${paperId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -181,7 +203,6 @@ export const editPaper = (paper) => async (dispatch) => {
       type: SUCCESS,
       payload: { msg: "Edit paper successfully" },
     });
-    dispatch({ type: CLEAR_PAPER_VALUES });
   } catch (error) {
     if (error.response.status === 401) return;
     dispatch({

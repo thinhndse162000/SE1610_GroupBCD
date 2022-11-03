@@ -16,7 +16,7 @@ import JournalAdmin from "../../../components/JournalAdmin";
 
 const ViewJournalList = () => {
   const {
-    base: { fields: fieldOptions, isLoading },
+    base: { fields: fieldOptions, isLoading, showAlert },
     admin: {
       search: { keyword, result, fields, page, numOfPage },
     },
@@ -60,13 +60,11 @@ const ViewJournalList = () => {
   const handlePageChange = (page) => {
     dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
   };
-  // Dtrag
-
-  const dragItem = useRef()
+ const dragItem = useRef()
   const dragOverItem = useRef()
 
   const [results, setResults] = useState(result);
- 
+
 
   const handleSort = () => {
 
@@ -157,8 +155,8 @@ const ViewJournalList = () => {
                   label: "edit",
                   onClick: () => dispatch(setEditJournal(journal.journalId)),
                 });
-                return (<div 
-               
+                return (<div
+
                   className="container-journal"
                   key={index + 1000}
                   draggable
