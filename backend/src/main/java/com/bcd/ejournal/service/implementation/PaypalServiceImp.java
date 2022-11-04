@@ -3,7 +3,6 @@ package com.bcd.ejournal.service.implementation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bcd.ejournal.service.PaypalService;
@@ -16,6 +15,7 @@ import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 
+@Service 
 public class PaypalServiceImp implements PaypalService{
 	
 	private APIContext paypalApiContext;
