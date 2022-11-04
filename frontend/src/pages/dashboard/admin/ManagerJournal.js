@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert, FormDropdown, FormRow } from "../../../components";
 import {
+  archiveJournal,
   createJournal,
   editJournal,
 } from "../../../context/service/adminService";
@@ -50,6 +51,7 @@ const ManagerJournal = () => {
       numberOfReviewer,
     };
     setErrors(validateCreateJournal(journal));
+    dispatch(archiveJournal("8"));
   };
 
   const selectFieldOptions = fields.map((field) => ({

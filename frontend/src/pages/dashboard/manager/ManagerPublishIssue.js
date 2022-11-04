@@ -66,7 +66,7 @@ const ManagerPublishIssue = () => {
         type: "manager_publishissue",
       })
     );
- }
+  }
   const handleSelect = (paper) => {
     var checkbox = document.getElementById(`paper-${paper.paperId}`);
     let newPublishes = publishes;

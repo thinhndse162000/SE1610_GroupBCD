@@ -59,6 +59,10 @@ const adminReducer = (state = admin, action) => {
           ...action.payload.value,
         },
       };
+    case "HANDLE_ADMIN_SPREADS_SEARCH_CHANGE":
+      return {
+        [state.search.result]: action.payload.value
+      };
     case HANDLE_ADMIN_CHANGE:
       return {
         ...state,

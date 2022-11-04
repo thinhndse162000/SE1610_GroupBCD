@@ -11,6 +11,7 @@ const JournalAdmin = ({ journal, type = "compact", action = [] }) => {
     slug,
     numberOfRound,
     numberOfReviewer,
+    status,
   } = journal;
   /*
         {
@@ -24,6 +25,7 @@ const JournalAdmin = ({ journal, type = "compact", action = [] }) => {
     <Wrapper>
 
       <header>
+
         <div className="info">
   
             <h3>{name}</h3>
@@ -47,19 +49,25 @@ const JournalAdmin = ({ journal, type = "compact", action = [] }) => {
               </span>
             ))}
           </p>
+          <p>
+            Status:   {status}
+          </p>
         </div>
       </header>
       <div className="content">
-        {type === "full" && (
+        {type === "full" && (<>
           <div className="content-center">
             <h5>Introduction</h5>
             <p>{introduction}</p>
           </div>
+       
+          </>
         )}
         <footer>
           <div className="actions">
             {action.map((act, index) => {
               return act.type === "link" ? (
+                <>
                 <Link
                   key={index}
                   to={act.to}
@@ -67,7 +75,17 @@ const JournalAdmin = ({ journal, type = "compact", action = [] }) => {
                   onClick={act.onClick}
                 >
                   {act.label}
+                
                 </Link>
+                       <button
+                       key={index}
+                       type="button"
+                       className={act.className2}
+                       onClick={act.onClick2}
+                     >
+                       {act.label2}
+                     </button>
+                     </>
               ) : (
                 <button
                   key={index}

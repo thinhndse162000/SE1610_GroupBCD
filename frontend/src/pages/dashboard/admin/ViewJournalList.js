@@ -8,7 +8,7 @@ import {
   Loading,
   PageBtnContainer,
 } from "../../../components";
-import { search, setEditJournal } from "../../../context/service/adminService";
+import { archiveJournal, search, setEditJournal } from "../../../context/service/adminService";
 import { handleChange } from "../../../context/service/utilService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
@@ -27,7 +27,7 @@ const ViewJournalList = () => {
     label: field.fieldName,
     value: field.fieldId,
   }));
-
+console.log ("page",page)
   const handleInputChange = (e) => {
     if (isLoading) return;
     dispatch(
@@ -51,25 +51,31 @@ const ViewJournalList = () => {
   useEffect(() => {
     dispatch(search({ keyword, fields, page }));
     // eslint-disable-next-line
-  }, [dispatch, page]);
+ 
+  }, [
+    // dispatch, page 
+  ]);
 
   const handleClick = (journalId) => {
     dispatch(setEditJournal(journalId));
+  };
+  const handleClick2 = (journalId) => {
+    dispatch(archiveJournal(journalId));
   };
 
   const handlePageChange = (page) => {
     dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
   };
- const dragItem = useRef()
+  const dragItem = useRef()
   const dragOverItem = useRef()
 
   const [results, setResults] = useState(result);
 
 
   const handleSort = () => {
-
+    
     let _results = [...results]
-
+  
     const draggedItemContent = _results.splice(dragItem.current, 1)[0]
 
     _results.splice(dragOverItem.current, 0, draggedItemContent)
@@ -77,6 +83,7 @@ const ViewJournalList = () => {
     dragItem.current = null
     dragOverItem.current = null
     setResults(_results)
+ 
     console.log(results)
     dispatch(
       handleChange({
@@ -130,7 +137,7 @@ const ViewJournalList = () => {
       </SearchWrapper>
 
       {result.length > 0 && (
-        page.length > 1 && (<PageBtnContainer
+        numOfPage > 1 && (<PageBtnContainer
           page={page}
           numOfPage={numOfPage}
           changePage={handlePageChange}
@@ -142,7 +149,7 @@ const ViewJournalList = () => {
         <>
           <ContainerWrapper>
             <div className="container">
-              {results.map((journal, index) => {
+              {result.map((journal, index) => {
                 let action = [];
                 action.push({
                   onDragStart: (e) => (dragItem.current = index),
@@ -153,19 +160,24 @@ const ViewJournalList = () => {
                   className: "btn edit-btn",
                   to: "/admin/create-journal",
                   label: "edit",
+                  className2: "btn delete-btn",
+                  label2: "delete",
+                  onClick2: handleClick2,
                   onClick: () => dispatch(setEditJournal(journal.journalId)),
                 });
                 return (<div
-
                   className="container-journal"
-                  key={index + 1000}
+                  key={(index + 1) * -1}
                   draggable
                   onDragStart={(e) => (dragItem.current = index)}
                   onDragEnter={(e) => (dragOverItem.current = index)}
                   onDragEnd={handleSort}
                   onDragOver={(e) => e.preventDefault()}>
+-
                   <JournalAdmin
-                    key={index} journal={journal} action={action} />
+                    key={index} journal={journal} action={action}
+                  />
+
                 </div>
 
 
@@ -173,7 +185,7 @@ const ViewJournalList = () => {
               })}
             </div>
           </ContainerWrapper>
-          {page.length > 1 && (<PageBtnContainer
+          {numOfPage > 1 && (<PageBtnContainer
             page={page}
             numOfPage={numOfPage}
             changePage={handlePageChange}

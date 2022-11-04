@@ -53,6 +53,7 @@ const admin = {
     journalFields: [],
     numberOfRound: 0,
     numberOfReviewer: 0,
+    status:'OPEN'
   },
   search: {
     keyword: "",
