@@ -169,6 +169,10 @@ public class IssueServiceImpl implements IssueService {
             totalPage += paper.getNumberOfPage();
             Publish publish = new Publish();
 
+            if (paper.getStatus() == PaperStatus.PUBLISH) {
+                throw new MethodNotAllowedException("Paper already publish. Id: " + paper.getPaperId());
+            }
+
             publish.setPublishId(0);
             publish.setPublishDate(new Date(System.currentTimeMillis()));
             publish.setPaper(paper);

@@ -1,13 +1,19 @@
 package com.bcd.ejournal.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bcd.ejournal.domain.dto.request.PaypalCheckoutRequest;
+import com.bcd.ejournal.service.InvoiceService;
 import com.bcd.ejournal.service.PaypalService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -16,54 +22,54 @@ import com.paypal.base.rest.PayPalRESTException;
 @RestController
 @RequestMapping("/payment")
 public class PaypalApi {
-	
-// 	@Autowired
-// 	PaypalService service;
-	
-// 	public static final String SUCCESS_URL = "pay/success";
-// 	public static final String CANCEL_URL = "pay/cancel";
 
-// 	@GetMapping("/")
-// 	public String home() {
-// 		return "home";
-// 	}
+    @Autowired
+    PaypalService service;
 
-// 	@PostMapping("/pay")
-// 	public String payment(@ModelAttribute("order") Order order) {
-// 		try {
-// 			Payment payment = service.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(),
-					
-// 					order.getIntent(), order.getDescription(), "http://localhost:9090/" + CANCEL_URL,
-// 					"http://localhost:9090/" + SUCCESS_URL);
-// 			for(Links link:payment.getLinks()) {
-// 				if(link.getRel().equals("approval_url")) {
-// 					return "redirect:"+link.getHref();
-// 				}
-// 			}
-			
-// 		} catch (PayPalRESTException e) {
-		
-// 			e.printStackTrace();
-// 		}
-// 		return "redirect:/";
-// 	}
-	
-// 	 @GetMapping(value = CANCEL_URL)
-// 	    public String cancelPay() {
-// 	        return "cancel";
-// 	    }
+    @Autowired
+    InvoiceService invoiceService;
+    private Logger log = LoggerFactory.getLogger(getClass());
+    public static final String SUCCESS_URL = "success";
+    public static final String CANCEL_URL = "cancel";
 
-// 	    @GetMapping(value = SUCCESS_URL)
-// 	    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
-// 	        try {
-// 	            Payment payment = service.executePayment(paymentId, payerId);
-// 	            System.out.println(payment.toJSON());
-// 	            if (payment.getState().equals("approved")) {
-// 	                return "success";
-// 	            }
-// 	        } catch (PayPalRESTException e) {
-// 	         System.out.println(e.getMessage());
-// 	        }
-// 	        return "redirect:/";
-// 	    }
+    @PostMapping
+    public ResponseEntity<String> payment(@RequestBody PaypalCheckoutRequest req) {
+        try {
+            Payment payment = service.createPayment(req.getAmount(), "USD", req.getPaymentMethod(), "sale",
+                    "Buy a journal", req.getCancelUrl(), req.getSuccessUrl());
+            for (Links link : payment.getLinks()) {
+                if (link.getRel().equals("approval_url")) {
+                    return new ResponseEntity<>(link.getHref(), HttpStatus.OK);
+                }
+            }
+        } catch (PayPalRESTException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @GetMapping(value = CANCEL_URL)
+    public String cancelPay() {
+        return "cancel";
+    }
+
+    @GetMapping(value = SUCCESS_URL)
+    public ResponseEntity<String> successPay(@RequestParam("paymentId") String paymentId,
+            @RequestParam("PayerID") String payerId, @RequestParam("accountId") Integer accountId,
+            @RequestParam("journalId") Integer journalId) {
+        try {
+            Payment payment = service.executePayment(paymentId, payerId);
+            System.out.println(payment.toJSON());
+            if (payment.getState().equals("approved")) {
+                double amount = Double.parseDouble(payment.getTransactions().get(0).getAmount().getTotal());
+                String method = payment.getPayer().getPaymentMethod();
+                invoiceService.createInvoice(amount, method, accountId, journalId);
+                return new ResponseEntity<>("success", HttpStatus.OK);
+
+            }
+        } catch (PayPalRESTException e) {
+            System.out.println(e.getMessage());
+        }
+        return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }

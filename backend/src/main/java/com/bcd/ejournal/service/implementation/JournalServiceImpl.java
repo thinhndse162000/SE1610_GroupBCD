@@ -84,7 +84,7 @@ public class JournalServiceImpl implements JournalService {
         journal.setIssn(request.getIssn());
         journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
-        journal.setSlug(request.getName().toLowerCase());
+        journal.setSlug(request.getName().replace(' ', '-').toLowerCase());
         journal.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 
         journal.setManager(account);
@@ -178,7 +178,7 @@ public class JournalServiceImpl implements JournalService {
         journal.setNumberOfRound(request.getNumberOfRound());
         journal.setNumberOfReviewer(request.getNumberOfReviewer());
         journal.setIssn(request.getIssn());
-        journal.setSlug(request.getName().toLowerCase());
+        journal.setSlug(request.getName().replace(' ', '-').toLowerCase());
 
         journal.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 
