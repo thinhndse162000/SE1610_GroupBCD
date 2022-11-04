@@ -1,20 +1,20 @@
 import {
-  INVITATION,
   REVIEW_REPORT,
   SET_EDIT_REVIEW,
   CLEAR_REVIEW_VALUES,
-  HANDLE_REVIEW_CHANGE,
+  HANDLE_REVIEWER_CHANGE,
+  HANDLE_NEWREVIEW_CHANGE,
   HANDLE_INVITATION_CHANGE,
 } from "../actions";
 import { reviewer } from "../state";
 
 const reviewerReducer = (state = reviewer, action) => {
   switch (action.type) {
-    case INVITATION:
+    case HANDLE_REVIEWER_CHANGE:
       return {
         ...state,
-        invitations: action.payload.invitations,
-      };
+        [action.payload.name]: action.payload.value,
+      }
     case CLEAR_REVIEW_VALUES:
       const reviewer = {
         editReviewId: "",
@@ -37,7 +37,7 @@ const reviewerReducer = (state = reviewer, action) => {
         reviewReports: action.payload.reviewReports,
       };
     case SET_EDIT_REVIEW:
-      const reviewReport = state.reviewReports.find(
+      const reviewReport = state.searchReview.result.find(
         (reviewReport) =>
           reviewReport.review.reviewReportId === action.payload.id
       );
@@ -49,7 +49,7 @@ const reviewerReducer = (state = reviewer, action) => {
           reviewPaper: reviewReport.paper,
         },
       };
-    case HANDLE_REVIEW_CHANGE:
+    case HANDLE_NEWREVIEW_CHANGE:
       return {
         ...state,
         newReview: {
@@ -58,17 +58,69 @@ const reviewerReducer = (state = reviewer, action) => {
         },
       };
     case HANDLE_INVITATION_CHANGE:
-      const invitations = state.invitations.map((invitation) => {
+      const invitations = state.searchInvitation.result.map((invitation) => {
         if (invitation.invitationId === action.payload.id) {
           return { ...invitation, status: action.payload.status };
         }
         return invitation;
       });
 
+      if (state.invitationDetail.invitationId === action.payload.id) {
+        return {
+          ...state,
+          searchInvitation: {
+            ...state.searchInvitation,
+            result: invitations,
+          },
+          invitationDetail: {
+            ...state.invitationDetail,
+            status: action.payload.status,
+          }
+        };
+      } else {
+        return {
+          ...state,
+          searchInvitation: {
+            ...state.searchInvitation,
+            result: invitations
+          },
+        };
+      }
+
+    case "HANDLE_REVIEWER_SEARCHINVITATION_CHANGE":
       return {
         ...state,
-        invitations,
-      };
+        searchInvitation: {
+          ...state.searchInvitation,
+          [action.payload.name]: action.payload.value,
+        }
+      }
+    case "HANDLE_REVIEWER_SPREAD_SEARCHINVITATION_CHANGE":
+      return {
+        ...state,
+        searchInvitation: {
+          ...state.searchInvitation,
+          ...action.payload.value,
+        }
+      }
+
+    case "HANDLE_REVIEWER_SEARCHREVIEW_CHANGE":
+      return {
+        ...state,
+        searchReview: {
+          ...state.searchReview,
+          [action.payload.name]: action.payload.value,
+        }
+      }
+    case "HANDLE_REVIEWER_SPREAD_SEARCHREVIEW_CHANGE":
+      return {
+        ...state,
+        searchReview: {
+          ...state.searchReview,
+          ...action.payload.value,
+        }
+      }
+
     default:
       return state;
   }

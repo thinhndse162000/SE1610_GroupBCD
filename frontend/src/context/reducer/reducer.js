@@ -6,6 +6,7 @@ import reviewerReducer from "./reviewerReducer";
 import managerReducer from "./managerReducer";
 import { LOGOUT_USER } from "../actions";
 import { initialState } from "../state";
+import adminReducer from "./adminReducer";
 
 const combinedReducer = combineReducers({
   base: baseReducer,
@@ -13,10 +14,11 @@ const combinedReducer = combineReducers({
   member: memberReducer,
   reviewer: reviewerReducer,
   manager: managerReducer,
+  admin :adminReducer,
 });
 
 const reducer = (state, action) => {
-  switch (action.type) {
+   switch (action.type) {
     case LOGOUT_USER:
       return {
         ...initialState,

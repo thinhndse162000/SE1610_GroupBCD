@@ -24,7 +24,7 @@ const PageBtnContainer = ({ page, numOfPage, changePage }) => {
 
   return (
     <Wrapper>
-      <button className='prev-btn' onClick={prevPage}>
+    <button className={`prev-btn ${numOfPage === 1 && "disabled"}`} onClick={prevPage} disabled={numOfPage === 1}>
         <HiChevronDoubleLeft />
         prev
       </button>
@@ -36,13 +36,14 @@ const PageBtnContainer = ({ page, numOfPage, changePage }) => {
               className={pageNumber === page ? 'pageBtn active' : 'pageBtn'}
               key={pageNumber}
               onClick={() => changePage(pageNumber)}
+              disabled={numOfPage === 1}
             >
               {pageNumber}
             </button>
           )
         })}
       </div>
-      <button className='next-btn' onClick={nextPage}>
+      <button className={`next-btn ${numOfPage === 1 && "disabled"}`} onClick={nextPage} disabled={numOfPage === 1}>
         next
         <HiChevronDoubleRight />
       </button>

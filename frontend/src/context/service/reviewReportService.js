@@ -1,33 +1,65 @@
 import {
   LOADING,
   LOADING_ALERT,
-  REVIEW_REPORT,
   SET_EDIT_REVIEW,
   SUCCESS_NO_MESSAGE,
   CLEAR_REVIEW_VALUES,
   ERROR,
   SUCCESS,
 } from "../actions";
-import { clearAlert } from "./utilService";
+import { clearAlert, handleChange } from "./utilService";
 import authFetch from "../../utils/authFetch";
 
-export const getReviewReport = () => async (dispatch) => {
-  dispatch({ type: LOADING });
-  try {
-    const { data } = await authFetch.get("/reviewer/reviewreport");
-    dispatch({ type: SUCCESS_NO_MESSAGE });
-    dispatch({
-      type: REVIEW_REPORT,
-      payload: {
-        reviewReports: data,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    console.log("error getting paper");
-  }
-  dispatch(clearAlert());
-};
+export const getReviewReport =
+  ({ title, verdict, page, status }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      const { data } = await authFetch.post("/reviewreport/search", {
+        title,
+        verdict: verdict === "ALL" ? null : verdict,
+        page,
+        status: status === "ALL" ? null : status,
+      });
+      dispatch({ type: SUCCESS_NO_MESSAGE });
+      dispatch(
+        handleChange({
+          name: "reviewReports",
+          value: data,
+          type: "reviewer_spread_searchreview",
+        })
+      );
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };
+
+export const getReviewReportDetail =
+  ({ reviewId }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      const { data } = await authFetch.get(
+        `/reviewer/reviewreport/${reviewId}`
+      );
+      dispatch({ type: SUCCESS_NO_MESSAGE });
+      dispatch(
+        handleChange({ name: "reviewDetail", value: data, type: "reviewer" })
+      );
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };
 
 export const editReview = (review) => async (dispatch) => {
   dispatch({ type: LOADING_ALERT });

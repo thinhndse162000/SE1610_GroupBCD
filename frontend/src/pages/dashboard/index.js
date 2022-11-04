@@ -9,14 +9,16 @@ import {
   MemberIssueDetail,
   MemberPublishDetail,
   MemberAuthorProfile,
+  MemberCheckout,
 } from "./member";
 import {
   AddReview,
   ReviewerInvitation,
+  ReviewerInvitationDetail,
   AllReviewReport,
   ReviewReportDetail,
 } from "./reviewer";
-import { ManagerPaper, SendInvitation } from "./manager";
+import { ManagerPaper, SendInvitation, ManagerPublishIssue } from "./manager";
 
 export {
   Profile,
@@ -27,6 +29,7 @@ export {
   MemberSearch,
   AddReview,
   ReviewerInvitation,
+  ReviewerInvitationDetail,
   AllReviewReport,
   ReviewReportDetail,
   ManagerPaper,
@@ -37,4 +40,6 @@ export {
   MemberIssueDetail,
   MemberPublishDetail,
   MemberAuthorProfile,
+  ManagerPublishIssue,
+  MemberCheckout,
 };

@@ -8,9 +8,9 @@ import org.springframework.core.io.Resource;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
-
 
 public interface PaperService {
     void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest);
@@ -19,7 +19,7 @@ public interface PaperService {
 
     void deleteById(Integer paperId);
 
-    List<PaperResponse> searchByRequest(PaperSearchRequest request);
+    PagingResponse searchByRequest(PaperSearchRequest request);
 
     List<PaperResponse> getAllPaperFromAuthor(Integer authorId);
 
@@ -28,4 +28,6 @@ public interface PaperService {
     PaperDetailResponse getPaper(Integer paperId);
 
     Resource downloadFile(Integer paperId) throws IOException;
+
+    void cleanDuePaper();
 }

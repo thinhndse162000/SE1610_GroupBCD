@@ -23,8 +23,8 @@ import com.paypal.base.rest.PayPalRESTException;
 @RequestMapping("/payment")
 public class PaypalApi {
 	
-	@Autowired
-	PaypalService service;
+ 	@Autowired
+ 	PaypalService service;
 	
 	@Autowired
 	InvoiceService invoiceService;
@@ -41,19 +41,12 @@ public class PaypalApi {
 				if(link.getRel().equals("approval_url")) {
 					return new ResponseEntity<>(link.getHref(), HttpStatus.OK);
 				}
-			}
-			
-		} catch (PayPalRESTException e) {
-		
+			}			
+ 		} catch (PayPalRESTException e) {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
 	}
-	
-	 @GetMapping(value = CANCEL_URL)
-	    public String cancelPay() {
-	        return "cancel";
-	    }
 
 	    @GetMapping(value = SUCCESS_URL)
 	    public ResponseEntity<String> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, @RequestParam("accountId") Integer accountId, @RequestParam("journalId") Integer journalId) {

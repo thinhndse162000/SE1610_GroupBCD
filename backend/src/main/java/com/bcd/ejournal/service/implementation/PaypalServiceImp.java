@@ -16,10 +16,8 @@ import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 
-@Service
 public class PaypalServiceImp implements PaypalService{
 	
-	@Autowired
 	private APIContext paypalApiContext;
 	
 	@Override

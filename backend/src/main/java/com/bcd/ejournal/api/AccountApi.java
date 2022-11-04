@@ -21,6 +21,7 @@ import com.bcd.ejournal.domain.dto.request.AccountChangePasswordRequest;
 import com.bcd.ejournal.domain.dto.request.AccountEmailVerify;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
 import com.bcd.ejournal.service.AccountService;
 import com.bcd.ejournal.service.EmailService;
 
@@ -29,8 +30,9 @@ import com.bcd.ejournal.service.EmailService;
 public class AccountApi {
     private final AccountService accountService;
     private final EmailService emailService;
+
     @Autowired
-    public AccountApi(AccountService accountService,EmailService emailService) {
+    public AccountApi(AccountService accountService, EmailService emailService) {
         this.accountService = accountService;
         this.emailService = emailService;
     }
@@ -42,17 +44,27 @@ public class AccountApi {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<AccountProfileResponse> updateProfile(@AuthenticationPrincipal AccountJWTPayload jwt, @Valid @RequestBody AccountUpdateProfileRequest request) {
+    public ResponseEntity<AccountProfileResponse> updateProfile(@AuthenticationPrincipal AccountJWTPayload jwt,
+            @Valid @RequestBody AccountUpdateProfileRequest request) {
         AccountProfileResponse response = accountService.updateProfile(jwt.getAccountId(), request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
-    @PostMapping("/email")
-    public void verifyEmail(@RequestBody AccountEmailVerify req){
-    	emailService.sendEmailForgetPassword(req);
+
+    @GetMapping("/education")
+    public ResponseEntity<EducationResponse> getEducation(@AuthenticationPrincipal AccountJWTPayload payload) {
+        Integer accountId = payload.getAccountId();
+        EducationResponse response = accountService.getEducation(accountId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PostMapping("/email")
+    public void verifyEmail(@RequestBody AccountEmailVerify req) {
+        emailService.sendEmailForgetPassword(req);
+    }
+
     @PutMapping("/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal AccountJWTPayload jwt, @Valid @RequestBody AccountChangePasswordRequest request) {
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal AccountJWTPayload jwt,
+            @Valid @RequestBody AccountChangePasswordRequest request) {
         accountService.changePassword(jwt.getAccountId(), request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -62,11 +74,10 @@ public class AccountApi {
     	accountService.forgotPassword(token, req);
     	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
     @DeleteMapping
     public ResponseEntity<Void> archiveAccount(@AuthenticationPrincipal AccountJWTPayload jwt) {
         accountService.archiveAccount(jwt.getAccountId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    
-
 }

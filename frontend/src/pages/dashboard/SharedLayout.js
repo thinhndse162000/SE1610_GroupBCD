@@ -18,7 +18,7 @@ const SharedLayout = ({ viewType }) => {
         <SmallSidebar />
         <BigSidebar />
         <div>
-          <Navbar />
+          <Navbar className="nav-bar" />
           <div className='dashboard-page'>
             <Outlet />
           </div>

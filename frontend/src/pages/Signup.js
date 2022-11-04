@@ -4,8 +4,7 @@ import Wrapper from "../assets/wrappers/RegisterPage";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../context/service/authService";
-import ValidateInfo from "../components/container/ValidateInfo";
-
+import validateInfo from "../context/validator/validateInfo";
 const initialState = {
   firstName: "",
   lastName: "",
@@ -20,7 +19,7 @@ const initialState = {
 const Signup = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
-  const { user, isLoading, showAlert } = useSelector((state) => state.base);
+  const { user, isLoading, showAlert, alertType } = useSelector((state) => state.base);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -29,7 +28,7 @@ const Signup = () => {
   const [errors, setErrors] = useState({ notEmpty: true });
   const onSubmit = (e) => {
     e.preventDefault();
-    setErrors(ValidateInfo(values));
+    setErrors(validateInfo(values));
   };
 
   useEffect(() => {
@@ -40,12 +39,10 @@ const Signup = () => {
   }, [dispatch, errors])
 
   useEffect(() => {
-    if (user) {
-      setTimeout(() => {
-        navigate("/author");
-      }, 1000);
+    if (alertType === "success") {
+      navigate("/login")
     }
-  }, [user, navigate]);
+  }, [alertType])
 
   return (
     <Wrapper className="full-page">
@@ -117,6 +114,7 @@ const Signup = () => {
               value={values.dateOfBirth}
               handleChange={handleChange}
             />
+            {errors.dateOfBirth && <p>{errors.dateOfBirth}</p>}
           </div>
           {/* organziation input */}
           <div className="input-signup">

@@ -15,7 +15,6 @@ const MemberAuthorProfile = () => {
     base: { isLoading },
     member: { authorProfile, authorPublish },
   } = useSelector((state) => state);
-
   useEffect(() => {
     dispatch(getAuthorProfile({ slug }));
     dispatch(getAuthorPublish({ slug }));

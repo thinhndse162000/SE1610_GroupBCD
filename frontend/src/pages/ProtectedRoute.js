@@ -2,13 +2,9 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const { user, role } = useSelector((state) => state.base);
-  // TODO: role manager redirect
+  const { user } = useSelector((state) => state.base);
   if (!user) {
     return <Navigate to="/landing" />;
-  }
-  if (role !== "MEMBER") {
-    return <Navigate to="/error" />;
   }
   return children;
 };

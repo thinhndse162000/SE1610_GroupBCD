@@ -16,17 +16,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
-import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
-import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.service.InvitationService;
 import com.bcd.ejournal.service.PaperService;
 
@@ -56,15 +53,6 @@ public class PaperApi {
         paperService.updatePaper(payload.getAccountId(), paperId, request);
 
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    // TODO: specify which role will use this
-    @PostMapping("/search")
-    public ResponseEntity<List<PaperResponse>> search(@RequestBody PaperSearchRequest request) {
-        List<PaperResponse> rs = paperService.searchByRequest(request);
-        // List<PapperResponse> rsl = rs.stream().map(p -> new
-        // PapperResponse(p.getPaperId())).collect(Collectors.toList());
-        return ResponseEntity.ok(rs);
     }
 
     @DeleteMapping("/{id}")

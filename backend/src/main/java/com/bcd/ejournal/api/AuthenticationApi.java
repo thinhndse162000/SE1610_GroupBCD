@@ -35,9 +35,9 @@ public class AuthenticationApi {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<AccountTokenResponse> signup(@Valid @RequestBody AccountSignupRequest request) {
-        AccountTokenResponse response = accountService.signup(request);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Void> signup(@Valid @RequestBody AccountSignupRequest request) {
+        accountService.signup(request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     @PutMapping("/verify/{token}")
@@ -46,6 +46,5 @@ public class AuthenticationApi {
     	tokenReq.setToken(token);
     	accountService.verify(tokenReq);
     	return new ResponseEntity<>(HttpStatus.OK);
-    	
     }
 }

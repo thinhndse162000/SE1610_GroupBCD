@@ -8,6 +8,7 @@ import {
   CLEAR_ALERT,
   HANDLE_CHANGE,
   CHANGE_PAGE,
+  SUCCESS,
 } from "../actions";
 import authFetch from "../../utils/authFetch";
 
@@ -29,14 +30,23 @@ export const changeView = (viewType) => (dispatch) => {
 
 export const displayAlert = () => (dispatch) => {
   dispatch({ type: DISPLAY_ALERT });
-  clearAlert();
+  dispatch(clearAlert());
 };
+
+export const displayAlertMessage = ({ message }) => dispatch => {
+  dispatch({ type: SUCCESS, payload: { msg: message } });
+  dispatch(clearAlert());
+}
 
 export const clearAlert = () => (dispatch) => {
   setTimeout(() => {
     dispatch({ type: CLEAR_ALERT });
-  }, 3000);
+  }, 5000);
 };
+
+export const clearAlertNow = () => (dispatch) => {
+  dispatch({ type: CLEAR_ALERT });
+}
 
 export const handleChange =
   ({ name, value, type }) =>

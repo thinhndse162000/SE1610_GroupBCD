@@ -1,4 +1,6 @@
 package com.bcd.ejournal.domain.dto.request;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,5 +13,5 @@ public class JournalSearchRequest {
     private String issn;
     private Integer journalId;
     private Integer page;
-	
+    private List<Integer> fieldIds;
 }

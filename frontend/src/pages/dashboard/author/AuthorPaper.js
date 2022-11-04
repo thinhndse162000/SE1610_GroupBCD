@@ -3,23 +3,30 @@ import { useSelector, useDispatch } from "react-redux";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import {
   getAuthorPaper,
-  setEditPaper,
-  deletePaper,
 } from "../../../context/service/paperService";
 import {
   Loading,
   Paper,
   SearchAuthorPaperContainer,
   PageBtnContainer,
+  Alert,
 } from "../../../components";
-import { handleChange } from "../../../context/service/utilService";
+import { clearAlertNow, handleChange } from "../../../context/service/utilService";
 
 const AuthorPaper = () => {
   const {
-    base: { isLoading },
+    base: { isLoading, showAlert },
     author: {
-      submittedPapers: papers,
-      search: { keyword, startDate, endDate, status, fields, page, numOfPage },
+      search: {
+        keyword,
+        startDate,
+        endDate,
+        status,
+        fields,
+        page,
+        numOfPage,
+        result: papers,
+      },
     },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -35,18 +42,31 @@ const AuthorPaper = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getAuthorPaper({ keyword, startDate, endDate, status: status === "ALL" ? null : status, fields, page }));
+    dispatch(
+      getAuthorPaper({
+        keyword,
+        startDate,
+        endDate,
+        status: status === "ALL" ? null : status,
+        fields,
+        page,
+      })
+    );
     // eslint-disable-next-line
   }, [dispatch, page]);
 
   return (
     <>
       <SearchAuthorPaperContainer />
-      <PageBtnContainer
-        page={page}
-        numOfPage={numOfPage}
-        changePage={handlePageChange}
-      />
+
+      {papers.length > 0 && (
+        <PageBtnContainer
+          page={page}
+          numOfPage={numOfPage}
+          changePage={handlePageChange}
+        />
+      )}
+      {showAlert && <Alert />}
       {isLoading ? (
         <Loading center />
       ) : papers.length > 0 ? (
@@ -59,17 +79,10 @@ const AuthorPaper = () => {
                 if (paper.status === "PENDING") {
                   action.push({
                     type: "link",
-                    to: "submit-paper",
+                    to: `edit-paper/${paper.paperId}`,
                     className: "btn edit-btn",
                     label: "Edit",
-                    onClick: () => dispatch(setEditPaper(paper.paperId)),
-                  });
-                  // TODO: deletePaper
-                  action.push({
-                    type: "button",
-                    className: "btn delete-btn",
-                    label: "Delete",
-                    onClick: () => dispatch(deletePaper(paper.paperId)),
+                    onClick: () => dispatch(clearAlertNow()),
                   });
                 }
                 return (

@@ -9,17 +9,20 @@ import com.bcd.ejournal.domain.dto.request.TokenRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AccountTokenResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
 
 public interface AccountService {
     AccountTokenResponse login(AccountLoginRequest req);
 
-    AccountTokenResponse signup(AccountSignupRequest req);
+    void signup(AccountSignupRequest req);
 
     void changePassword(Integer id, AccountChangePasswordRequest req);
 
     AccountProfileResponse updateProfile(Integer id, AccountUpdateProfileRequest req);
 
     AccountProfileResponse getProfile(Integer id);
+
+    EducationResponse getEducation(Integer accountId);
 
     void archiveAccount(Integer id);
 

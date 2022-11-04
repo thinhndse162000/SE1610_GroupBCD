@@ -41,7 +41,11 @@ const MemberSearch = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    dispatch(search({ keyword, type, fields }));
+    if (page === 1) {
+      dispatch(search({ keyword, type, fields, page }));
+    } else {
+      handlePageChange(1);
+    }
   };
 
   useEffect(() => {
@@ -104,11 +108,14 @@ const MemberSearch = () => {
           </div>
         </form>
       </SearchWrapper>
-      <PageBtnContainer
-        page={page}
-        numOfPage={numOfPage}
-        changePage={handlePageChange}
-      />
+
+      {result.length > 0 && (
+        <PageBtnContainer
+          page={page}
+          numOfPage={numOfPage}
+          changePage={handlePageChange}
+        />
+      )}
       {isLoading ? (
         <Loading center />
       ) : result.length > 0 ? (
@@ -117,7 +124,13 @@ const MemberSearch = () => {
             <ContainerWrapper>
               <div className="container">
                 {result.map((journal, index) => {
-                  return <Journal key={index} journal={journal} />;
+                  return (
+                    <Journal
+                      link={`/journal/${journal.slug}`}
+                      key={index}
+                      journal={journal}
+                    />
+                  );
                 })}
               </div>
             </ContainerWrapper>
@@ -130,7 +143,9 @@ const MemberSearch = () => {
             changePage={handlePageChange}
           />
         </>
-      ) : <p>No result found</p>}
+      ) : (
+        <p>No result found</p>
+      )}
     </div>
   );
 };

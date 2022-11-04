@@ -54,11 +54,11 @@ public class Account implements UserDetails {
     private String slug;
     private boolean enable;
     
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Author author;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Reviewer reviewer;
 
@@ -114,5 +114,4 @@ public class Account implements UserDetails {
     public boolean isEnabled() {
         return status == AccountStatus.OPEN;
     }
-
 }

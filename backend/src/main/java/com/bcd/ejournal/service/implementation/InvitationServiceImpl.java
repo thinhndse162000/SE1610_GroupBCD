@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,9 +15,10 @@ import com.bcd.ejournal.domain.dto.request.InvitationSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.request.ReviewerInvitationRequest;
 import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
 import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
-import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.entity.EmailDetail;
 import com.bcd.ejournal.domain.entity.Invitation;
+import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.entity.Reviewer;
@@ -41,24 +41,24 @@ public class InvitationServiceImpl implements InvitationService {
     private final ReviewerRepository reviewerRepository;
     private final PaperRepository paperRepository;
     private final ReviewReportRepository reviewReportRepository;
-    private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
     @Autowired
     private EmailService emailService;
 
     @Autowired
-    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository, PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
+    public InvitationServiceImpl(InvitationRepository invitationRepository, ReviewerRepository reviewerRepository,
+            PaperRepository paperRepository, ReviewReportRepository reviewReportRepository, DTOMapper dtoMapper) {
         this.invitationRepository = invitationRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
         this.reviewReportRepository = reviewReportRepository;
-        this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
 
     }
 
     @Override
-    public InvitationPaperResponse sendInvitation(Integer accountId, Integer reviewerId, ReviewerInvitationRequest request) {
+    public InvitationPaperResponse sendInvitation(Integer accountId, Integer reviewerId,
+            ReviewerInvitationRequest request) {
         Reviewer reviewer = reviewerRepository.findById(reviewerId)
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. Id: " + reviewerId));
         // check if reviewer invitable
@@ -84,14 +84,24 @@ public class InvitationServiceImpl implements InvitationService {
         Invitation invitation = new Invitation();
         invitation.setInvitationId(0);
         invitation.setStatus(InvitationStatus.PENDING);
+        invitation.setRound(paper.getRound());
         invitation.setInviteDate(new Date(System.currentTimeMillis()));
         invitation.setReviewer(reviewer);
         invitation.setPaper(paper);
-        invitationRepository.save(invitation);
+
         EmailDetail detail = new EmailDetail();
         detail.setRecipient(reviewer.getAccount().getEmail());
         emailService.sendEmailInvitaion(detail);
-        return toInvitationPaperResponse(invitation);
+        invitationRepository.save(invitation);
+
+        return dtoMapper.toInvitationPaperResponse(invitation);
+    }
+
+    @Override
+    public InvitationReviewerResponse getInvitation(Integer accountId, Integer invitationId) {
+        Invitation invitation = invitationRepository.findByIdAndReviewerId(invitationId, accountId)
+                .orElseThrow(() -> new NullPointerException("Invitation not found. Id: " + invitationId));
+        return dtoMapper.toInvitationReviewerResponse(invitation);
     }
 
     @Override
@@ -100,7 +110,7 @@ public class InvitationServiceImpl implements InvitationService {
                 .orElseThrow(() -> new NullPointerException("Reviewer not found. Id: " + reviewerId));
         List<Invitation> invitations = reviewer.getInvitations1();
         return invitations.stream()
-                .map(this::toInvitationReviewerResponse)
+                .map(dtoMapper::toInvitationReviewerResponse)
                 .collect(Collectors.toList());
     }
 
@@ -115,7 +125,7 @@ public class InvitationServiceImpl implements InvitationService {
 
         List<Invitation> invitations = paper.getInvitations();
         return invitations.stream()
-                .map(this::toInvitationPaperResponse)
+                .map(dtoMapper::toInvitationPaperResponse)
                 .collect(Collectors.toList());
     }
 
@@ -134,46 +144,56 @@ public class InvitationServiceImpl implements InvitationService {
         invitationRepository.save(invitation);
 
         Paper paper = invitation.getPaper();
-        List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(), InvitationStatus.ACCEPTED);
+        Journal journal = paper.getJournal();
+        List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(),
+                InvitationStatus.ACCEPTED);
 
         // Create new review report
         ReviewReport reviewReport = new ReviewReport();
         reviewReport.setReviewReportId(0);
         reviewReport.setPaper(paper);
+        reviewReport.setRound(paper.getRound());
         reviewReport.setReviewer(invitation.getReviewer());
         reviewReport.setStatus(ReviewReportStatus.PENDING);
 
         reviewReportRepository.save(reviewReport);
-        if (acceptedInvitations.size() == 3) {
+        if (acceptedInvitations.size() == journal.getNumberOfReviewer()) {
             // update paper status
             paper.setStatus(PaperStatus.REVIEWING);
             paperRepository.save(paper);
             // change status of other invitation to cancel
-            invitationRepository.updateInvitationStatusByPaperId(paper.getPaperId(), InvitationStatus.CANCEL);
+            invitationRepository.updateInvitationStatusByPaperIdAndRound(paper.getPaperId(), paper.getRound(),
+                    InvitationStatus.CANCEL);
         }
     }
 
-    private InvitationPaperResponse toInvitationPaperResponse(Invitation invitation) {
-        InvitationPaperResponse response = modelMapper.map(invitation, InvitationPaperResponse.class);
-        Reviewer reviewer = invitation.getReviewer();
-        response.setReviewerId(reviewer.getReviewerId());
-        response.setReviewerName(reviewer.getAccount().getFullName());
+    @Override
+    public PagingResponse searchFilterInvitation(InvitationSearchFilterRequest filterRequest) {
+        int pageNum = filterRequest.getPage() != null ? filterRequest.getPage() - 1 : 0;
+        Pageable page = PageRequest.of(pageNum, 10);
+        Page<Invitation> invitation = invitationRepository.searchFilter(filterRequest, page);
+
+        PagingResponse response = new PagingResponse();
+
+        response.setResult(invitation.stream().map(dtoMapper::toInvitationReviewerResponse)
+                .collect(Collectors.toList()));
+        response.setNumOfPage(invitation.getTotalPages());
+        response.setTotalFound(invitation.getTotalElements());
+
         return response;
     }
 
-    private InvitationReviewerResponse toInvitationReviewerResponse(Invitation invitation) {
-        InvitationReviewerResponse response = modelMapper.map(invitation, InvitationReviewerResponse.class);
-        PaperResponse paperResponse = dtoMapper.toPaperResponse(invitation.getPaper());
-        response.setPaper(paperResponse);
-        return response;
+    @Override
+    @Transactional
+    public void cleanDueInvitation() {
+        // Cancel pending invitation after 14 days
+        invitationRepository.updatePendingInvitationAfter14Days();
     }
 
-	@Override
-	public List<InvitationReviewerResponse> searcFilterInvitation(InvitationSearchFilterRequest filterRequest) {
-		int pageNum = filterRequest.getPage() != null ? filterRequest.getPage() - 1 : 0;
-		Pageable page = PageRequest.of(pageNum, 10);
-		Page<Invitation> invitation = invitationRepository.searchFilte(filterRequest, page);
-		return invitation.stream().map(this::toInvitationReviewerResponse)
-				.collect(Collectors.toList());
-	}
+    @Override
+    public void notifyReviewer() {
+        // Send reviewer email after 10 days
+        List<Invitation> invitations = invitationRepository.findPendingInvitationAfter10Days();
+        // TODO: Thinh oi, lam cai gui email den reviewer nha
+    }
 }

@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReviewReportSearchFilterRequest {
+    private String title;
     private Integer reviewerId;
     private Integer reviewReportId;
     private ReviewReportVerdict verdict;

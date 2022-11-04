@@ -3,6 +3,7 @@ package com.bcd.ejournal.domain.entity;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,11 +31,12 @@ public class Issue {
     private Date startDate;
     private Date endDate;
     private Integer numberOfPage;
+    private Integer year;
 
     @ManyToOne
     @JoinColumn(name = "journalId", nullable = false)
     private Journal journal;
 
-    @OneToMany(mappedBy = "issue")
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.MERGE)
     private List<Publish> publishes;
 }

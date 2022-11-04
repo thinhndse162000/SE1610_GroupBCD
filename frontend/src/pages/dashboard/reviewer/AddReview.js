@@ -4,19 +4,21 @@ import {
   FormRow,
   FormTextArea,
   FormRowSelect,
-  Alert,
   Paper,
+  Alert,
 } from "../../../components";
 import {
   handleChange,
   displayAlert,
+  displayAlertMessage,
 } from "../../../context/service/utilService";
 import { editReview } from "../../../context/service/reviewReportService";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import validateSubmitReview from "../../../context/validator/validateSubmitReview";
 const AddReview = () => {
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({ notEmpty: true });
   const { base, reviewer } = useSelector((state) => state);
   const { isLoading, showAlert } = base;
   const {
@@ -30,20 +32,24 @@ const AddReview = () => {
     },
   } = reviewer;
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (!editReviewId) {
-      navigate("/reviewer");
+      setTimeout(() => {
+        navigate("/reviewer");
+      }, 1000);
     }
   }, [editReviewId, navigate]);
 
   const handleInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    dispatch(handleChange({ name, value, type: "review" }));
+    dispatch(handleChange({ name, value, type: "newreview" }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const review = {
       editReviewId,
       reviewNote,
@@ -51,55 +57,62 @@ const AddReview = () => {
       reviewConfidentiality,
       reviewVerdict,
     };
-    if (
-      !reviewNote ||
-      !reviewGrade ||
-      !reviewConfidentiality ||
-      !reviewVerdict
-    ) {
-      dispatch(displayAlert());
-      return;
-    }
-
-    // TODO: only edit
-    dispatch(editReview(review));
+    setErrors(validateSubmitReview(review))
     return;
   };
 
-  // TODO: add Paper component
+  useEffect(() => {
+    if (Object.getOwnPropertyNames(errors).length === 0) {
+      const review = {
+        editReviewId,
+        reviewNote,
+        reviewGrade,
+        reviewConfidentiality,
+        reviewVerdict,
+      };
+      dispatch(editReview(review))
+    }
+  }, [dispatch, errors])
+
   if (editReviewId) {
     return (
       <>
-        <Paper paper={reviewPaper} />
+        <Paper paper={reviewPaper} type="full" />
         <Wrapper>
           <form className="form">
             <h3>Submit Review</h3>
-            {showAlert && <Alert />}
             <div className="form-center">
-              {/* Paper Summary */}
-              <FormTextArea
-                type="text"
-                name="reviewNote"
-                value={reviewNote}
-                labelText="note"
-                handleChange={handleInput}
-              />
-  
-              <div className="container-3">
-                <FormRow
-                  type="number"
-                  name="reviewGrade"
-                  value={reviewGrade}
-                  labelText="grade"
-                  handleChange={handleInput}
-                />{" "}
-                <FormRow
-                  type="number"
-                  name="reviewConfidentiality"
-                  value={reviewConfidentiality}
-                  labelText="confidentiality"
+              <div>
+                <FormTextArea
+                  type="text"
+                  name="reviewNote"
+                  value={reviewNote}
+                  labelText="note"
                   handleChange={handleInput}
                 />
+                {errors.reviewNote && <p>{errors.reviewNote}</p>}
+              </div>
+              <div className="container-3">
+                <div>
+                  <FormRow
+                    type="number"
+                    name="reviewGrade"
+                    value={reviewGrade}
+                    labelText="grade"
+                    handleChange={handleInput}
+                  />{" "}
+                  {errors.reviewGrade && <p>{errors.reviewGrade}</p>}
+                </div>
+                <div>
+                  <FormRow
+                    type="number"
+                    name="reviewConfidentiality"
+                    value={reviewConfidentiality}
+                    labelText="confidentiality"
+                    handleChange={handleInput}
+                  />
+                  {errors.reviewConfidentiality && <p>{errors.reviewConfidentiality}</p>}
+                </div>
                 <FormRowSelect
                   name="reviewVerdict"
                   value={reviewVerdict}
@@ -108,7 +121,7 @@ const AddReview = () => {
                   list={["ACCEPTED", "REJECTED"]}
                 />
               </div>
-  
+
               {/* btn container */}
               <div>
                 <button
@@ -119,9 +132,6 @@ const AddReview = () => {
                 >
                   Submit
                 </button>
-                {/* <button className="btn btn-block clear-btn" onClick={handleClear}>
-                clear
-              </button> */}
               </div>
             </div>
           </form>
@@ -129,9 +139,8 @@ const AddReview = () => {
       </>
     );
   } else {
-    return (<></>)
+    return (<>{showAlert && <Alert />}</>)
   }
-  
 };
 
 export default AddReview;

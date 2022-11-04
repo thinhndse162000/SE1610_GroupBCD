@@ -1,24 +1,50 @@
+import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 
-const Invitation = ({ invitation, action = [] }) => {
+const Invitation = ({ invitation, type = "compact", link, action = [] }) => {
   const { paper } = invitation;
   const { authors } = paper;
   return (
     <Wrapper>
       <header>
         <div className="info">
-          <h5>{paper.title}</h5>
+          {link != null ? (
+            <Link to={link}>
+              <h5>{paper.title}</h5>
+            </Link>
+          ) : (
+            <h5>{paper.title}</h5>
+          )}
           <p>
             Author: {authors.fullName} - {paper.numberOfPage}{" "}
             {paper.numberOfPage > 1 ? "pages" : "page"}
           </p>
+          <p>Round: {paper.round}</p>
+          <p>
+            Fields:{" "}
+            {paper.fields.map((field, index) => (
+              <span key={index}>
+                {field.fieldName}
+                {index !== paper.fields.length - 1 && ","}{" "}
+              </span>
+            ))}
+          </p>
         </div>
+
+        <p>
+          Invitation status:{" "}
+          <span className={`status ${invitation.status.toLowerCase()}`}>
+            {invitation.status}
+          </span>
+        </p>
       </header>
       <div className="content">
-        <div>
-          <h5>Abstract</h5>
-          <p>{paper.summary}</p>
-        </div>
+        {type === "full" && (
+          <div>
+            <h5>Abstract</h5>
+            <p>{paper.summary}</p>
+          </div>
+        )}
         <footer>
           <div className="actions">
             {action.map((act, index) => {
@@ -34,11 +60,6 @@ const Invitation = ({ invitation, action = [] }) => {
               );
             })}
           </div>
-          <p>
-            Invitation status: <span className={`status ${invitation.status.toLowerCase()}`}>
-              {invitation.status}
-            </span>
-          </p>
         </footer>
       </div>
     </Wrapper>

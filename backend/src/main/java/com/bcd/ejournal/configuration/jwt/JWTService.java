@@ -79,10 +79,6 @@ public class JWTService implements JWTSerializer, JWTDeserializer {
         try {
             final String decodedPayload = Base64URL.decode(splintedTokens[1]);
             final JWTPayload jwtPayload = objectMapper.readValue(decodedPayload, AccountJWTPayload.class);
-            // Check expired
-            if (jwtPayload.isExpired()) {
-                throw new IllegalArgumentException("Token expired");
-            }
             return jwtPayload;
         } catch (Exception exception) {
             throw new IllegalArgumentException(exception);

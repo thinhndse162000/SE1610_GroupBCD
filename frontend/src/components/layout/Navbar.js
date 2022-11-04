@@ -11,8 +11,9 @@ const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const { user, role } = useSelector((state) => state.base);
   const dispatch = useDispatch();
+
   return (
-    <Wrapper>
+    <Wrapper id="navbar" className="sticky">
       <div className="nav-center">
         <button
           type="button"
@@ -26,32 +27,34 @@ const Navbar = () => {
           <h3 className="logo-text">dashboard</h3>
         </div>
         <div className="navigation-link">
-          {role === "MANAGER" ? (
-            <Link
-              to="/manager"
-              onClick={(e) => dispatch(changeView("manager"))}
-            >
-              Manager
+          <>
+            <Link to="/" onClick={(e) => dispatch(changeView("member"))}>
+              Home
             </Link>
-          ) : (
-            <>
-              <Link to="/" onClick={(e) => dispatch(changeView("member"))}>
-                Home
-              </Link>
+            <Link to="/author" onClick={(e) => dispatch(changeView("author"))}>
+              Author
+            </Link>
+            <Link
+              to="/reviewer"
+              onClick={(e) => dispatch(changeView("reviewer"))}
+            >
+              Reviewer
+            </Link>
+            <Link
+              to="/profile"
+              onClick={(e) => dispatch(changeView("profile"))}
+            >
+              Profile
+            </Link>
+            {role === "MANAGER" && (
               <Link
-                to="/author"
-                onClick={(e) => dispatch(changeView("author"))}
+                to="/manager"
+                onClick={(e) => dispatch(changeView("manager"))}
               >
-                Author
+                Manager
               </Link>
-              <Link
-                to="/reviewer"
-                onClick={(e) => dispatch(changeView("reviewer"))}
-              >
-                Reviewer
-              </Link>
-            </>
-          )}
+            )}
+          </>
         </div>
         <div className="btn-container">
           <button

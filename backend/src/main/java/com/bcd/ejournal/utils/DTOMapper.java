@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.AuthorResponse;
+import com.bcd.ejournal.domain.dto.response.EducationResponse;
+import com.bcd.ejournal.domain.dto.response.InvitationPaperResponse;
+import com.bcd.ejournal.domain.dto.response.InvitationReviewerResponse;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
@@ -15,7 +18,9 @@ import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewerResponse;
 import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
+import com.bcd.ejournal.domain.entity.Invitation;
 import com.bcd.ejournal.domain.entity.Issue;
+import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.Publish;
 import com.bcd.ejournal.domain.entity.ReviewReport;
@@ -31,14 +36,31 @@ public class DTOMapper {
     }
 
     public AccountProfileResponse toAccountProfileResponse(Account account) {
-        return modelMapper.map(account, AccountProfileResponse.class);
+
+        AccountProfileResponse response = modelMapper.map(account, AccountProfileResponse.class);
+        response.setPhone(response.getPhone().trim());
+        return response;
     }
 
     public PaperResponse toPaperResponse(Paper paper) {
         PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
-        paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
+        paperResponse.setJournal(toJournalResponse(paper.getJournal()));
         paperResponse.setAuthors(toAuthorResponse(paper.getAuthor()));
         return paperResponse;
+    }
+
+    public JournalResponse toJournalResponse(Journal journal) {
+        JournalResponse response = modelMapper.map(journal, JournalResponse.class);
+        response.setManagerEmail(journal.getManager().getEmail());
+        return response;
+    }
+
+    public EducationResponse toEducationResponse(Account account) {
+        EducationResponse educationResponse = new EducationResponse();
+        modelMapper.map(account.getReviewer(), educationResponse);
+        modelMapper.map(account.getAuthor(), educationResponse);
+
+        return educationResponse;
     }
 
     public AuthorResponse toAuthorResponse(Author author) {
@@ -50,7 +72,7 @@ public class DTOMapper {
 
     public IssueResponse toIssueResponse(Issue issue) {
         IssueResponse issueResponse = modelMapper.map(issue, IssueResponse.class);
-        issueResponse.setJournal(modelMapper.map(issue.getJournal(), JournalResponse.class));
+        issueResponse.setJournal(toJournalResponse(issue.getJournal()));
         issueResponse.setNumberOfPaper(issue.getPublishes().size());
         return issueResponse;
     }
@@ -65,7 +87,7 @@ public class DTOMapper {
     public ReviewReportResponse toReviewReportResponse(ReviewReport reviewReport) {
         ReviewReportResponse response = modelMapper.map(reviewReport, ReviewReportResponse.class);
         Account acc = reviewReport.getReviewer().getAccount();
-        response.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName()));
+        response.setReviewer(toReviewerResponse(acc.getReviewer()));
         return response;
     }
 
@@ -75,7 +97,7 @@ public class DTOMapper {
 
         ReviewReportResponse tmp = modelMapper.map(reviewReport, ReviewReportResponse.class);
         Account acc = reviewReport.getReviewer().getAccount();
-        tmp.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName()));
+        tmp.setReviewer(toReviewerResponse(acc.getReviewer()));
         response.setReview(tmp);
 
         return response;
@@ -85,6 +107,22 @@ public class DTOMapper {
         ReviewerResponse response = new ReviewerResponse();
         response.setReviewerId(reviewer.getReviewerId());
         response.setFullName(reviewer.getAccount().getFullName());
+        response.setFields(reviewer.getFields());
+        response.setInvitable(reviewer.isInvitable());
+        return response;
+    }
+
+    public InvitationPaperResponse toInvitationPaperResponse(Invitation invitation) {
+        InvitationPaperResponse response = modelMapper.map(invitation, InvitationPaperResponse.class);
+        Reviewer reviewer = invitation.getReviewer();
+        response.setReviewer(toReviewerResponse(reviewer));
+        return response;
+    }
+
+    public InvitationReviewerResponse toInvitationReviewerResponse(Invitation invitation) {
+        InvitationReviewerResponse response = modelMapper.map(invitation, InvitationReviewerResponse.class);
+        PaperResponse paperResponse = toPaperResponse(invitation.getPaper());
+        response.setPaper(paperResponse);
         return response;
     }
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -22,24 +21,19 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.request.PaperSubmitRequest;
 import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
-import com.bcd.ejournal.domain.dto.response.AuthorResponse;
-import com.bcd.ejournal.domain.dto.response.JournalResponse;
+import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
-import com.bcd.ejournal.domain.dto.response.ReviewerResponse;
-import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
-import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.FieldRepository;
 import com.bcd.ejournal.repository.JournalRepository;
 import com.bcd.ejournal.repository.PaperRepository;
-import com.bcd.ejournal.repository.RequestMapper;
 import com.bcd.ejournal.service.EmailService;
 import com.bcd.ejournal.service.PaperService;
 import com.bcd.ejournal.utils.DTOMapper;
@@ -47,182 +41,189 @@ import com.bcd.ejournal.utils.FileUtils;
 
 @Service
 public class PaperServiceImpl implements PaperService {
+    private final PaperRepository paperRepository;
+    private final AccountRepository accountRepository;
+    private final JournalRepository journalRepository;
+    private final FieldRepository fieldRepository;
+    private final DTOMapper dtoMapper;
+    @Value("${paper.file.dir}")
+    private String uploadDir;
 
-	private final PaperRepository paperRepository;
-	private final AccountRepository accountRepository;
-	private final JournalRepository journalRepository;
-	private final FieldRepository fieldRepository;
-	private final RequestMapper paperMapper;
-	private final ModelMapper modelMapper;
-	private final DTOMapper dtoMapper;
-	
-	@Autowired
-	private EmailService emailService;
-	@Value("${paper.file.dir}")
-	private String uploadDir;
+    @Autowired
+    private EmailService emailService;
 
-	@Autowired
-	public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository,
-			JournalRepository journalRepository, FieldRepository fieldRepository, RequestMapper paperMapper,
-			ModelMapper modelMapper, DTOMapper dtoMapper) {
-		this.paperRepository = paperRepository;
-		this.accountRepository = accountRepository;
-		this.journalRepository = journalRepository;
-		this.fieldRepository = fieldRepository;
-		this.paperMapper = paperMapper;
-		this.modelMapper = modelMapper;
-		this.dtoMapper = dtoMapper;
-	}
+    @Autowired
+    public PaperServiceImpl(PaperRepository paperRepository, AccountRepository accountRepository,
+            JournalRepository journalRepository, FieldRepository fieldRepository,
+            DTOMapper dtoMapper) {
+        this.paperRepository = paperRepository;
+        this.accountRepository = accountRepository;
+        this.journalRepository = journalRepository;
+        this.fieldRepository = fieldRepository;
+        this.dtoMapper = dtoMapper;
+    }
 
-	@Override
-	@Transactional
-	public void submitPaper(Integer authorId, PaperSubmitRequest request) {
-		request.setTitle(request.getTitle().trim());
-		request.setSummary(request.getSummary().trim());
+    @Override
+    @Transactional
+    public void submitPaper(Integer authorId, PaperSubmitRequest request) {
+        request.setTitle(request.getTitle().trim());
+        request.setSummary(request.getSummary().trim());
 
-		Paper paper = new Paper(request);
-		// TODO: generate random file name
-		// TODO: delete file if error
-		String fileName = request.getFile().getOriginalFilename();
-		MultipartFile file = request.getFile();
-		paper.setLinkPDF(fileName);
-		try {
-			FileUtils.saveFile(uploadDir, fileName, file);
-		} catch (NullPointerException ex) {
-			System.out.println("Null");
-		} catch (IOException ex) {
-			System.out.println("IOexception");
-		}
+        Paper paper = new Paper(request);
+        // TODO: generate random file name
+        // TODO: delete file if error
+        String fileName = request.getFile().getOriginalFilename();
+        MultipartFile file = request.getFile();
+        paper.setLinkPDF(fileName);
+        try {
+            FileUtils.saveFile(uploadDir, fileName, file);
+        } catch (NullPointerException ex) {
+            System.out.println("Null");
+        } catch (IOException ex) {
+            System.out.println("IOexception");
+        }
 
-		paper.setPaperId(0);
-		paper.setSubmitTime(new Timestamp(System.currentTimeMillis()));
-		// TODO: read number of page from pdf
-		paper.setNumberOfPage(10);
-		paper.setStatus(PaperStatus.PENDING);
-		paper.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
+        paper.setPaperId(0);
+        paper.setRound(1);
+        paper.setSubmitTime(new Timestamp(System.currentTimeMillis()));
+        // TODO: read number of page from pdf
+        paper.setNumberOfPage(10);
+        paper.setStatus(PaperStatus.PENDING);
+        paper.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 
-		Journal journal = journalRepository.findById(request.getJournalId())
-				.orElseThrow(() -> new NullPointerException("Journal not found. Id: " + request.getJournalId()));
-		Author author = accountRepository.findById(authorId)
-				.orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId)).getAuthor();
-		paper.setAuthor(author);
-		author.getPapers().add(paper);
-		Account account = (Account) accountRepository.getAccountId(journal.getManager().getAccountId());
-		paper.setJournal(journal);
-		journal.getPapers().add(paper);
-		emailService.sendEmailSumbitPaper(account);
-		paperRepository.save(paper);
+        Journal journal = journalRepository.findById(request.getJournalId())
+                .orElseThrow(() -> new NullPointerException("Journal not found. Id: " + request.getJournalId()));
+        Author author = accountRepository.findById(authorId)
+                .orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId))
+                .getAuthor();
+        paper.setAuthor(author);
+        author.getPapers().add(paper);
 
-}
+        paper.setJournal(journal);
+        journal.getPapers().add(paper);
 
-	@Override
-	public void deleteById(Integer paperID) {
-		// TODO: verify accountID
-		Optional<Paper> paperOpt = paperRepository.findById(paperID);
-		if (paperOpt.isPresent()) {
-			File file = new File(paperOpt.get().getLinkPDF());
-			// TODO: file service delete
-			boolean isDelete = file.delete();
-			paperRepository.deleteById(paperID);
-			if (isDelete) {
-				System.out.println("File delete successfully");
-			} else {
-				System.out.println("File doesn't exist");
-			}
-		}
-	}
+        emailService.sendEmailSumbitPaper(author.getAccount());
 
-	@Override
-	public void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request) {
-		// trim whitespace
-		request.setTitle(request.getTitle().trim());
-		request.setSummary(request.getSummary().trim());
+        paperRepository.save(paper);
+    }
 
-		Paper paper = paperRepository.findById(paperId)
-				.orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
-		// check author's ownership
-		if (paper.getAuthor().getAuthorId() != accountId) {
-			throw new ForbiddenException("Author does not own paper. Paper Id: " + paperId);
-		}
+    @Override
+    public void deleteById(Integer paperId) {
+        // TODO: verify accountId
+        // TODO: log existence
+        Optional<Paper> paperOpt = paperRepository.findById(paperId);
+        if (paperOpt.isPresent()) {
+            File file = new File(paperOpt.get().getLinkPDF());
+            // TODO: file service delete
+            boolean isDelete = file.delete();
+            paperRepository.deleteById(paperId);
+            if (isDelete) {
+                System.out.println("File delete successfully");
+            } else {
+                System.out.println("File doesn't exist");
+            }
+        }
+    }
 
-		paper.setTitle(request.getTitle());
-		paper.setSummary(request.getSummary());
+    @Override
+    public void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request) {
+        // trim whitespace
+        request.setTitle(request.getTitle().trim());
+        request.setSummary(request.getSummary().trim());
 
-		String fileName = request.getFile().getOriginalFilename();
-		MultipartFile file = request.getFile();
-		paper.setLinkPDF(fileName);
-		// TODO: delete old file if update
-		try {
-			FileUtils.saveFile(uploadDir, fileName, file);
-		} catch (NullPointerException ex) {
-			System.out.println("Null");
-		} catch (IOException ex) {
-			System.out.println("IOexception");
-		}
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
+        // check author's ownership
+        if (paper.getAuthor().getAuthorId() != accountId) {
+            throw new ForbiddenException("Author does not own paper. Paper Id: " + paperId);
+        }
 
-		paperRepository.save(paper);
-	}
+        if (paper.getStatus() != PaperStatus.PENDING) {
+            throw new ForbiddenException("Paper cannot be updated. Paper Id: " + paperId);
+        }
 
-	@Override
-	public List<PaperResponse> searchByRequest(PaperSearchRequest request) {
-		int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
-		Pageable page = PageRequest.of(pageNum, 10, Sort.by("submitTime").descending());
+        paper.setTitle(request.getTitle());
+        paper.setSummary(request.getSummary());
 
-		Page<Paper> papers = paperRepository.searchAndFilter(request, page);
-		return papers.stream().map(dtoMapper::toPaperResponse).collect(Collectors.toList());
-	}
+        if (request.getFile() != null) {
+            String fileName = request.getFile().getOriginalFilename();
+            MultipartFile file = request.getFile();
+            paper.setLinkPDF(fileName);
+            // TODO: delete old file if update
+            try {
+                FileUtils.saveFile(uploadDir, fileName, file);
+            } catch (NullPointerException ex) {
+                System.out.println("Null");
+            } catch (IOException ex) {
+                System.out.println("IOexception");
+            }
+        }
 
-	@Override
-	public List<PaperResponse> getAllPaperFromAuthor(Integer authorId) {
-		Author author = accountRepository.findById(authorId)
-				.orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId)).getAuthor();
+        paperRepository.save(paper);
+    }
 
-		List<Paper> papers = author.getPapers();
-		return papers.stream().map(dtoMapper::toPaperResponse).collect(Collectors.toList());
-	}
+    @Override
+    public PagingResponse searchByRequest(PaperSearchRequest request) {
+        int pageNum = request.getPage() != null ? request.getPage() - 1 : 0;
+        Pageable page = PageRequest.of(pageNum, 10, Sort.by("submitTime").descending());
 
-	@Override
-	public List<PaperResponse> getAllPaperFromJournal(Integer journalId) {
-		Journal journal = journalRepository.findById(journalId)
-				.orElseThrow(() -> new NullPointerException("Journal not found. Id: " + journalId));
-		List<Paper> papers = journal.getPapers();
-		return papers.stream().map(dtoMapper::toPaperResponse).collect(Collectors.toList());
-	}
+        Page<Paper> papers = paperRepository.searchAndFilter(request, page);
 
-	@Override
-	public Resource downloadFile(Integer paperId) throws IOException {
-		Paper paper = paperRepository.findById(paperId)
-				.orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
-		String fileName = paper.getLinkPDF();
-		// TODO: verify reviewer can download
-		// TODO: verify author
-		return FileUtils.load(uploadDir, fileName.trim());
-	}
+        PagingResponse response = new PagingResponse();
 
-	private PaperResponse fromPaper(Paper paper) {
-		PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
-		paperResponse.setJournal(modelMapper.map(paper.getJournal(), JournalResponse.class));
-		paperResponse.setAuthors(fromAuthor(paper.getAuthor()));
-		return paperResponse;
-	}
+        response.setResult(papers.stream().map(dtoMapper::toPaperResponse)
+                .collect(Collectors.toList()));
+        response.setNumOfPage(papers.getTotalPages());
+        response.setTotalFound(papers.getTotalElements());
 
-	private AuthorResponse fromAuthor(Author author) {
-		AuthorResponse authorResponse = modelMapper.map(author, AuthorResponse.class);
-		authorResponse.setFullName(author.getAccount().getFullName());
-		return authorResponse;
-	}
+        return response;
+    }
 
-	private ReviewReportResponse fromReviewReport(ReviewReport reviewReport) {
-		ReviewReportResponse response = modelMapper.map(reviewReport, ReviewReportResponse.class);
-		Account acc = reviewReport.getReviewer().getAccount();
-		response.setReviewer(new ReviewerResponse(acc.getAccountId(), acc.getFullName()));
-		return response;
-	}
+    @Override
+    public List<PaperResponse> getAllPaperFromAuthor(Integer authorId) {
+        Author author = accountRepository.findById(authorId)
+                .orElseThrow(() -> new NullPointerException("Author not found. Id: " + authorId)).getAuthor();
 
-	@Override
-	public PaperDetailResponse getPaper(Integer paperId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        List<Paper> papers = author.getPapers();
+        return papers.stream().map(dtoMapper::toPaperResponse).collect(Collectors.toList());
+    }
 
+    @Override
+    public List<PaperResponse> getAllPaperFromJournal(Integer journalId) {
+        Journal journal = journalRepository.findById(journalId)
+                .orElseThrow(() -> new NullPointerException("Journal not found. Id: " + journalId));
+        List<Paper> papers = journal.getPapers();
+        return papers.stream().map(dtoMapper::toPaperResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public PaperDetailResponse getPaper(Integer paperId) {
+        PaperDetailResponse response = new PaperDetailResponse();
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new NullPointerException("No paper found. Id: " + paperId));
+
+        List<ReviewReportResponse> reviewReports = paper.getReviewReports().stream()
+                .map(dtoMapper::toReviewReportResponse)
+                .collect(Collectors.toList());
+
+        response.setPaper(dtoMapper.toPaperResponse(paper));
+        response.setReviews(reviewReports);
+        return response;
+    }
+
+    @Override
+    public Resource downloadFile(Integer paperId) throws IOException {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
+        String fileName = paper.getLinkPDF();
+        return FileUtils.load(uploadDir, fileName.trim());
+    }
+
+    public void cleanDuePaper() {
+        // Update status to cancel for all paper that is in pending state for more than
+        // 6 months
+        // FIXME: fix for paper that is review for many round, should check accept date
+        paperRepository.updatePendingPaperAfter6Months();
+        // TODO: Thinh send email to author
+    }
 }

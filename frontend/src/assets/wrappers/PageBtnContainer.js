@@ -8,6 +8,7 @@ const Wrapper = styled.section`
   justify-content: end;
   flex-wrap: wrap;
   gap: 1rem;
+
   .btn-container {
     background: var(--primary-100);
     border-radius: var(--borderRadius);
@@ -49,6 +50,16 @@ const Wrapper = styled.section`
   .next-btn:hover {
     background: var(--primary-500);
     color: var(--white);
+  }
+
+  .disabled {
+    background: var(--grey-100);
+    color: var(--grey-400);
+  }
+
+  .disabled:hover {
+    background: var(--grey-100);
+    color: var(--grey-400);
   }
 `
 export default Wrapper

@@ -30,6 +30,8 @@ public class ReviewReport {
     private String note;
     @Enumerated(EnumType.STRING)
     private ReviewReportStatus status;
+    @Column(name = "[Round]")
+    private Integer round;
 
     @ManyToOne
     @JoinColumn(name = "ReviewerId", nullable = false)

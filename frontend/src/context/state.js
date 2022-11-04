@@ -6,12 +6,27 @@ const author = {
   submittedPapers: [],
   editPaperId: "",
   paperDetail: {},
+  editPaper: {
+    paperTitle: "",
+    paperSummary: "",
+    paperJournal: {}, 
+    paperPdfFile: { fileName: "", file: "" },
+    paperFields: [],
+  },
+
   newPaper: {
     paperTitle: "",
     paperSummary: "",
-    paperJournal: { journalName: "", journalId: "" },
+    paperJournal: {}, 
     paperPdfFile: { fileName: "", file: "" },
     paperFields: [],
+  },
+  searchJournal: {
+    keyword: "",
+    result: [],
+    page: 1,
+    numOfPage: 1,
+    totalFound: 0,
   },
   search: {
     keyword: "",
@@ -19,23 +34,66 @@ const author = {
     endDate: "",
     status: "ALL",
     page: 1,
-    numOfPage: 10,
+    numOfPage: 1,
+    totalFound: 0,
     fields: [],
     result: [],
   },
   paperStatusOptions: ["PENDING", "REVIEWING", "ACCEPTED", "REJECTED", "PUBLISH"],
 };
+const admin = {
+  editJournalID: "",
+  journal: [],
+  newJournal: {
+    name: "",
+    introduction: "",
+    organization: "",
+    issn: "",
+    managerEmail: "",
+    journalFields: [],
+    numberOfRound: 0,
+    numberOfReviewer: 0,
+  },
+  search: {
+    keyword: "",
+    fields: [],
+    result: [],
+    page: 1,
+    numOfPage: 1,
+    totalFound: 0,
+  },
+};
 
 const reviewer = {
   invitations: [],
+  invitationDetail: {},
   reviewReports: [],
+  reviewDetail: {},
   editReviewId: "",
+  searchInvitation: {
+    title: "",
+    status: "ALL",
+    startDate: "",
+    page: 1,
+    numOfPage: 1,
+    totalFound: 0,
+    result: [],
+  },
+  searchReview: {
+    title: "",
+    status: "ALL",
+    verdict: "ALL",
+    page: 1,
+    numOfPage: 1,
+    totalFound: 0,
+    result: [],
+  },
   newReview: {
     reviewPaper: {},
     reviewNote: "",
     reviewGrade: 0,
     reviewConfidentiality: 0,
-    reviewVerdict: "",
+    reviewVerdict: "ACCEPTED",
   }
 }
 
@@ -48,10 +106,23 @@ const member = {
     result: [],
     page: 1,
     numOfPage: 1,
+    totalFound: 0,
   },
   journalDetailId: '',
   journalSlug: '',
   journal: {},
+  profile: {
+    email: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    organization: "",
+    dateOfBirth: "",
+  },
+  reviewerSetting: {
+    fields: [],
+    invitable: false,
+  },
   issuePublishes: {},
   publish: null,
   authorProfile: null,
@@ -59,6 +130,27 @@ const member = {
 };
 
 const manager = {
+  searchPaper: {
+    keyword: "",
+    status: "ALL",
+    startDate: "",
+    page: 1,
+    numOfPage: 1,
+    result: [],
+    totalFound: 0,
+  },
+  publishIssue: {
+    acceptedPapers: [],
+    publishes: [],
+    startDate: "",
+    endDate: "",
+    latestIssue: {},
+    confirm: false,
+    result: [],
+    page: 1,
+    numOfPage: 1,
+    totalFound: 0,
+  },
   sentPapers: [],
   sentInvitations: [],
   availableReviewers: [],
@@ -78,6 +170,7 @@ const base = {
   showSidebar: false,
   viewType: "author",
   fields: [],
+  invitationStatus: ["PENDING", "ACCEPTED", "REJECTED", "CANCEL", "DUEDATE"],
 };
 
 const initialState = {
@@ -88,4 +181,4 @@ const initialState = {
   manager,
 };
 
-export { initialState, base, reviewer, author, member, manager };
+export { initialState, base, reviewer, author, member, manager, admin };
