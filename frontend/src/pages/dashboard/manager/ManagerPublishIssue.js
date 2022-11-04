@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -54,7 +55,7 @@ const ManagerPublishIssue = () => {
       newPublishes.push({ paper, accessLevel: "OPEN" });
     } else {
       newPublishes = newPublishes.filter(
-        (tmpPaper) => tmpPaper.paperId !== paper.paperId
+        (tmpPaper) => tmpPaper.paper.paperId !== paper.paperId
       );
     }
 
@@ -156,6 +157,10 @@ const ManagerPublishIssue = () => {
               <h5>
                 Publish for next issue: Volume {nextVolume} Issue {nextIssue}
               </h5>
+              <p>
+                End date of current issue:{" "}
+                {moment(latestIssue.endDate).format("DD/MM/YYYY")}
+              </p>
             </div>
           </header>
         </ItemWrapper>
@@ -203,6 +208,10 @@ const ManagerPublishIssue = () => {
             <h5>
               Publish for next issue: Volume {nextVolume} Issue {nextIssue}
             </h5>
+            <p>
+              End date of current issue:{" "}
+              {moment(latestIssue.endDate).format("DD/MM/YYYY")}
+            </p>
           </div>
         </header>
       </ItemWrapper>
@@ -247,27 +256,35 @@ const ManagerPublishIssue = () => {
       {isLoading ? (
         <Loading center />
       ) : papers.length > 0 ? (
-        <ContainerWrapper>
-          <div className="container">
-            <h3>Accepted Paper - {publishes.length} papers selected</h3>
-            {papers.map((paper, index) => {
-              return (
-                <ItemWrapper key={index}>
-                  <div className="content">
-                    <input
-                      type="checkbox"
-                      id={`paper-${paper.paperId}`}
-                      value={paper.paperId}
-                      checked={checkObject(paper.paperId)}
-                      onChange={() => handleSelect(paper)}
-                    />
-                    <h5> {paper.title}</h5>
-                  </div>
-                </ItemWrapper>
-              );
-            })}
-          </div>
-        </ContainerWrapper>
+        <>
+          <ContainerWrapper>
+            <div className="container">
+              <h3>Accepted Paper - {publishes.length} papers selected</h3>
+              {papers.map((paper, index) => {
+                return (
+                  <ItemWrapper key={index}>
+                    <div className="content">
+                      <input
+                        type="checkbox"
+                        id={`paper-${paper.paperId}`}
+                        value={paper.paperId}
+                        checked={checkObject(paper.paperId)}
+                        onChange={() => handleSelect(paper)}
+                      />
+                      <h5> {paper.title}</h5>
+                    </div>
+                  </ItemWrapper>
+                );
+              })}
+            </div>
+          </ContainerWrapper>
+
+          <PageBtnContainer
+            page={page}
+            numOfPage={numOfPage}
+            changePage={handlePageChange}
+          />
+        </>
       ) : (
         <p>No accepted paper yet</p>
       )}

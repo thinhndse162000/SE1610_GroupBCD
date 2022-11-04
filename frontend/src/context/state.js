@@ -21,8 +21,10 @@ const author = {
     paperPdfFile: { fileName: "", file: "" },
     paperFields: [],
   },
+
   searchJournal: {
     keyword: "",
+    fields: [],
     result: [],
     page: 1,
     numOfPage: 1,
