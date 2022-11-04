@@ -27,7 +27,7 @@ const ViewJournalList = () => {
     label: field.fieldName,
     value: field.fieldId,
   }));
-console.log ("page",page)
+  console.log("page", page)
   const handleInputChange = (e) => {
     if (isLoading) return;
     dispatch(
@@ -51,19 +51,19 @@ console.log ("page",page)
   useEffect(() => {
     dispatch(search({ keyword, fields, page }));
     // eslint-disable-next-line
- 
-  }, [
-    // dispatch, page 
-  ]);
+
+  }, [dispatch, page]);
 
   const handleClick = (journalId) => {
     dispatch(setEditJournal(journalId));
   };
   const handleClick2 = (journalId) => {
     dispatch(archiveJournal(journalId));
+
   };
 
   const handlePageChange = (page) => {
+
     dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
   };
   const dragItem = useRef()
@@ -73,18 +73,16 @@ console.log ("page",page)
 
 
   const handleSort = () => {
-    
+
     let _results = [...results]
-  
+
     const draggedItemContent = _results.splice(dragItem.current, 1)[0]
 
     _results.splice(dragOverItem.current, 0, draggedItemContent)
 
     dragItem.current = null
     dragOverItem.current = null
-    setResults(_results)
- 
-    console.log(results)
+
     dispatch(
       handleChange({
         name: "result",
@@ -151,37 +149,47 @@ console.log ("page",page)
             <div className="container">
               {result.map((journal, index) => {
                 let action = [];
-                action.push({
-                  onDragStart: (e) => (dragItem.current = index),
-                  onDragEnter: (e) => (dragOverItem.current = index),
-                  onDragEnd: handleSort,
-                  onDragOver: (e) => e.preventDefault(),
-                  type: "link",
-                  className: "btn edit-btn",
-                  to: "/admin/create-journal",
-                  label: "edit",
-                  className2: "btn delete-btn",
-                  label2: "delete",
-                  onClick2: handleClick2,
-                  onClick: () => dispatch(setEditJournal(journal.journalId)),
-                });
-                return (<div
-                  className="container-journal"
-                  key={(index + 1) * -1}
-                  draggable
-                  onDragStart={(e) => (dragItem.current = index)}
-                  onDragEnter={(e) => (dragOverItem.current = index)}
-                  onDragEnd={handleSort}
-                  onDragOver={(e) => e.preventDefault()}>
--
-                  <JournalAdmin
-                    key={index} journal={journal} action={action}
-                  />
+                {
+                  if (journal.status === 'OPEN')
+                  {  action.push({
+                      type: "link",
+                      className: "btn edit-btn",
+                      to: "/admin/create-journal",
+                      label: "edit",
+                      className2: "btn delete-btn",
+                      label2: "delete",
+                      onClick2: () => dispatch(archiveJournal(journal.journalId)),
+                      onClick: () => dispatch(setEditJournal(journal.journalId)),
+                    });}else
+                    {  action.push({
+                      type: "link",
+                      className: "btn edit-btn",
+                      to: "/admin/create-journal",
+                      label: "edit",
+                      className2: "btn open-btn",
+                      label2: "OPEN",
+                
+                      onClick: () => dispatch(setEditJournal(journal.journalId)),
+                    });}
+                  return (
+                    //                 <div
+                    //                   className="container-journal"
+                    //                   key={(index + 1) * -1}
+                    //                   draggable
+                    //                   onDragStart={(e) => (dragItem.current = index)}
+                    //                   onDragEnter={(e) => (dragOverItem.current = index)}
+                    //                   onDragEnd={handleSort}
+                    //                   onDragOver={(e) => e.preventDefault()}>
 
-                </div>
+                    <JournalAdmin
+                      key={journal.journalId} journal={journal} action={action}
+                      index={journal.journalId}
+                    />
 
+                    // </div>
 
-                );
+                  );
+                }
               })}
             </div>
           </ContainerWrapper>

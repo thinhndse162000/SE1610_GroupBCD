@@ -87,13 +87,15 @@ export const setEditJournal = (id) => (dispatch) => {
   dispatch({ type: SET_EDIT_JOURNAL, payload: { id } });
 };
 
+
 export const archiveJournal =
-  ({ journalId }) =>
+  (journalId) =>
     async (dispatch) => {
+
       dispatch({ type: LOADING });
       try {
-        const { data } = await authFetch.delete (`/journal/${journalId}`);
-        console.log("data")
+        await authFetch.delete(`/journal/${journalId}`);
+
         dispatch({
           type: SUCCESS,
           payload: { msg: "Archive journal successfully" },
@@ -105,8 +107,9 @@ export const archiveJournal =
             status: "ARCHIVED",
           }
         });
+        console.log("Sucesss")
       } catch (error) {
-     
+
         if (error.response.status === 401) return;
         dispatch({
           type: ERROR,
