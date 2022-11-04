@@ -34,6 +34,7 @@ import {
 import ManagerJournal from "./pages/dashboard/admin/ManagerJournal";
 import ViewJournalList from "./pages/dashboard/admin/ViewJournalList";
 import AuthorEditPaper from "./pages/dashboard/author/AuthorEditPaper";
+import ManagerPaperDetail from "./pages/dashboard/manager/ManagerPaperDetail";
 import ChangePassword from "./pages/dashboard/profile/ChangePassword";
 import ViewProfle from "./pages/dashboard/profile/ViewProfle";
 import ViewReviewingSetting from "./pages/dashboard/profile/ViewReviewingSetting";
@@ -109,7 +110,7 @@ function App() {
           }
         >
           <Route index element={<ManagerPaper />} />
-          <Route path="paper-detail/:paperId" element={<AuthorPaperDetail />} />
+          <Route path="paper-detail/:paperId" element={<ManagerPaperDetail />} />
           <Route path="send-invitation/:paperId" element={<SendInvitation />} />
           <Route path="publish" element={<ManagerPublishIssue />} />
           {/* <Route path="invite" element={<ReviewReportDetail />} /> */}

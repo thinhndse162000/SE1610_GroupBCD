@@ -30,7 +30,7 @@ const ReviewReportDetail = () => {
         type: "link",
         to: "/reviewer/submit-review",
         className: "btn edit-btn",
-        label: "Submit",
+        label: "Submit review",
         onClick: () =>
           dispatch(setEditReview(reviewReport.review.reviewReportId)),
       });

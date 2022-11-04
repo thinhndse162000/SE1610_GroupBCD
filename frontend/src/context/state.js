@@ -165,6 +165,7 @@ const base = {
   showAlert: false,
   alertText: "",
   alertType: "",
+  redirectUrl: "",
   user: user ? user : "",
   token: token,
   showSidebar: false,

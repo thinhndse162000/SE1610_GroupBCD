@@ -1,9 +1,12 @@
+import moment from "moment";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 
 const Invitation = ({ invitation, type = "compact", link, action = [] }) => {
   const { paper } = invitation;
   const { authors } = paper;
+
+  let date = moment(invitation.inviteDate).format("DD/MM/YYYY");
   return (
     <Wrapper>
       <header>
@@ -19,6 +22,7 @@ const Invitation = ({ invitation, type = "compact", link, action = [] }) => {
             Author: {authors.fullName} - {paper.numberOfPage}{" "}
             {paper.numberOfPage > 1 ? "pages" : "page"}
           </p>
+          <p>Invite date: {date}</p>
           <p>Round: {paper.round}</p>
           <p>
             Fields:{" "}

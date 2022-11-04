@@ -12,6 +12,7 @@ const FormRowFile = ({ name, value, handleChange, labelText, required = false, d
         className='form-input form-input-file'
         required={required}
         disabled={disabled}
+        accept="application/pdf"
       />
     <input type="button" value="Browse..." onClick={() => document.getElementById('1-file').click()} />
     <span>  {value}</span>
