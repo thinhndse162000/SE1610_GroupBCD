@@ -227,13 +227,13 @@ export const search =
       if (type === "Journal") {
         data = await authFetch.post("/journal/search", {
           name: keyword,
-          fieldIds: fields.map(field => field.fieldId),
+          fieldIds: fields.map((field) => field.fieldId),
           page,
         });
       } else {
-        data = await authFetch.post("/paper/search", {
+        data = await authFetch.post("/publish/search", {
           title: keyword,
-          fields,
+          fieldIds: fields.map((field) => field.fieldId),
           page,
         });
       }
@@ -243,7 +243,7 @@ export const search =
       dispatch(
         handleChange({
           name: "result",
-          value: data.data,
+          value: { ...data.data, resultType: type },
           type: "member_spread_search",
         })
       );

@@ -103,8 +103,9 @@ const member = {
   search: {
     keyword: "",
     type: "Journal",
-    options: ["Journal", "Paper"],
+    options: ["Journal", "Publish"],
     fields: [],
+    resultType: "Journal",
     result: [],
     page: 1,
     numOfPage: 1,
