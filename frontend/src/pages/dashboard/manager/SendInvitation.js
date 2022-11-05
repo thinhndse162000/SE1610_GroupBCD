@@ -30,7 +30,6 @@ const SendInvitation = () => {
     return (
       <>
         <Paper paper={paperDetail.paper} />
-        <SentInvitationContainer />
         <SearchWrapper>
           <form className="form">
             <h5>Search Reviewer</h5>
@@ -52,8 +51,11 @@ const SendInvitation = () => {
             </div>
           </form>
         </SearchWrapper>
-      {/* TODO: Refactor not to use container*/}
-        <ReviewerResultContainer />
+
+        <div className="two-column">
+          <ReviewerResultContainer />
+          <SentInvitationContainer />
+        </div>
       </>
     );
   }

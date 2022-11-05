@@ -11,7 +11,8 @@ const Publish = ({
   action = [],
 }) => {
   const { paper } = publish;
-  const body = action.length > 0 || download || type === "full";
+  // const body = action.length > 0 || type === "full";
+  const body = true;
   const dispatch = useDispatch();
   return (
     <Wrapper>
@@ -46,7 +47,6 @@ const Publish = ({
       </header>
       {body && (
         <div className="content">
-
           {type === "full" && (
             <div className="content-center">
               <h5>Abstract</h5>
@@ -78,7 +78,7 @@ const Publish = ({
                 );
               })}
 
-              {download && (
+              {download ? (
                 <button
                   type="button"
                   className="btn edit-btn"
@@ -86,9 +86,18 @@ const Publish = ({
                 >
                   Download PDF
                 </button>
+              ) : (
+                <>
+                  <span>Subscribe to journal to view </span>
+                  <Link
+                    to={`/journal/${publish.issue.journal.slug}`}
+                    className="btn edit-btn"
+                  >
+                    Subscribe
+                  </Link>
+                </>
               )}
             </div>
-
           </footer>
         </div>
       )}

@@ -15,7 +15,11 @@ export const getSentPaper =
       });
       dispatch({ type: SUCCESS_NO_MESSAGE });
       dispatch(
-        handleChange({ name: "sentPapers", value: data, type: "manager_spread_searchpaper" })
+        handleChange({
+          name: "sentPapers",
+          value: data,
+          type: "manager_spread_searchpaper",
+        })
       );
     } catch (error) {
       if (error.response.status === 401) return;
@@ -31,7 +35,7 @@ export const getJournalFromManager = () => async (dispatch) => {
   dispatch({ type: LOADING });
   try {
     const { data } = await authFetch.get("/journal");
-      
+
     dispatch({ type: SUCCESS_NO_MESSAGE });
     dispatch(handleChange({ name: "journal", value: data, type: "manager" }));
   } catch (error) {
@@ -193,7 +197,10 @@ export const createIssue =
   async (dispatch) => {
     dispatch({ type: LOADING });
     try {
-      let pub = publishes.map((p) => ({ paperId: p.paper.paperId, accessLevel: p.accessLevel }));
+      let pub = publishes.map((p) => ({
+        paperId: p.paper.paperId,
+        accessLevel: p.accessLevel,
+      }));
 
       await authFetch.post("/journal/issue", {
         startDate,
@@ -239,6 +246,24 @@ export const searchJournal =
       dispatch({
         type: ERROR,
         msg: error.response.data.message,
+      });
+    }
+    dispatch(clearAlert());
+  };
+
+export const getSubscribeInfo =
+  ({ slug }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      const { data } = await authFetch.get(`/journal/slug/${slug}/subscribe`);
+      dispatch({ type: SUCCESS_NO_MESSAGE });
+      dispatch(handleChange({ name: "journalSubscribe", value: data, type: "member" }));
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
       });
     }
     dispatch(clearAlert());

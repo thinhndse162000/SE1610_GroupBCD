@@ -1,3 +1,4 @@
+import moment from "moment";
 import React from "react";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
@@ -12,14 +13,14 @@ const Journal = ({ journal, link, type = "compact", action = [] }) => {
     numberOfRound,
     numberOfReviewer,
   } = journal;
-  /*
-        {
-        "journalId": "2",
-        "name": "Chemistry",
-        "introduction": "this is the second chemistry",
-        "organization": "HUS",
-        "issn": "1234-124"
-    */
+
+  let date = "";
+  try {
+    date = moment(journal.journalSubscribe.endDate).format("DD/MM/YYYY");
+  } catch {
+    date = "";
+  }
+
   return (
     <Wrapper>
       <header>

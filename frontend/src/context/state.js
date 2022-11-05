@@ -113,6 +113,10 @@ const member = {
   journalDetailId: '',
   journalSlug: '',
   journal: {},
+  journalSubscribe: {
+    endDate: "",
+    subscribed: false,
+  },
   profile: {
     email: "",
     firstName: "",

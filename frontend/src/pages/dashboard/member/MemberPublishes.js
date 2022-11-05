@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getJournalPublishes } from "../../../context/service/journalService";
+import { getJournalPublishes, getSubscribeInfo } from "../../../context/service/journalService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { MEMBER_JOURNAL_ID } from "../../../context/actions";
 import { Publish } from "../../../components";
@@ -10,12 +10,13 @@ const MemberPublishes = () => {
   const { slug } = useParams();
   const dispatch = useDispatch();
   const {
-    member: { publishes },
+    member: { publishes, journalSubscribe },
   } = useSelector((state) => state);
 
   useEffect(() => {
     dispatch({ type: MEMBER_JOURNAL_ID, payload: { slug } });
     dispatch(getJournalPublishes({ slug }));
+    dispatch(getSubscribeInfo({ slug }))
   }, [dispatch, slug]);
 
   if (publishes == null) {
@@ -32,6 +33,7 @@ const MemberPublishes = () => {
               <Publish
                 key={index}
                 publish={publish}
+                download={journalSubscribe.subscribed || publish.accessLevel === "OPEN"}
                 link={`/publish/${publish.publishId}`}
               />
             );
