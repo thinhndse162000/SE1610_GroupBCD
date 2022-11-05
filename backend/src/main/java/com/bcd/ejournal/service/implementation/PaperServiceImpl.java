@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -65,7 +68,7 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public void submitPaper(Integer authorId, PaperSubmitRequest request) {
+    public void submitPaper(Integer authorId, PaperSubmitRequest request) throws InvalidPasswordException, IOException {
         request.setTitle(request.getTitle().trim());
         request.setSummary(request.getSummary().trim());
 
@@ -86,7 +89,9 @@ public class PaperServiceImpl implements PaperService {
         paper.setPaperId(0);
         paper.setRound(1);
         paper.setSubmitTime(new Timestamp(System.currentTimeMillis()));
-        // TODO: read number of page from pdf
+        // TODO: read number of page frsom pdf
+        PDDocument doc = Loader.loadPDF(new File(uploadDir + paper.getLinkPDF()));
+        int count = doc.getNumberOfPages();
         paper.setNumberOfPage(10);
         paper.setStatus(PaperStatus.PENDING);
         paper.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
@@ -107,7 +112,12 @@ public class PaperServiceImpl implements PaperService {
         paperRepository.save(paper);
     }
 
-    @Override
+    private File File(String linkPDF) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
     public void deleteById(Integer paperId) {
         // TODO: verify accountId
         // TODO: log existence
@@ -219,7 +229,8 @@ public class PaperServiceImpl implements PaperService {
         return FileUtils.load(uploadDir, fileName.trim());
     }
 
-    public void cleanDuePaper() {
+    @Override
+	public void cleanDuePaper() {
         // Update status to cancel for all paper that is in pending state for more than
         // 6 months
         // FIXME: fix for paper that is review for many round, should check accept date
