@@ -24,6 +24,24 @@ export const getAccountProfile = () => async (dispatch) => {
   dispatch(clearAlert());
 };
 
+export const updateProfile = (profile) => async (dispatch) => {
+  dispatch({ type: LOADING });
+  try {
+    await authFetch.put("/account/profile", profile);
+    dispatch({
+      type: SUCCESS,
+      payload: { msg: "Update profile successfully" },
+    });
+  } catch (error) {
+    if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
+  }
+  dispatch(clearAlert());
+};
+
 export const chagePassword =
   ({ currentPassword }) =>
   async (dispatch) => {

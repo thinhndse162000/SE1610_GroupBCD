@@ -6,7 +6,7 @@ import { getPaperDetail } from "../../../context/service/paperService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as PageButtonWrapper } from "../../../assets/wrappers/PageBtnContainer";
 
-const AuthorPaperDetail = () => {
+const ManagerPaperDetail = () => {
   const { paperId } = useParams();
   const {
     base: { isLoading },
@@ -29,12 +29,21 @@ const AuthorPaperDetail = () => {
   }
 
   if (Object.keys(paperDetail).length !== 0) {
+    let action = [];
+    if (paperDetail.paper.status === "PENDING") {
+      action.push({
+        type: "link",
+        to: `/manager/send-invitation/${paperDetail.paper.paperId}`,
+        className: "btn edit-btn",
+        label: "Send invitation",
+      });
+    }
     return (
       <>
         <ContainerWrapper>
           <div className="container">
             <h3>Paper</h3>
-            <Paper type="full" paper={paperDetail.paper} />
+            <Paper type="full" paper={paperDetail.paper} action={action} />
           </div>
         </ContainerWrapper>
         <PageButtonWrapper>
@@ -84,4 +93,4 @@ const AuthorPaperDetail = () => {
   );
 };
 
-export default AuthorPaperDetail;
+export default ManagerPaperDetail;

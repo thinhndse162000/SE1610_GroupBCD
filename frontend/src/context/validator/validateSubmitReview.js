@@ -11,16 +11,14 @@ export default function validateSubmitReview(values) {
         errors.reviewNote = "Can not use whitespace for note."
     }
 
-    if (reviewGrade < 0) {
-        errors.reviewGrade = "Grade can not be negative number."
-    } else if (reviewGrade > 10) {
-        errors.reviewGrade = "Grade must be in range of 0-10."
+    if (!(0 < reviewGrade && reviewGrade <= 10)) {
+        errors.reviewGrade = "Grade must be in range of 1-10."
     }
-    if (reviewConfidentiality < 0) {
-        errors.reviewConfidentiality = "Confidentiality can not be negative number."
-    } else if (reviewConfidentiality > 10) {
-        errors.reviewConfidentiality = "Confidentiality must be in the range of 0-10."
+
+    if (!(0 < reviewConfidentiality && reviewConfidentiality <= 10)) {
+        errors.reviewConfidentiality = "Confidentiality must be in range of 1-10."
     }
+
     if (!reviewVerdict) {
         errors.reviewVerdict = "Review Verdict is required."
     }

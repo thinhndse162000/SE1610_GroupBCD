@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  Alert,
   FormDropdown,
   FormRow,
   FormRowSelect,
@@ -8,14 +9,19 @@ import {
   Loading,
   PageBtnContainer,
 } from "../../../components";
-import { search, setEditJournal } from "../../../context/service/adminService";
+import {
+  archiveJournal,
+  openJournal,
+  search,
+  setEditJournal,
+} from "../../../context/service/adminService";
 import { handleChange } from "../../../context/service/utilService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as SearchWrapper } from "../../../assets/wrappers/SearchContainer";
 
 const ViewJournalList = () => {
   const {
-    base: { fields: fieldOptions, isLoading },
+    base: { fields: fieldOptions, isLoading, showAlert },
     admin: {
       search: { keyword, result, fields, page, numOfPage },
     },
@@ -59,34 +65,6 @@ const ViewJournalList = () => {
   const handlePageChange = (page) => {
     dispatch(handleChange({ name: "page", value: page, type: "admin_search" }));
   };
-  // Dtrag
-
-  const dragItem = useRef()
-  const dragOverItem = useRef()
-
-  const [results, setResults] = useState(result);
-
-  console.log("results", results)
-  const handleSort = () => {
-    //duplicate items
-    let _results = [...results]
-    console.log("dragItem", dragItem)
-    console.log("dragOverItem", dragOverItem)
-
-    //remove and save the dragged item content
-    const draggedItemContent = _results.splice(dragItem.current, 1)[0]
-
-    //switch the position
-    _results.splice(dragOverItem.current, 0, draggedItemContent)
-
-    //reset the position ref
-    dragItem.current = null
-    dragOverItem.current = null
-
-    //update the actual array
-    setResults = (_results)
-  }
-
   return (
     <div>
       <SearchWrapper>
@@ -136,6 +114,7 @@ const ViewJournalList = () => {
           changePage={handlePageChange}
         />)
       )}
+      {showAlert && <Alert />}
       {isLoading ? (
         <Loading center />
       ) : result.length > 0 ? (
@@ -151,8 +130,6 @@ const ViewJournalList = () => {
                   label: "edit",
                   onClick: () => dispatch(setEditJournal(journal.journalId)),
                 });
-
-
 
                 return (
 

@@ -51,5 +51,15 @@ const Wrapper = styled.section`
     background: var(--primary-500);
     color: var(--white);
   }
+
+  .disabled {
+    background: var(--grey-100);
+    color: var(--grey-400);
+  }
+
+  .disabled:hover {
+    background: var(--grey-100);
+    color: var(--grey-400);
+  }
 `
 export default Wrapper

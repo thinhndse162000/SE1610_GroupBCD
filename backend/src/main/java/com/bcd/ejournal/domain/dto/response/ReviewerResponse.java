@@ -17,4 +17,5 @@ public class ReviewerResponse {
     private Integer reviewerId;
     private String fullName;
     private List<Field> fields;
+    private Boolean invitable;
 }

@@ -3,20 +3,19 @@ import { useSelector, useDispatch } from "react-redux";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import {
   getAuthorPaper,
-  setEditPaper,
-  deletePaper,
 } from "../../../context/service/paperService";
 import {
   Loading,
   Paper,
   SearchAuthorPaperContainer,
   PageBtnContainer,
+  Alert,
 } from "../../../components";
-import { handleChange } from "../../../context/service/utilService";
+import { clearAlertNow, handleChange } from "../../../context/service/utilService";
 
 const AuthorPaper = () => {
   const {
-    base: { isLoading },
+    base: { isLoading, showAlert },
     author: {
       search: {
         keyword,
@@ -67,51 +66,45 @@ const AuthorPaper = () => {
           changePage={handlePageChange}
         />
       )}
+      {showAlert && <Alert />}
       {isLoading ? (
         <Loading center />
-      ) : papers.length > 0 ?
-        (
-          <>
-            <ContainerWrapper>
-              <h3>All Papers</h3>
-              <div className="container">
-                {papers.map((paper, index) => {
-                  let action = [];
-                  if (paper.status === "PENDING") {
-                    action.push({
-                      type: "link",
-                      to: "submit-paper",
-                      className: "btn edit-btn",
-                      label: "Edit",
-                      onClick: () => dispatch(setEditPaper(paper.paperId)),
-                    });
-                    // action.push({
-                    //   type: "button",
-                    //   className: "btn delete-btn",
-                    //   label: "Delete",
-                    //   onClick: () => dispatch(deletePaper(paper.paperId)),
-                    // });
-                  }
-                  return (
-                    <Paper
-                      key={index}
-                      paper={paper}
-                      link={`paper-detail/${paper.paperId}`}
-                      action={action}
-                    />
-                  );
-                })}
-              </div>
-            </ContainerWrapper>
-            <PageBtnContainer
-              page={page}
-              numOfPage={numOfPage}
-              changePage={handlePageChange}
-            />
-          </>
-        ) : (
-          <p>There are no papers</p>
-        )}
+      ) : papers.length > 0 ? (
+        <>
+          <ContainerWrapper>
+            <h3>All Papers</h3>
+            <div className="container">
+              {papers.map((paper, index) => {
+                let action = [];
+                if (paper.status === "PENDING") {
+                  action.push({
+                    type: "link",
+                    to: `edit-paper/${paper.paperId}`,
+                    className: "btn edit-btn",
+                    label: "Edit",
+                    onClick: () => dispatch(clearAlertNow()),
+                  });
+                }
+                return (
+                  <Paper
+                    key={index}
+                    paper={paper}
+                    link={`paper-detail/${paper.paperId}`}
+                    action={action}
+                  />
+                );
+              })}
+            </div>
+          </ContainerWrapper>
+          <PageBtnContainer
+            page={page}
+            numOfPage={numOfPage}
+            changePage={handlePageChange}
+          />
+        </>
+      ) : (
+        <p>There are no papers</p>
+      )}
     </>
   );
 };

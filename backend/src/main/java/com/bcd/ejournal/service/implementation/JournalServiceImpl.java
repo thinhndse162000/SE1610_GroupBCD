@@ -27,6 +27,7 @@ import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.enums.AccountRole;
 import com.bcd.ejournal.domain.enums.JournalStatus;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
+import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.FieldRepository;
 import com.bcd.ejournal.repository.IssueRepository;
@@ -66,6 +67,13 @@ public class JournalServiceImpl implements JournalService {
         request.setOrganization(request.getOrganization().trim());
         request.setIssn(request.getIssn().trim());
 
+        Account account = accountRepository.findByEmail(request.getManagerEmail())
+                .orElseThrow(() -> new NullPointerException("Account not found. Email: " + request.getManagerEmail()));
+
+        if (account.getJournal() != null) {
+            throw new MethodNotAllowedException("This account is already a manager");
+        }
+
         Journal journal = new Journal();
         journal.setName(request.getName());
         journal.setIntroduction(request.getIntroduction());
@@ -78,9 +86,15 @@ public class JournalServiceImpl implements JournalService {
         journal.setStatus(JournalStatus.OPEN);
         journal.setSlug(request.getName().toLowerCase());
         journal.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
-        journal = journalRepository.save(journal);
 
-        return modelMapper.map(journal, JournalResponse.class);
+        journal.setManager(account);
+        account.setJournal(journal);
+        account.setRole(AccountRole.MANAGER);
+
+        journal = journalRepository.save(journal);
+        accountRepository.save(account);
+
+        return dtoMapper.toJournalResponse(journal);
     }
 
     @Override
@@ -88,14 +102,14 @@ public class JournalServiceImpl implements JournalService {
         // TODO: return journal detail: latest issue, lastest publish
         Journal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
-        return modelMapper.map(journal, JournalResponse.class);
+        return dtoMapper.toJournalResponse(journal);
     }
 
     @Override
     public JournalResponse getJournal(String slug) {
         Journal journal = journalRepository.findBySlug(slug)
                 .orElseThrow(() -> new NullPointerException("Journal not found. Slug: " + slug));
-        return modelMapper.map(journal, JournalResponse.class);
+        return dtoMapper.toJournalResponse(journal);
     }
 
     @Override
@@ -105,7 +119,7 @@ public class JournalServiceImpl implements JournalService {
         if (account.getRole() != AccountRole.MANAGER) {
             throw new ForbiddenException("Unauthorized action");
         }
-        return modelMapper.map(account.getJournal(), JournalResponse.class);
+        return dtoMapper.toJournalResponse(account.getJournal());
     }
 
     @Override
@@ -124,7 +138,7 @@ public class JournalServiceImpl implements JournalService {
         response.setTotalFound(journals.getTotalElements());
 
         response.setResult(journals.stream()
-                .map((journal) -> modelMapper.map(journal, JournalResponse.class))
+                .map(dtoMapper::toJournalResponse)
                 .collect(Collectors.toList()));
         return response;
     }
@@ -157,10 +171,43 @@ public class JournalServiceImpl implements JournalService {
     public JournalResponse updateJournal(Integer journalId, JournalCreateRequest request) {
         Journal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
-        modelMapper.map(request, journal);
+
+        journal.setName(request.getName());
+        journal.setIntroduction(request.getIntroduction());
+        journal.setOrganization(request.getOrganization());
+        journal.setNumberOfRound(request.getNumberOfRound());
+        journal.setNumberOfReviewer(request.getNumberOfReviewer());
+        journal.setIssn(request.getIssn());
         journal.setSlug(request.getName().toLowerCase());
-        journal = journalRepository.save(journal);
-        return modelMapper.map(journal, JournalResponse.class);
+
+        journal.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
+
+        Account manager = journal.getManager();
+
+        if (!manager.getEmail().equals(request.getManagerEmail())) {
+            Account account = accountRepository.findByEmail(request.getManagerEmail())
+                    .orElseThrow(
+                            () -> new NullPointerException("Account not found. Email: " + request.getManagerEmail()));
+
+            if (account.getJournal() != null) {
+                throw new MethodNotAllowedException("This account is already a manager");
+            }
+
+            journal.setManager(account);
+            account.setJournal(journal);
+
+            account.setRole(AccountRole.MANAGER);
+            manager.setRole(AccountRole.MEMBER);
+            manager.setJournal(null);
+
+            journal = journalRepository.save(journal);
+            accountRepository.save(account);
+            accountRepository.save(manager);
+        } else {
+            journal = journalRepository.save(journal);
+        }
+
+        return dtoMapper.toJournalResponse(journal);
     }
 
     @Override
@@ -168,6 +215,14 @@ public class JournalServiceImpl implements JournalService {
         Journal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
         journal.setStatus(JournalStatus.ARCHIVED);
+        journalRepository.save(journal);
+    }
+
+    @Override
+    public void openJournal(Integer journalId) {
+        Journal journal = journalRepository.findById(journalId)
+                .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
+        journal.setStatus(JournalStatus.OPEN);
         journalRepository.save(journal);
     }
 

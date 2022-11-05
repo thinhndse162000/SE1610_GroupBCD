@@ -1,5 +1,5 @@
-export default function validateSubmitPaper(values) {
-    const { paperTitle, paperSummary, paperFields, paperJournal, paperPdfFile } = values;
+export default function validateEditPaper(values) {
+    const { paperTitle, paperSummary, paperPdfFile } = values;
     let errors = {};
 
     if (!paperTitle) {
@@ -16,17 +16,10 @@ export default function validateSubmitPaper(values) {
     } else if (paperSummary.trim().length === 0) {
         errors.paperSummary = 'Can not use whitespace for abstract paper'
     }
-    // if (paperJournal.journalId === '') {
-    //     errors.paperJournal = 'Paper journal is required.'
-    // }
-    if (paperFields.length === 0) {
-        errors.paperFields = 'Paper fields is required.'
-    } else if (paperFields.length > 3) {
-        errors.paperFields = 'Paper fields only include maximum 3 fields'
-    }
-    if (paperPdfFile.file === '') {
+
+    if (paperPdfFile.fileName === '') {
         errors.paperPdfFile = 'PDF File is required.'
-    } else if (paperPdfFile.file.type !== 'application/pdf') {
+    } else if (paperPdfFile.file !== '' && paperPdfFile.file.type !== 'application/pdf') {
         errors.paperPdfFile = 'You can only upload PDF file.'
     }
     return errors

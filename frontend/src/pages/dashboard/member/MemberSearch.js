@@ -124,7 +124,13 @@ const MemberSearch = () => {
             <ContainerWrapper>
               <div className="container">
                 {result.map((journal, index) => {
-                  return <Journal key={index} journal={journal} />;
+                  return (
+                    <Journal
+                      link={`/journal/${journal.slug}`}
+                      key={index}
+                      journal={journal}
+                    />
+                  );
                 })}
               </div>
             </ContainerWrapper>

@@ -7,13 +7,12 @@ import {
   SUCCESS,
   SUCCESS_NO_MESSAGE,
 } from "../actions";
-import { clearAlert, handleChange } from "./utilService";
+import { clearAlert, clearAlertNow, handleChange } from "./utilService";
 
 export const createJournal =
   ({ journal }) =>
   async (dispatch) => {
     dispatch({ type: LOADING });
-    console.log(journal)
     try {
       await authFetch.post("/journal/", journal);
       dispatch({
@@ -82,6 +81,62 @@ export const search =
     }
     dispatch(clearAlert());
   };
+
 export const setEditJournal = (id) => (dispatch) => {
+  dispatch(clearAlertNow());
   dispatch({ type: SET_EDIT_JOURNAL, payload: { id } });
 };
+
+export const archiveJournal =
+  ({ journalId }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      await authFetch.delete(`/journal/${journalId}`);
+      dispatch({
+        type: SUCCESS,
+        payload: { msg: "Archive journal successfully" },
+      });
+      dispatch({
+        type: "HANDLE_JOURNAL_CHANGE",
+        payload: {
+          id: journalId,
+          status: "ARCHIVED",
+        }
+      });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };
+
+export const openJournal =
+  ({ journalId }) =>
+  async (dispatch) => {
+    dispatch({ type: LOADING });
+    try {
+      await authFetch.put(`/journal/${journalId}/open`);
+      dispatch({
+        type: SUCCESS,
+        payload: { msg: "Open journal successfully" },
+      });
+      dispatch({
+        type: "HANDLE_JOURNAL_CHANGE",
+        payload: {
+          id: journalId,
+          status: "OPEN",
+        }
+      });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ERROR,
+        payload: { msg: error.response.data.message },
+      });
+    }
+    dispatch(clearAlert());
+  };

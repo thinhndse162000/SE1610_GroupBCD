@@ -5,29 +5,22 @@ import {
   createJournal,
   editJournal,
 } from "../../../context/service/adminService";
-import { handleChange } from "../../../context/service/utilService";
+import { clearAlert, handleChange } from "../../../context/service/utilService";
 import validateCreateJournal from "../../../context/validator/validateCreateJournal";
 import Wrapper from "../../../assets/wrappers/DashboardFormPage";
+import { useNavigate } from "react-router-dom";
 
 const ManagerJournal = () => {
   const { base, admin } = useSelector((state) => state);
-  const { isLoading, showAlert, fields } = base;
-  // Bin
-  const initialState = {
-    name: "",
-    introduction: "",
-    organization: "",
-    issn: "",
-    journalFields: [],
-    numberOfRound: 0,
-    numberOfReviewer: 0,
-  };
+  const navigate = useNavigate();
+  const { isLoading, alertType, showAlert, fields } = base;
 
   const {
     editJournalID,
     newJournal: {
       name,
       introduction,
+      managerEmail,
       organization,
       issn,
       journalFields,
@@ -51,6 +44,7 @@ const ManagerJournal = () => {
       introduction,
       organization,
       issn,
+      managerEmail,
       journalFields,
       numberOfRound,
       numberOfReviewer,
@@ -64,12 +58,12 @@ const ManagerJournal = () => {
   }));
 
   useEffect(() => {
-    console.log(journalFields)
     const journal = {
       name,
       introduction,
       organization,
       issn,
+      managerEmail,
       fieldId: journalFields.map((f) => f.fieldId),
       numberOfRound,
       numberOfReviewer,
@@ -83,6 +77,7 @@ const ManagerJournal = () => {
           introduction,
           organization,
           issn,
+          managerEmail,
           fieldId: journalFields.map((f) => f.fieldId),
           numberOfRound,
           numberOfReviewer,
@@ -91,11 +86,18 @@ const ManagerJournal = () => {
       } else dispatch(createJournal({ journal }));
     }
   }, [dispatch, errors]);
+
+  useEffect(() => {
+    if (alertType === "success") {
+      navigate("/admin")
+    }
+  }, [navigate, alertType])
+
   return (
     <Wrapper>
       <form className="form">
         <h3>{editJournalID ? "edit journal" : "Create Journal"}</h3>
-        {<Alert />}
+        {showAlert && <Alert />}
         <div className="form">
           <FormRow
             type="text"
@@ -113,6 +115,16 @@ const ManagerJournal = () => {
             handleChange={handleInput}
           />
           {errors.introduction && <p>{errors.introduction}</p>}
+
+          <FormRow
+            type="text"
+            labelText="Manager email"
+            name="managerEmail"
+            value={managerEmail}
+            handleChange={handleInput}
+          />
+          {errors.managerEmail && <p>{errors.managerEmail}</p>}
+
           <FormRow
             type="text"
             labelText="Organization"
