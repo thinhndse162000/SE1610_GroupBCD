@@ -1,5 +1,8 @@
 package com.bcd.ejournal.service;
 
+import java.util.List;
+
+import com.bcd.ejournal.domain.dto.response.InvoiceResponse;
 import com.bcd.ejournal.domain.entity.Invoice;
 
 public interface InvoiceService {
@@ -10,4 +13,6 @@ public interface InvoiceService {
     Invoice getLatestInvoice(Integer accountId, Integer journalId);
 
     Invoice getLatestInvoice(Integer accountId, String slug);
+
+    List<InvoiceResponse> getInvoicebyId(Integer AccountId);
 }

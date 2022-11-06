@@ -3,6 +3,7 @@ package com.bcd.ejournal.api;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -42,7 +43,7 @@ public class PaperApi {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> submitPaper(@AuthenticationPrincipal AccountJWTPayload payload,
-            @ModelAttribute PaperSubmitRequest request) {
+            @ModelAttribute PaperSubmitRequest request) throws InvalidPasswordException, IOException {
         paperService.submitPaper(payload.getAccountId(), request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

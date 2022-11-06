@@ -31,6 +31,7 @@ import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
+import com.bcd.ejournal.service.EmailService;
 import com.bcd.ejournal.service.ReviewReportService;
 import com.bcd.ejournal.utils.DTOMapper;
 
@@ -42,17 +43,19 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     private final PaperRepository paperRepository;
     private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
+    private final EmailService emailService;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
     public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository,
-            PaperRepository paperRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
+            PaperRepository paperRepository, ModelMapper modelMapper, DTOMapper dtoMapper, EmailService emailService) {
         this.reviewreportRepository = reviewreportRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
         this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
+        this.emailService = emailService;
     }
 
     @Override
@@ -76,7 +79,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         reviewreportRepository.save(reviewReport);
         Paper paper = reviewReport.getPaper();
         Journal journal = paper.getJournal();
-
+        
         // TODO: test this
         // evaluation process
         List<ReviewReport> reviewReports = reviewreportRepository.findByPaperIdAndStatus(paper.getPaperId(),
@@ -105,8 +108,10 @@ public class ReviewReportServiceImpl implements ReviewReportService {
             }
             // grade is avarage of total grade
             paper.setGrade(grade / journal.getNumberOfReviewer());
-
+            emailService.sendEmailReviewReport(paper.getAuthor().getAccount().getEmail());
+            emailService.sendEmailReviewReport(journal.getManager().getEmail());
             paperRepository.save(paper);
+            
         }
     }
 

@@ -19,7 +19,7 @@ VALUES
   """
 
 journal_sql = """INSERT INTO Journal
-  (name, Introduction, organization, NumberOfRound, NumberOfReviewer, issn, status, slug, price)
+  (name, Introduction, organization, NumberOfRound, NumberOfReviewer, issn, status, slug, price, policy)
 VALUES
   """
 

@@ -168,8 +168,9 @@ class JournalSql(SqlTemplate):
                 num_of_reviewer = random.choice([3, 3, 3, 5, 5])
 
                 journal[id] = [num_of_paper_round, num_of_reviewer];
+                policy = lorem.sentence();
 
-                super().insert(f"('{name.format(field_name)} {id-1}', 'This is {name.format(field_name)}', 'FPT', {num_of_paper_round}, {num_of_reviewer}, '123-{self.issn}', 'OPEN', '{slug}', 10000)")
+                super().insert(f"('{name.format(field_name)} {id-1}', 'This is {name.format(field_name)}', 'FPT', {num_of_paper_round}, {num_of_reviewer}, '123-{self.issn}', 'OPEN', '{slug}', 10000, '{policy}')")
 
                 self.journal_field.insert(id, random.choice(list(range(1,i+1)) + list(range(i+2, len(fields)))))
                 self.journal_field.insert(id, i+1)

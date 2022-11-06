@@ -15,4 +15,7 @@ public interface InvoiceRepository extends CrudRepository<Invoice, Integer>{
 
     @Query("SELECT i FROM Invoice i JOIN i.account a JOIN i.journal j WHERE a.accountId = :accountId AND j.slug = :slug")
     Page<Invoice> findFirstByAccountIdAndSlug(Integer accountId, String slug, Pageable pageable);
+	
+	@Query("SELECT i FROM Invoice i WHERE AccountId = :accountId")
+	Iterable<Invoice> getInvoiceByAccountId( Integer accountId);
 }

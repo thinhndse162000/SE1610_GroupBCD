@@ -3,6 +3,7 @@ package com.bcd.ejournal.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.springframework.core.io.Resource;
 
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
@@ -13,7 +14,7 @@ import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 
 public interface PaperService {
-    void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest);
+    void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest) throws InvalidPasswordException, IOException;
 
     void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request);
 

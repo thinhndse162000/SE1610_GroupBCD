@@ -95,6 +95,7 @@ CREATE TABLE Journal(
   NumberOfRound int not null,
   NumberOfReviewer int not null,
   slug nvarchar(255) not null UNIQUE,
+  policy text not null,
 )
 go 
 CREATE TABLE Invoice(

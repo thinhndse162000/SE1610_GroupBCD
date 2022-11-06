@@ -20,4 +20,6 @@ public interface EmailService {
     String sendEmailSumbitPaper(Account acc);
 
     String sendEmailForgetPassword(AccountEmailVerify req);
+    
+    String sendEmailReviewReport(String mail);
 }

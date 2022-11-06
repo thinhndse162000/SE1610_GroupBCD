@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import {
   getAuthorPaper,
-  setEditPaper,
-  deletePaper,
 } from "../../../context/service/paperService";
 import {
   Loading,
@@ -13,7 +11,7 @@ import {
   PageBtnContainer,
   Alert,
 } from "../../../components";
-import { handleChange } from "../../../context/service/utilService";
+import { clearAlertNow, handleChange } from "../../../context/service/utilService";
 
 const AuthorPaper = () => {
   const {
@@ -81,17 +79,11 @@ const AuthorPaper = () => {
                 if (paper.status === "PENDING") {
                   action.push({
                     type: "link",
-                    to: "submit-paper",
+                    to: `edit-paper/${paper.paperId}`,
                     className: "btn edit-btn",
                     label: "Edit",
-                    onClick: () => dispatch(setEditPaper(paper.paperId)),
+                    onClick: () => dispatch(clearAlertNow()),
                   });
-                  // action.push({
-                  //   type: "button",
-                  //   className: "btn delete-btn",
-                  //   label: "Delete",
-                  //   onClick: () => dispatch(deletePaper(paper.paperId)),
-                  // });
                 }
                 return (
                   <Paper

@@ -1,5 +1,7 @@
 package com.bcd.ejournal.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +24,22 @@ import com.bcd.ejournal.domain.dto.request.AccountEmailVerify;
 import com.bcd.ejournal.domain.dto.request.AccountUpdateProfileRequest;
 import com.bcd.ejournal.domain.dto.response.AccountProfileResponse;
 import com.bcd.ejournal.domain.dto.response.EducationResponse;
+import com.bcd.ejournal.domain.dto.response.InvoiceResponse;
 import com.bcd.ejournal.service.AccountService;
 import com.bcd.ejournal.service.EmailService;
+import com.bcd.ejournal.service.InvoiceService;
 
 @RestController
 @RequestMapping("/account")
 public class AccountApi {
     private final AccountService accountService;
     private final EmailService emailService;
-
+    private final InvoiceService invoiceService;
     @Autowired
-    public AccountApi(AccountService accountService, EmailService emailService) {
+    public AccountApi(AccountService accountService, EmailService emailService, InvoiceService invoiceService) {
         this.accountService = accountService;
         this.emailService = emailService;
+        this.invoiceService =invoiceService;
     }
 
     @GetMapping("/profile")
@@ -74,7 +79,13 @@ public class AccountApi {
     	accountService.forgotPassword(token, req);
     	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    
+    @GetMapping("/payment")
+    public ResponseEntity<List<InvoiceResponse>> historyPayment(@AuthenticationPrincipal AccountJWTPayload payload){
+    	Integer accountId = payload.getAccountId();
+    	List<InvoiceResponse> response= invoiceService.getInvoicebyId(accountId);
+    	return new ResponseEntity<>(response ,HttpStatus.OK);
+    }
     @DeleteMapping
     public ResponseEntity<Void> archiveAccount(@AuthenticationPrincipal AccountJWTPayload jwt) {
         accountService.archiveAccount(jwt.getAccountId());
