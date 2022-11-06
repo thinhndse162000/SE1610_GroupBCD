@@ -121,7 +121,7 @@ const ViewJournalList = () => {
         <>
           <ContainerWrapper>
             <div className="container">
-              {results.map((journal, index) => {
+              {result.map((journal, index) => {
                 let action = [];
                 action.push({
                   type: "link",
@@ -134,11 +134,7 @@ const ViewJournalList = () => {
                 return (
 
                   <Journal
-                    draggable
-                    onDragStart={(e) => (dragItem.current = index)}
-                    onDragEnter={(e) => (dragOverItem.current = index)}
-                    onDragEnd={handleSort}
-                    onDragOver={(e) => e.preventDefault()}
+              
                     key={index} journal={journal} action={action} />
                 );
               })}

@@ -21,7 +21,6 @@ import {
   ReviewReportDetail,
   ReviewerInvitationDetail,
   ManagerPaper,
-  ManagerPublishIssue,
   SendInvitation,
   MemberJournalDetail,
   MemberIssues,
@@ -39,7 +38,7 @@ import ChangePassword from "./pages/dashboard/profile/ChangePassword";
 import ViewProfle from "./pages/dashboard/profile/ViewProfle";
 import ViewReviewingSetting from "./pages/dashboard/profile/ViewReviewingSetting";
 import VerifyForgotPassword from "./pages/VerifyForgotPassword";
-
+import index, { ManagerPublishIssue } from "./pages/dashboard/manager";
 function App() {
   return (
     <BrowserRouter>

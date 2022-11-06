@@ -17,6 +17,11 @@ const Wrapper = styled.article`
       letter-spacing: 0;
     }
   }
+  .droptarget {
+    width: 100%; 
+    height: 25px;
+    border: 1px solid #aaaaaa;
+  }
   .info {
     h5 {
       margin-bottom: 0.25rem;
@@ -36,6 +41,9 @@ const Wrapper = styled.article`
     background: #93c47d;
     color: #647acb;
   }
+  .container-SelectedPaper{
+    cursor: pointer; 
+  }
   .reviewing {
     background: #93c47d;
     color: #647acb;
@@ -46,6 +54,7 @@ const Wrapper = styled.article`
   }
   .content {
     padding: 1rem 1.5rem;
+
   }
   .content-center {
     witdh: 100%;
@@ -87,5 +96,4 @@ const Wrapper = styled.article`
     visibility: visible;
   }
 `
-
 export default Wrapper

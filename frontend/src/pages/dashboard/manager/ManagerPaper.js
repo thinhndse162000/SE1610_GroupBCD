@@ -172,6 +172,7 @@ const ManagerPaper = () => {
         <p>No paper found</p>
       )}
     </>
+
   );
 };
 
