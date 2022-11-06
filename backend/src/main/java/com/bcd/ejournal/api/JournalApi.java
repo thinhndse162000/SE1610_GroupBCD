@@ -1,5 +1,6 @@
 package com.bcd.ejournal.api;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.List;
 

@@ -81,6 +81,7 @@ CREATE TABLE Issue(
 	startDate DATE not null,
 	endDate DATE not null,
 	NumberOfPage int not null
+	LinkPDF char(100),
 	CONSTRAINT UQ_Issue UNIQUE(JournalId,IssueId,Volume)
 )
 go 

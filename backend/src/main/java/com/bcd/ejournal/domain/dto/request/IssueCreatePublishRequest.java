@@ -10,4 +10,5 @@ import lombok.Setter;
 public class IssueCreatePublishRequest {
     private Integer paperId;
     private PublishAccessLevel accessLevel;
+    private Integer ordinalNumber;
 }

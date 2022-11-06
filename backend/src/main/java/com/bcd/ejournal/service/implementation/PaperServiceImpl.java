@@ -73,26 +73,11 @@ public class PaperServiceImpl implements PaperService {
         request.setSummary(request.getSummary().trim());
 
         Paper paper = new Paper(request);
-        // TODO: generate random file name
-        // TODO: delete file if error
-        String fileName = request.getFile().getOriginalFilename();
-        MultipartFile file = request.getFile();
-        paper.setLinkPDF(fileName);
-        try {
-            FileUtils.saveFile(uploadDir, fileName, file);
-        } catch (NullPointerException ex) {
-            System.out.println("Null");
-        } catch (IOException ex) {
-            System.out.println("IOexception");
-        }
 
         paper.setPaperId(0);
         paper.setRound(1);
         paper.setSubmitTime(new Timestamp(System.currentTimeMillis()));
-        // TODO: read number of page frsom pdf
-        PDDocument doc = Loader.loadPDF(new File(uploadDir + paper.getLinkPDF()));
-        int count = doc.getNumberOfPages();
-        paper.setNumberOfPage(10);
+
         paper.setStatus(PaperStatus.PENDING);
         paper.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 
@@ -107,15 +92,24 @@ public class PaperServiceImpl implements PaperService {
         paper.setJournal(journal);
         journal.getPapers().add(paper);
 
+        String fileName = request.getTitle() + " - " + author.getAccount().getFullName() + ".pdf";
+        MultipartFile file = request.getFile();
+        paper.setLinkPDF(fileName);
+        try {
+            FileUtils.saveFile(uploadDir, fileName, file);
+        } catch (NullPointerException ex) {
+            System.out.println("Null");
+        } catch (IOException ex) {
+            System.out.println("IOexception");
+        }
+
+        PDDocument doc = Loader.loadPDF(new File(uploadDir + paper.getLinkPDF()));
+        paper.setNumberOfPage(doc.getNumberOfPages());
+
         emailService.sendEmailSumbitPaper(author.getAccount());
 
         paperRepository.save(paper);
     }
-
-    private File File(String linkPDF) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
     public void deleteById(Integer paperId) {
@@ -231,9 +225,6 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
 	public void cleanDuePaper() {
-        // Update status to cancel for all paper that is in pending state for more than
-        // 6 months
-        // FIXME: fix for paper that is review for many round, should check accept date
         paperRepository.updatePendingPaperAfter6Months();
         // TODO: Thinh send email to author
     }
