@@ -144,27 +144,29 @@ public class InvitationServiceImpl implements InvitationService {
         invitation.setStatus(status);
         invitationRepository.save(invitation);
 
-        Paper paper = invitation.getPaper();
-        Journal journal = paper.getJournal();
-        List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(),
-                InvitationStatus.ACCEPTED);
+        if (status == InvitationStatus.ACCEPTED) {
+            Paper paper = invitation.getPaper();
+            Journal journal = paper.getJournal();
+            List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(),
+                    InvitationStatus.ACCEPTED);
 
-        // Create new review report
-        ReviewReport reviewReport = new ReviewReport();
-        reviewReport.setReviewReportId(0);
-        reviewReport.setPaper(paper);
-        reviewReport.setRound(paper.getRound());
-        reviewReport.setReviewer(invitation.getReviewer());
-        reviewReport.setStatus(ReviewReportStatus.PENDING);
+            // Create new review report
+            ReviewReport reviewReport = new ReviewReport();
+            reviewReport.setReviewReportId(0);
+            reviewReport.setPaper(paper);
+            reviewReport.setRound(paper.getRound());
+            reviewReport.setReviewer(invitation.getReviewer());
+            reviewReport.setStatus(ReviewReportStatus.PENDING);
 
-        reviewReportRepository.save(reviewReport);
-        if (acceptedInvitations.size() == journal.getNumberOfReviewer()) {
-            // update paper status
-            paper.setStatus(PaperStatus.REVIEWING);
-            paperRepository.save(paper);
-            // change status of other invitation to cancel
-            invitationRepository.updateInvitationStatusByPaperIdAndRound(paper.getPaperId(), paper.getRound(),
-                    InvitationStatus.CANCEL);
+            reviewReportRepository.save(reviewReport);
+            if (acceptedInvitations.size() == journal.getNumberOfReviewer()) {
+                // update paper status
+                paper.setStatus(PaperStatus.REVIEWING);
+                paperRepository.save(paper);
+                // change status of other invitation to cancel
+                invitationRepository.updateInvitationStatusByPaperIdAndRound(paper.getPaperId(), paper.getRound(),
+                        InvitationStatus.CANCEL);
+            }
         }
     }
 

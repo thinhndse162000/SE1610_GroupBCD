@@ -1,5 +1,6 @@
 package com.bcd.ejournal.service.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.bcd.ejournal.domain.dto.request.PublishSearchFilterRequest;
 import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
+import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Publish;
 import com.bcd.ejournal.domain.enums.PublishAccessLevel;
 import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
@@ -96,9 +98,17 @@ public class PublishServiceImpl implements PublishService {
     public PagingResponse searchByFilter(PublishSearchFilterRequest req) {
         int pageNum = req.getPage() != null ? req.getPage() - 1 : 0;
         Pageable page = PageRequest.of(pageNum, 10);
-        Page<Publish> publishs = publishRepository.searchByRequest(req, page);
+        if (req.getFieldIds() == null) {
+            req.setFieldIds(new ArrayList<>());
+        }
+
+        Page<Publish> publishs = publishRepository.searchByRequest(req, Long.valueOf(req.getFieldIds().size()),
+                page);
+
+        // Page<Publish> publishs = publishRepository.searchByRequest(req, page);
+
         PagingResponse response = new PagingResponse();
-        response.setResult(publishs.stream().map((publish) -> modelMapper.map(publish, PublishResponse.class))
+        response.setResult(publishs.stream().map(dtoMapper::toPublishResponse)
                 .collect(Collectors.toList()));
         response.setTotalFound(publishs.getTotalElements());
         response.setNumOfPage(publishs.getTotalPages());

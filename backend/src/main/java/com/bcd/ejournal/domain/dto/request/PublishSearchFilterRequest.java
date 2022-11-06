@@ -1,5 +1,7 @@
 package com.bcd.ejournal.domain.dto.request;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,4 +13,5 @@ public class PublishSearchFilterRequest {
     private String title;
     private Integer authorId;
     private Integer volume;
+    private List<Integer> fieldIds;
 }

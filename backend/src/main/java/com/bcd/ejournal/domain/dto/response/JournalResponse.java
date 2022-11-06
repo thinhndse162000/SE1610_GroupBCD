@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JournalResponse {
-    private String journalId;
+    private Integer journalId;
     private String name;
     private String introduction;
     private String organization;
@@ -26,5 +26,6 @@ public class JournalResponse {
     private Integer price;
     private JournalStatus status;
     private String managerEmail;
+    private String policy;
     private List<Field> fields;
 }

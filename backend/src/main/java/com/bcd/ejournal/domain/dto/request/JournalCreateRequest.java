@@ -32,4 +32,6 @@ public class JournalCreateRequest {
     private Integer numberOfRound;
     @NotNull
     private Integer numberOfReviewer;
+    @NotNull
+    private String policy;
 }
