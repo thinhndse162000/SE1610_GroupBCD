@@ -3,13 +3,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 
-const Journal = ({ journal, link, type = "compact", action = [] }) => {
+const Journal = ({
+  index,
+  journal,
+  link,
+  showPolicy = false,
+  type = "compact",
+  action = [],
+}) => {
   const {
     name,
     introduction,
     organization,
     issn,
     slug,
+    policy,
     numberOfRound,
     numberOfReviewer,
   } = journal;
@@ -60,6 +68,30 @@ const Journal = ({ journal, link, type = "compact", action = [] }) => {
             <p>{introduction}</p>
           </div>
         )}
+        {showPolicy && (
+          <>
+            <button
+              type="button"
+              className="collapsible"
+              onClick={(e) => {
+                var content = document.getElementById(
+                  `policy-collapse-${index}`
+                );
+                if (content.style.display === "block") {
+                  content.style.display = "none";
+                } else {
+                  content.style.display = "block";
+                }
+              }}
+            >
+              Policy
+            </button>
+            <div id={`policy-collapse-${index}`} className="collapse-content">
+              <p>{journal.policy}</p>
+            </div>
+          </>
+        )}
+
         <footer>
           <div className="actions">
             {action.map((act, index) => {

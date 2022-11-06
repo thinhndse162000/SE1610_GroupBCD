@@ -134,7 +134,7 @@ const ReviewerInvitation = () => {
                   className: "btn edit-btn",
                   label: "Download PDF",
                   onClick: () =>
-                    dispatch(downloadFile(invitation.paper.paperId)),
+                  dispatch(downloadFile({ paperId: invitation.paper.paperId, fileName: invitation.paper.linkPDF })),
                 });
                 return (
                   <Invitation

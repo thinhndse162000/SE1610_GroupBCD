@@ -52,10 +52,11 @@ const PageBtnContainer = ({ page, numOfPage, changePage }) => {
         prev
       </button>
       <div className="btn-container">
-        {pages.map((pageNumber) => {
+        {pages.map((pageNumber, index) => {
           if (pageNumber === -1) {
             return (
               <button
+                key={index}
                 type="button"
                 className={"pageBtn disabled"}
                 disabled={true}
@@ -68,7 +69,7 @@ const PageBtnContainer = ({ page, numOfPage, changePage }) => {
             <button
               type="button"
               className={pageNumber === page ? "pageBtn active" : "pageBtn"}
-              key={pageNumber}
+              key={index}
               onClick={() => changePage(pageNumber)}
               disabled={numOfPage === 1}
             >

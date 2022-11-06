@@ -82,7 +82,7 @@ const Publish = ({
                 <button
                   type="button"
                   className="btn edit-btn"
-                  onClick={() => dispatch(downloadFile(paper.paperId))}
+                  onClick={() => dispatch(downloadFile({ paperId: paper.paperId, fileName: paper.linkPDF }))}
                 >
                   Download PDF
                 </button>

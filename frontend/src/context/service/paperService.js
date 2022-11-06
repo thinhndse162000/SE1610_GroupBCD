@@ -274,12 +274,12 @@ export const listInvitation = (paperId) => async (dispatch) => {
   dispatch(clearAlert());
 };
 
-export const downloadFile = (paperId) => async (dispatch) => {
+export const downloadFile = ({ paperId, fileName }) => async (dispatch) => {
   try {
     const { data } = await authFetch.get(`/paper/${paperId}/download`, {
       responseType: "blob",
     });
-    fileDownload(data, `${paperId}.pdf`);
+    fileDownload(data, fileName);
   } catch (error) {
     if (error.response.status === 401) return;
   }

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Wrapper = styled.article`
   background: var(--white);
@@ -47,11 +47,40 @@ const Wrapper = styled.article`
   .content {
     padding: 1rem 1.5rem;
   }
+  label {
+    padding-left: 10px;
+  }
+
   .content-center {
     witdh: 100%;
     .p {
-      display:inline-block;
+      display: inline-block;
     }
+  }
+  .collapsible {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+
+  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+  .active,
+  .collapsible:hover {
+    background-color: #ccc;
+  }
+
+  /* Style the collapsible content. Note: hidden by default */
+  .collapse-content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
   }
 
   .status {
@@ -80,12 +109,12 @@ const Wrapper = styled.article`
     color: var(--red-dark);
     background: var(--red-light);
   }
-.actions > * {
-  margin: 5px;
-}
+  .actions > * {
+    margin: 5px;
+  }
   &:hover .actions {
     visibility: visible;
   }
-`
+`;
 
-export default Wrapper
+export default Wrapper;

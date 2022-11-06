@@ -22,7 +22,10 @@ const Paper = ({ paper, type = "compact", link, action = [] }) => {
             {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} -
             Submit date: {date}
           </p>
-          <p>Round: {paper.round}/{paper.journal.numberOfRound} - Number of reviewer per round: {paper.journal.numberOfReviewer}</p>
+          <p>
+            Round: {paper.round}/{paper.journal.numberOfRound} - Number of
+            reviewer per round: {paper.journal.numberOfReviewer}
+          </p>
           <p>
             Fields:{" "}
             {paper.fields.map((field, index) => (
@@ -75,7 +78,14 @@ const Paper = ({ paper, type = "compact", link, action = [] }) => {
             <button
               type="button"
               className="btn edit-btn"
-              onClick={() => dispatch(downloadFile(paper.paperId))}
+              onClick={() =>
+                dispatch(
+                  downloadFile({
+                    paperId: paper.paperId,
+                    fileName: paper.linkPDF,
+                  })
+                )
+              }
             >
               Download PDF
             </button>

@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Loading } from "../../../components";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
-import { getIssuePublish } from "../../../context/service/journalService";
+import {
+  downloadIssueFile,
+  getIssuePublish,
+} from "../../../context/service/journalService";
 import { MEMBER_JOURNAL_ID } from "../../../context/actions";
 import { Issue, Publish } from "../../../components";
 
@@ -12,7 +15,7 @@ const MemberIssueDetail = () => {
   const dispatch = useDispatch();
   const {
     base: { isLoading },
-    member: { issuePublishes },
+    member: { issuePublishes, journalSubscribe },
   } = useSelector((state) => state);
   const { issue, publishes } = issuePublishes;
 
@@ -26,6 +29,7 @@ const MemberIssueDetail = () => {
         type: MEMBER_JOURNAL_ID,
         payload: { slug: issue.journal.slug },
       });
+      dispatch(downloadIssueFile({ slug: issue.journal.slug }));
     }
   }, [dispatch, issue]);
 
@@ -36,7 +40,9 @@ const MemberIssueDetail = () => {
   return (
     <>
       <h3>Issue</h3>
-      {issue != null && <Issue issue={issue} />}
+      {issue != null && (
+        <Issue issue={issue} download={journalSubscribe.subscribed} />
+      )}
       <ContainerWrapper>
         <div className="container">
           <h3>Publications</h3>
@@ -44,6 +50,10 @@ const MemberIssueDetail = () => {
             publishes.map((publish, index) => {
               return (
                 <Publish
+                  download={
+                    publish.accessLevel === "OPEN" ||
+                    journalSubscribe.subscribed
+                  }
                   key={index}
                   publish={publish}
                   link={`/publish/${publish.publishId}`}

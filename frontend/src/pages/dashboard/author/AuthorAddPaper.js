@@ -334,7 +334,7 @@ const AuthorAddPaper = () => {
                       onClick: (e) => handleSelect(e, journal),
                     });
                     return (
-                      <Journal key={index} journal={journal} action={action} />
+                      <Journal key={index} journal={journal} showPolicy={true} action={action} index={index}/>
                     );
                   })}
                 </div>

@@ -1,6 +1,7 @@
 import authFetch from "../../utils/authFetch";
 import { LOADING, SUCCESS_NO_MESSAGE, ERROR } from "../actions";
 import { clearAlert, handleChange } from "./utilService";
+import fileDownload from "js-file-download";
 
 export const getSentPaper =
   ({ keyword: title, startDate, status, page }) =>
@@ -197,9 +198,10 @@ export const createIssue =
   async (dispatch) => {
     dispatch({ type: LOADING });
     try {
-      let pub = publishes.map((p) => ({
+      let pub = publishes.map((p, index) => ({
         paperId: p.paper.paperId,
         accessLevel: p.accessLevel,
+        ordinalNumber: index,
       }));
 
       await authFetch.post("/journal/issue", {
@@ -268,3 +270,14 @@ export const getSubscribeInfo =
     }
     dispatch(clearAlert());
   };
+
+export const downloadIssueFile = ({ issueId, fileName }) => async (dispatch) => {
+  try {
+    const { data } = await authFetch.get(`/issue/${issueId}/download`, {
+      responseType: "blob",
+    });
+    fileDownload(data, fileName);
+  } catch (error) {
+    if (error.response.status === 401) return;
+  }
+};

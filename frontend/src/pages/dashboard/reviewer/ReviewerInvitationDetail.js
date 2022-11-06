@@ -46,7 +46,13 @@ const ReviewerInvitationDetail = () => {
     type: "button",
     className: "btn edit-btn",
     label: "Download PDF",
-    onClick: () => dispatch(downloadFile(invitation.paper.paperId)),
+    onClick: () =>
+      dispatch(
+        downloadFile({
+          paperId: invitation.paper.paperId,
+          fileName: invitation.paper.linkPaper,
+        })
+      ),
   });
 
   if (Object.keys(invitation).length !== 0) {

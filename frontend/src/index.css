@@ -131,6 +131,14 @@ button {
 }
 button:disabled {
   cursor: not-allowed;
+  background: var(--grey-300);
+  color: var(--grey-50);
+}
+
+button:disabled:hover {
+  cursor: not-allowed;
+  background: var(--grey-300);
+  color: var(--grey-50);
 }
 ul {
   list-style-type: none;
