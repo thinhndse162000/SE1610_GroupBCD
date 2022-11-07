@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Loading, ReviewReport, Paper } from "../../../components";
-import { getPaperDetail } from "../../../context/service/paperService";
+import { getPaperDetailManager, updatePaperStatus } from "../../../context/service/paperService";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
 import { default as PageButtonWrapper } from "../../../assets/wrappers/PageBtnContainer";
 
@@ -10,12 +10,13 @@ const ManagerPaperDetail = () => {
   const { paperId } = useParams();
   const {
     base: { isLoading },
-    author: { paperDetail },
+    manager: { paperDetail },
   } = useSelector((state) => state);
+
   const dispatch = useDispatch();
   const [currentRound, setCurrentRound] = useState();
   useEffect(() => {
-    dispatch(getPaperDetail(paperId));
+    dispatch(getPaperDetailManager(paperId));
   }, [paperId, dispatch]);
 
   useEffect(() => {
@@ -36,6 +37,19 @@ const ManagerPaperDetail = () => {
         to: `/manager/send-invitation/${paperDetail.paper.paperId}`,
         className: "btn edit-btn",
         label: "Send invitation",
+      });
+    } else if (paperDetail.paper.status === "EVALUATING") {
+      action.push({
+        type: "button",
+        className: "btn accept-btn",
+        label: "Accept",
+        onClick: () => dispatch(updatePaperStatus(paperDetail.paper.paperId, "ACCEPTED")),
+      });
+      action.push({
+        type: "button",
+        className: "btn reject-btn",
+        label: "Reject",
+        onClick: () => dispatch(updatePaperStatus(paperDetail.paper.paperId, "REJECTED")),
       });
     }
     return (

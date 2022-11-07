@@ -1,5 +1,5 @@
 import authFetch from "../../utils/authFetch";
-import { LOADING, SUCCESS_NO_MESSAGE, ERROR } from "../actions";
+import { LOADING, SUCCESS_NO_MESSAGE, ERROR, SUCCESS } from "../actions";
 import { clearAlert, handleChange } from "./utilService";
 import fileDownload from "js-file-download";
 
@@ -210,7 +210,12 @@ export const createIssue =
         publishes: pub,
       });
 
-      dispatch({ type: SUCCESS_NO_MESSAGE });
+      dispatch({
+        type: SUCCESS,
+        payload: {
+          msg: "Publish issue successfully",
+        },
+      });
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
@@ -260,7 +265,9 @@ export const getSubscribeInfo =
     try {
       const { data } = await authFetch.get(`/journal/slug/${slug}/subscribe`);
       dispatch({ type: SUCCESS_NO_MESSAGE });
-      dispatch(handleChange({ name: "journalSubscribe", value: data, type: "member" }));
+      dispatch(
+        handleChange({ name: "journalSubscribe", value: data, type: "member" })
+      );
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
@@ -271,13 +278,15 @@ export const getSubscribeInfo =
     dispatch(clearAlert());
   };
 
-export const downloadIssueFile = ({ issueId, fileName }) => async (dispatch) => {
-  try {
-    const { data } = await authFetch.get(`/issue/${issueId}/download`, {
-      responseType: "blob",
-    });
-    fileDownload(data, fileName);
-  } catch (error) {
-    if (error.response.status === 401) return;
-  }
-};
+export const downloadIssueFile =
+  ({ issueId, fileName }) =>
+  async (dispatch) => {
+    try {
+      const { data } = await authFetch.get(`/issue/${issueId}/download`, {
+        responseType: "blob",
+      });
+      fileDownload(data, fileName);
+    } catch (error) {
+      if (error.response.status === 401) return;
+    }
+  };

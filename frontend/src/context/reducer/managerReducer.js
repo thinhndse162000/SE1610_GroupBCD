@@ -31,6 +31,22 @@ const managerReducer = (state = manager, action) => {
           ...action.payload.value,
         },
       }
+    case "CLEAN_PUBLISHISSUE":
+      return {
+        ...state,
+        publishIssue: {
+          ...state.publishIssue,
+          publishes: [],
+          startDate: "",
+          endDate: "",
+          confirm: false,
+        },
+      }
+
+    case "CLEAN_SELECTPAPER":
+      return {
+
+      }
     case HANDLE_MANAGER_SEARCHPAPER_CHANGE:
       return {
         ...state,
@@ -71,6 +87,46 @@ const managerReducer = (state = manager, action) => {
         ...state,
         sentInvitations,
       };
+
+    case "HANDLE_MANAGER_PAPER_CHANGE":
+      const papers = state.searchPaper.result.map((paper) => {
+        if (paper.paperId === action.payload.id) {
+          return { ...paper, status: action.payload.status };
+        }
+        return paper;
+      });
+
+      if (state.paperDetail.paper != null && state.paperDetail.paper.paperId === action.payload.id) {
+        return {
+          ...state,
+          searchPaper: {
+            ...state.searchPaper,
+            result: papers,
+          },
+          paperDetail: {
+            ...state.paperDetail,
+            paper: {
+              ...state.paperDetail.paper,
+              status: action.payload.status,
+            }
+          }
+        };
+      } else {
+        return {
+          ...state,
+          searchPaper: {
+            ...state.searchPaper,
+            result: papers
+          },
+        };
+      }
+
+    case "MANAGER_PAPER_DETAIL":
+      return {
+        ...state,
+        paperDetail: action.payload.paperDetail,
+      };
+
     default:
       return state;
   }

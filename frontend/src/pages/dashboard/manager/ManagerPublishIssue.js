@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
+  Alert,
   FormRow,
   FormRowSelect,
   Loading,
@@ -21,10 +22,11 @@ import { default as ContainerWrapper } from "../../../assets/wrappers/Container"
 import { default as PageButtonWrapper } from "../../../assets/wrappers/PageBtnContainer";
 import { handleChange } from "../../../context/service/utilService";
 import { getPaperDetail } from "../../../context/service/paperService";
+import { useNavigate } from "react-router-dom";
 
 const ManagerPublishIssue = () => {
   const {
-    base: { isLoading },
+    base: { isLoading, alertType, showAlert },
     manager: {
       publishIssue: {
         result: papers,
@@ -44,6 +46,7 @@ const ManagerPublishIssue = () => {
   const [errors, setErrors] = useState({ noError: true });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getLatestIssue());
@@ -64,6 +67,15 @@ const ManagerPublishIssue = () => {
       setCurrentRound(paperDetail.paper.round);
     }
   }, [paperDetail]);
+
+  useEffect(() => {
+    if (alertType === "success") {
+      dispatch({ type: "CLEAN_PUBLISHISSUE" });
+      dispatch(getLatestIssue());
+      dispatch(getAcceptedPaper({ page: page }));
+      navigate("/manager/publish");
+    }
+  }, [dispatch, alertType]);
 
   const handleSelect = (paper) => {
     var checkbox = document.getElementById(`paper-${paper.paperId}`);
@@ -360,6 +372,7 @@ const ManagerPublishIssue = () => {
 
   return (
     <>
+      {showAlert && <Alert />}
       <ItemWrapper>
         <header>
           <div className="info">
@@ -448,7 +461,10 @@ const ManagerPublishIssue = () => {
                             id={`paper-${paper.paperId}`}
                             value={paper.paperId}
                             checked={checkObject(paper.paperId)}
-                            onChange={() => handleSelect(paper)}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              handleSelect(paper);
+                            }}
                           />
                           <label htmlFor={`paper-${paper.paperId}`}>
                             {paper.title}
@@ -477,6 +493,7 @@ const ManagerPublishIssue = () => {
                           <button
                             className="btn edit-btn"
                             onClick={(e) => {
+                              e.stopPropagation();
                               setPaperDetailId(paper.paperId);
                             }}
                           >

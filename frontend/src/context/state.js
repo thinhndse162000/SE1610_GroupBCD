@@ -41,7 +41,7 @@ const author = {
     fields: [],
     result: [],
   },
-  paperStatusOptions: ["PENDING", "REVIEWING", "ACCEPTED", "REJECTED", "PUBLISH"],
+  paperStatusOptions: ["PENDING", "REVIEWING", "EVALUATING", "ACCEPTED", "REJECTED", "PUBLISH"],
 };
 const admin = {
   editJournalID: "",
@@ -137,6 +137,7 @@ const member = {
 };
 
 const manager = {
+  selectedPaper: [],
   searchPaper: {
     keyword: "",
     status: "ALL",
@@ -161,6 +162,7 @@ const manager = {
   sentPapers: [],
   sentInvitations: [],
   availableReviewers: [],
+  paperDetail: {},
   paper: {},
   journal: {},
   issues: {},

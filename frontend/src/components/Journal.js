@@ -88,6 +88,8 @@ const Journal = ({
             </button>
             <div id={`policy-collapse-${index}`} className="collapse-content">
               <p>{journal.policy}</p>
+              <p>{journal.reviewPolicy === "AUTOMATIC" && "Paper will be automatically evaluated after all reviewers have submitted their reviews. The paper will be accepted if more than half of the reviewers accept the paper"}</p>
+              <p>{journal.reviewPolicy === "MANAGER_DECIDE" && "Paper will be evaluated by the manager after all reviewers have submitted their reviews. The manager will evaluate based on the note, grade and confidentiality of reviewers"}</p>
             </div>
           </>
         )}

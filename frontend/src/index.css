@@ -326,3 +326,18 @@ ul {
 .coffee-info a {
   color: var(--primary-500);
 }
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.center {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.pageBtnAlign {
+    height: 40px;
+}
