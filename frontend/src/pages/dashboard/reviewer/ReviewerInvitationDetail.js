@@ -50,7 +50,7 @@ const ReviewerInvitationDetail = () => {
       dispatch(
         downloadFile({
           paperId: invitation.paper.paperId,
-          fileName: invitation.paper.linkPaper,
+          fileName: invitation.paper.linkPDF,
         })
       ),
   });

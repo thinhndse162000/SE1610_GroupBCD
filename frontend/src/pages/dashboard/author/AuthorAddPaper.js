@@ -358,7 +358,7 @@ const AuthorAddPaper = () => {
           Back
         </button>
         <h3>Confirm</h3>
-        <Journal journal={paperJournal} />
+        <Journal journal={paperJournal} showPolicy={true}/>
         <h3>Paper</h3>
         <ItemWrapper>
           <header>

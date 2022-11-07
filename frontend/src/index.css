@@ -339,5 +339,9 @@ ul {
 }
 
 .pageBtnAlign {
-    height: 40px;
+  height: 40px;
+}
+
+.gaps > * {
+  margin: 5px;
 }

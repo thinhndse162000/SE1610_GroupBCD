@@ -68,24 +68,10 @@ const ManagerPaper = () => {
     e.preventDefault();
     setSelectMode(!selectMode);
 
-    dispatch(
-      handleChange({
-        name: "status",
-        value: "EVALUATING",
-        type: "manager_searchPaper",
-      })
-    );
-    if (page === 1) {
-      dispatch(
-        getSentPaper({
-          keyword,
-          startDate,
-          status: "EVALUATING",
-          page,
-        })
-      );
+    if (selectMode) {
+      doTheSelectWork("ALL");
     } else {
-      handlePageChange(1);
+      doTheSelectWork("EVALUATING");
     }
   };
 
@@ -136,6 +122,29 @@ const ManagerPaper = () => {
     );
   };
 
+  const doTheSelectWork = (status) => {
+    setSelectMode(!selectMode);
+    dispatch(
+      handleChange({
+        name: "status",
+        value: status,
+        type: "manager_searchPaper",
+      })
+    );
+    if (page === 1) {
+      dispatch(
+        getSentPaper({
+          keyword,
+          startDate,
+          status: status === "ALL" ? null : status,
+          page,
+        })
+      );
+    } else {
+      handlePageChange(1);
+    }
+  };
+
   const handleButtonUpdate = (e, status) => {
     e.preventDefault();
     dispatch(
@@ -145,26 +154,7 @@ const ManagerPaper = () => {
       )
     );
 
-    setSelectMode(!selectMode);
-    dispatch(
-      handleChange({
-        name: "status",
-        value: "ALL",
-        type: "manager_searchPaper",
-      })
-    );
-    if (page === 1) {
-      dispatch(
-        getSentPaper({
-          keyword,
-          startDate,
-          status: null,
-          page,
-        })
-      );
-    } else {
-      handlePageChange(1);
-    }
+    doTheSelectWork("ALL");
   };
 
   const checkObject = (paperId) => {
@@ -219,11 +209,18 @@ const ManagerPaper = () => {
           </div>
         </form>
       </SearchWrapper>
+
+      {selectMode && papers.length === 0 && (
+        <button className="btn pageBtnAlign" onClick={handleSelectMode}>
+          Exit select mode
+        </button>
+      )}
+
       {papers.length > 0 && (
         <span className="flex">
           <div className="center">
             <button className="btn pageBtnAlign" onClick={handleSelectMode}>
-              Select mode
+              {selectMode ? "Exit select mode" : "Select mode"}
             </button>
           </div>
           <PageBtnContainer
@@ -235,8 +232,8 @@ const ManagerPaper = () => {
         </span>
       )}
 
-      {selectMode && (
-        <div>
+      {selectMode && papers.length > 0 && (
+        <div className="gaps">
           <button
             className="btn"
             onClick={(e) => handleButtonUpdate(e, "ACCEPTED")}
