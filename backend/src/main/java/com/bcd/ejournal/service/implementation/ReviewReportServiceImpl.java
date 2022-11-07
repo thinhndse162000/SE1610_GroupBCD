@@ -23,6 +23,7 @@ import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.entity.Reviewer;
+import com.bcd.ejournal.domain.enums.JournalReviewPolicy;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportVerdict;
@@ -79,39 +80,52 @@ public class ReviewReportServiceImpl implements ReviewReportService {
         reviewreportRepository.save(reviewReport);
         Paper paper = reviewReport.getPaper();
         Journal journal = paper.getJournal();
-        
+
         // TODO: test this
         // evaluation process
         List<ReviewReport> reviewReports = reviewreportRepository.findByPaperIdAndStatus(paper.getPaperId(),
                 ReviewReportStatus.DONE);
 
         if (reviewReports.size() == journal.getNumberOfReviewer()) {
-            int accepted = 0;
-            int grade = 0;
-            for (ReviewReport report : reviewReports) {
-                grade += report.getGrade();
-                if (report.getVerdict() == ReviewReportVerdict.ACCEPTED) {
-                    accepted++;
+            if (journal.getReviewPolicy() == JournalReviewPolicy.AUTOMATIC) {
+                int accepted = 0;
+                int grade = 0;
+                for (ReviewReport report : reviewReports) {
+                    grade += report.getGrade();
+                    if (report.getVerdict() == ReviewReportVerdict.ACCEPTED) {
+                        accepted++;
+                    }
                 }
-            }
 
-            // accept if two or more reviewer accept
-            if (accepted >= (journal.getNumberOfReviewer() + 1) / 2) {
-                if (paper.getRound() == journal.getNumberOfRound()) {
-                    paper.setStatus(PaperStatus.ACCEPTED);
+                // accept if two or more reviewer accept
+                if (accepted >= (journal.getNumberOfReviewer() + 1) / 2) {
+                    if (paper.getRound() == journal.getNumberOfRound()) {
+                        paper.setStatus(PaperStatus.ACCEPTED);
+                    } else {
+                        paper.setRound(paper.getRound() + 1);
+                        paper.setStatus(PaperStatus.PENDING);
+                    }
                 } else {
-                    paper.setRound(paper.getRound() + 1);
-                    paper.setStatus(PaperStatus.PENDING);
+                    paper.setStatus(PaperStatus.REJECTED);
                 }
+                // grade is avarage of total grade
+                paper.setGrade(grade / journal.getNumberOfReviewer());
+                emailService.sendEmailReviewReport(paper.getAuthor().getAccount().getEmail());
+                emailService.sendEmailReviewReport(journal.getManager().getEmail());
+                paperRepository.save(paper);
             } else {
-                paper.setStatus(PaperStatus.REJECTED);
+                int grade = 0;
+                for (ReviewReport report : reviewReports) {
+                    grade += report.getGrade();
+                }
+
+                paper.setGrade(grade / journal.getNumberOfReviewer());
+                paper.setStatus(PaperStatus.EVALUATING);
+
+                emailService.sendEmailEvaluating(paper.getAuthor().getAccount().getEmail());
+                emailService.sendEmailEvaluating(journal.getManager().getEmail());
+                paperRepository.save(paper);
             }
-            // grade is avarage of total grade
-            paper.setGrade(grade / journal.getNumberOfReviewer());
-            emailService.sendEmailReviewReport(paper.getAuthor().getAccount().getEmail());
-            emailService.sendEmailReviewReport(journal.getManager().getEmail());
-            paperRepository.save(paper);
-            
         }
     }
 

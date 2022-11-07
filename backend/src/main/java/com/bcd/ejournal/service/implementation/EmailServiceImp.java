@@ -205,30 +205,57 @@ public class EmailServiceImp implements EmailService {
         }
     }
 
-	@Override
+    @Override
     @Async
-	public String sendEmailReviewReport(String mail) {
-		 try {
-			 	EmailDetail details = new EmailDetail();
-			 	details.setSubject("Someone have review");
-			 	details.setMsgBody("Reviewer have submit review report");
-	            details.setRecipient(mail);
-	            SimpleMailMessage mailMessage = new SimpleMailMessage();
+    public String sendEmailReviewReport(String mail) {
+        try {
+            EmailDetail details = new EmailDetail();
+            details.setSubject("Someone have review");
+            details.setMsgBody("Reviewer have submit review report");
+            details.setRecipient(mail);
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-	            // Setting up necessary details
-	            mailMessage.setFrom(sender);
-	            mailMessage.setTo(details.getRecipient());
-	            mailMessage.setText(details.getMsgBody());
-	            mailMessage.setSubject(details.getSubject());
+            // Setting up necessary details
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(details.getRecipient());
+            mailMessage.setText(details.getMsgBody());
+            mailMessage.setSubject(details.getSubject());
 
-	            // Sending the mail
-	            javaMailSender.send(mailMessage);
-	            return "Mail Sent Successfully...";
-	        }
+            // Sending the mail
+            javaMailSender.send(mailMessage);
+            return "Mail Sent Successfully...";
+        }
 
-	        // Catch block to handle the exceptions
-	        catch (Exception e) {
-	            return "Error while Sending Mail";
-	        }
-	}
+        // Catch block to handle the exceptions
+        catch (Exception e) {
+            return "Error while Sending Mail";
+        }
+    }
+
+    @Override
+    @Async
+    public String sendEmailEvaluating(String mail) {
+        try {
+            EmailDetail details = new EmailDetail();
+            details.setSubject("Paper ");
+            details.setMsgBody("Paper in evaluating status");
+            details.setRecipient(mail);
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+            // Setting up necessary details
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(details.getRecipient());
+            mailMessage.setText(details.getMsgBody());
+            mailMessage.setSubject(details.getSubject());
+
+            // Sending the mail
+            javaMailSender.send(mailMessage);
+            return "Mail Sent Successfully...";
+        }
+
+        // Catch block to handle the exceptions
+        catch (Exception e) {
+            return "Error while Sending Mail";
+        }
+    }
 }

@@ -22,4 +22,6 @@ public interface EmailService {
     String sendEmailForgetPassword(AccountEmailVerify req);
     
     String sendEmailReviewReport(String mail);
+
+    String sendEmailEvaluating(String mail);
 }

@@ -12,6 +12,7 @@ import com.bcd.ejournal.domain.dto.request.PaperUpdateRequest;
 import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
+import com.bcd.ejournal.domain.enums.PaperStatus;
 
 public interface PaperService {
     void submitPaper(Integer authorId, PaperSubmitRequest paperSubmitRequest) throws InvalidPasswordException, IOException;
@@ -19,6 +20,10 @@ public interface PaperService {
     void updatePaper(Integer accountId, Integer paperId, PaperUpdateRequest request);
 
     void deleteById(Integer paperId);
+
+    void managerUpdatePaperStatus(Integer accountId, Integer paperId, PaperStatus status);
+
+    void managerBulkUpdatePaperStatus(Integer accountId, List<Integer> paperIds, PaperStatus status);
 
     PagingResponse searchByRequest(PaperSearchRequest request);
 

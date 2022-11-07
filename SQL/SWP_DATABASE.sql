@@ -80,7 +80,7 @@ CREATE TABLE Issue(
   Year int not null,
 	startDate DATE not null,
 	endDate DATE not null,
-	NumberOfPage int not null
+	NumberOfPage int not null,
 	LinkPDF char(100),
 	CONSTRAINT UQ_Issue UNIQUE(JournalId,IssueId,Volume)
 )
@@ -97,6 +97,7 @@ CREATE TABLE Journal(
   NumberOfReviewer int not null,
   slug nvarchar(255) not null UNIQUE,
   policy text not null,
+  ReviewPolicy nvarchar(20) not null,
 )
 go 
 CREATE TABLE Invoice(

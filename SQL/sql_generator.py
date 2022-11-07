@@ -169,8 +169,13 @@ class JournalSql(SqlTemplate):
 
                 journal[id] = [num_of_paper_round, num_of_reviewer];
                 policy = lorem.sentence();
+                review_policy = random.choice(["AUTOMATIC", "AUTOMATIC", "MANAGER_DECIDE"])
+                if (id == 1): 
+                    review_policy = "MANAGER_DECIDE"
+                    num_of_paper_round = 1
+                    num_of_reviewer = 3
 
-                super().insert(f"('{name.format(field_name)} {id-1}', 'This is {name.format(field_name)}', 'FPT', {num_of_paper_round}, {num_of_reviewer}, '123-{self.issn}', 'OPEN', '{slug}', 10000, '{policy}')")
+                super().insert(f"('{name.format(field_name)} {id-1}', 'This is {name.format(field_name)}', 'FPT', {num_of_paper_round}, {num_of_reviewer}, '123-{self.issn}', 'OPEN', '{slug}', 10000, '{policy}', '{review_policy}')")
 
                 self.journal_field.insert(id, random.choice(list(range(1,i+1)) + list(range(i+2, len(fields)))))
                 self.journal_field.insert(id, i+1)
@@ -202,7 +207,6 @@ class PaperSql(SqlTemplate):
         number_of_page = 10
         grade = 'null'
 
-
         num_of_pass_paper_round = random.randint(0, journal[journal_id][ROUND] - 1)
 
         if (status == "PENDING"):
@@ -210,17 +214,26 @@ class PaperSql(SqlTemplate):
             grade = 'null'
         elif (status == "ACCEPTED"):
             grade = random.randint(8, 10)
-            accepted_paper_id.append([author_id, self.id, journal_id])
             num_of_pass_paper_round = journal[journal_id][ROUND]
+            accepted_paper_id.append([author_id, self.id, journal_id, num_of_pass_paper_round])
             if (journal_id not in journal_accepted_paper):
                 journal_accepted_paper[journal_id] = []
             journal_accepted_paper[journal_id].append(self.id)
         elif (status == "REJECTED"):
             grade = random.randint(1, 6)
+            if (num_of_pass_paper_round != journal[journal_id][ROUND]):
+                num_of_pass_paper_round += 1
             rejected_paper_id.append([author_id, self.id, journal_id, num_of_pass_paper_round])
         elif (status == "REVIEWING"):
             grade = 'null'
             reviewing_paper_id.append([author_id, self.id, journal_id, num_of_pass_paper_round])
+        elif (status == "EVALUATING"):
+            if (random.random() < 0.3):
+                num_of_pass_paper_round = journal[journal_id][ROUND]
+            if (num_of_pass_paper_round != journal[journal_id][ROUND]):
+                num_of_pass_paper_round += 1
+            grade = random.randint(8, 10)
+            accepted_paper_id.append([author_id, self.id, journal_id, num_of_pass_paper_round])
 
         if (num_of_pass_paper_round != journal[journal_id][ROUND]):
             num_of_pass_paper_round += 1
@@ -237,6 +250,9 @@ class PaperSql(SqlTemplate):
 
     def insert(self):
         for author_id in range(1, account_num + 1):
+            if (random.random() < 0.1):
+                self.insert_paper(author_id, 1, "EVALUATING")
+
             paper_status_list = ["PENDING", "REVIEWING", "ACCEPTED", "REJECTED"]
             for _ in range(16):
                 if (7 < random.randint(1,10)):
@@ -295,9 +311,10 @@ class InvitationSql(SqlTemplate):
                 self.add_reviewer_field(reviewer_id, paper_id)
 
     def insert(self):
-        for author_id, paper_id, journal_id in accepted_paper_id:
-            for paper_round in range(1, journal[journal_id][ROUND] + 1):
+        for author_id, paper_id, journal_id, num_of_pass_paper_round in accepted_paper_id:
+            for paper_round in range(1, num_of_pass_paper_round + 1):
                 self.insert_one_paper_round_of_review_report(accepted_reviewer_paper_id, journal_id, author_id, paper_id, paper_round)
+
 
         for author_id, paper_id, journal_id, num_of_pass_paper_round in rejected_paper_id:
             for paper_round in range(1, num_of_pass_paper_round + 1):
@@ -309,7 +326,7 @@ class InvitationSql(SqlTemplate):
             for paper_round in range(1, num_of_pass_paper_round + 1):
                 self.insert_one_paper_round_of_review_report(accepted_reviewer_paper_id, journal_id, author_id, paper_id, paper_round, random.randint(0, journal[journal_id][REVIEWER] - 1))
 
-            self.insert_one_paper_round_of_review_report(pending_reviewer_paper_id, journal_id, author_id, paper_id, num_of_pass_paper_round + 1)
+            self.insert_one_paper_round_of_review_report(pending_reviewer_paper_id, journal_id, author_id, paper_id, num_of_pass_paper_round + 1, num_of_invitation_accept=2)
 
         for author_id, paper_id, journal_id, num_of_pass_paper_round in reviewing_paper_id:
             for paper_round in range(1, num_of_pass_paper_round + 1):
