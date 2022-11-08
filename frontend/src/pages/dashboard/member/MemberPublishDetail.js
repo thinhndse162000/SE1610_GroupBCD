@@ -64,6 +64,7 @@ const MemberPublishDetail = () => {
                 <Issue
                   issue={publish.issue}
                   link={`/issue/${publish.issue.issueId}`}
+                  download={journalSubscribe.subscribed}
                 />
               </div>
             </div>
