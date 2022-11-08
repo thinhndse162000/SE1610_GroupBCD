@@ -112,6 +112,12 @@ const baseReducer = (state = base, action) => {
         ...state,
         [action.payload.name]: action.payload.value,
       };
+
+    case "HANDLE_BASE_CHANGE":
+      return {
+        ...state,
+        [action.payload.name]: action.payload.value,
+      };
     case CLEAR_FILTERS:
       return {
         ...state,

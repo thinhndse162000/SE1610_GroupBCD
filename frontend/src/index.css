@@ -5,7 +5,7 @@
 }
 
 /* fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap");
 
 html {
   font-size: 100%;
@@ -44,8 +44,8 @@ html {
   --green-dark: #0f5132;
 
   /* fonts  */
-  --headingFont: 'Roboto Condensed', Sans-Serif;
-  --bodyFont: 'Cabin', Sans-Serif;
+  --headingFont: "Roboto Condensed", Sans-Serif;
+  --bodyFont: "Cabin", Sans-Serif;
   --small-text: 0.875rem;
   --extra-small-text: 0.7em;
   /* rest of the vars */
@@ -131,6 +131,14 @@ button {
 }
 button:disabled {
   cursor: not-allowed;
+  background: var(--grey-300);
+  color: var(--grey-50);
+}
+
+button:disabled:hover {
+  cursor: not-allowed;
+  background: var(--grey-300);
+  color: var(--grey-50);
 }
 ul {
   list-style-type: none;
@@ -233,7 +241,13 @@ ul {
 }
 
 .form-input-file {
-    display: none;
+  display: none;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 .form-input,
@@ -311,4 +325,23 @@ ul {
 }
 .coffee-info a {
   color: var(--primary-500);
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.center {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.pageBtnAlign {
+  height: 40px;
+}
+
+.gaps > * {
+  margin: 5px;
 }

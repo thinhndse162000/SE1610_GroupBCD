@@ -4,17 +4,38 @@ import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Item";
 import { downloadFile } from "../context/service/paperService";
 
-const Paper = ({ paper, type = "compact", link, action = [] }) => {
+const Paper = ({
+  paper,
+  type = "compact",
+  link,
+  checkbox = false,
+  checked = false,
+  checkboxId = "",
+  handleCheck,
+  onClick,
+  action = [],
+}) => {
   let date = moment(paper.submitTime).format("DD/MM/YYYY");
   const dispatch = useDispatch();
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick}>
       <header>
         <div className="info">
           {link != null ? (
             <Link to={link}>
               <h5>{paper.title}</h5>
             </Link>
+          ) : checkbox ? (
+            <h5>
+              <input
+                type="checkbox"
+                id={checkboxId}
+                value={paper.paperId}
+                checked={checked}
+                onChange={handleCheck}
+              />
+              <label htmlFor={checkboxId}>{paper.title}</label>
+            </h5>
           ) : (
             <h5>{paper.title}</h5>
           )}
@@ -22,7 +43,10 @@ const Paper = ({ paper, type = "compact", link, action = [] }) => {
             {paper.numberOfPage} {paper.numberOfPage > 1 ? "pages" : "page"} -
             Submit date: {date}
           </p>
-          <p>Round: {paper.round}/{paper.journal.numberOfRound} - Number of reviewer per round: {paper.journal.numberOfReviewer}</p>
+          <p>
+            Round: {paper.round}/{paper.journal.numberOfRound} - Number of
+            reviewer per round: {paper.journal.numberOfReviewer}
+          </p>
           <p>
             Fields:{" "}
             {paper.fields.map((field, index) => (
@@ -75,7 +99,14 @@ const Paper = ({ paper, type = "compact", link, action = [] }) => {
             <button
               type="button"
               className="btn edit-btn"
-              onClick={() => dispatch(downloadFile(paper.paperId))}
+              onClick={() =>
+                dispatch(
+                  downloadFile({
+                    paperId: paper.paperId,
+                    fileName: paper.linkPDF,
+                  })
+                )
+              }
             >
               Download PDF
             </button>

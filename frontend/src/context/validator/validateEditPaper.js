@@ -11,8 +11,8 @@ export default function validateEditPaper(values) {
     }
     if (!paperSummary) {
         errors.paperSummary = 'Abstract is required.'
-    } else if (paperSummary.length > 1600) {
-        errors.paperSummary = 'Abstract must be less than 1600 characters.'
+    } else if (paperSummary.length > 5000) {
+        errors.paperSummary = 'Abstract must be less than 5000 characters.'
     } else if (paperSummary.trim().length === 0) {
         errors.paperSummary = 'Can not use whitespace for abstract paper'
     }

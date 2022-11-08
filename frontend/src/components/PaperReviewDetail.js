@@ -34,16 +34,6 @@ const PaperReviewDetail = ({
             <p>{paper.summary}</p>
           </div>
         )}
-
-        <div className="actions">
-          <button
-            type="button"
-            className="btn edit-btn"
-            onClick={() => dispatch(downloadFile(paper.paperId))}
-          >
-            Download PDF
-          </button>
-        </div>
       </header>
       <div className="content">
         {review.status === "DONE" && (
@@ -87,6 +77,14 @@ const PaperReviewDetail = ({
                 </button>
               );
             })}
+
+              <button
+                type="button"
+                className="btn edit-btn"
+                onClick={() => dispatch(downloadFile({ paperId: paper.paperId, fileName: paper.linkPDF }))}
+              >
+                Download PDF
+              </button>
           </div>
         </footer>
       </div>

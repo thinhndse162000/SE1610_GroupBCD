@@ -21,8 +21,10 @@ const author = {
     paperPdfFile: { fileName: "", file: "" },
     paperFields: [],
   },
+
   searchJournal: {
     keyword: "",
+    fields: [],
     result: [],
     page: 1,
     numOfPage: 1,
@@ -39,7 +41,7 @@ const author = {
     fields: [],
     result: [],
   },
-  paperStatusOptions: ["PENDING", "REVIEWING", "ACCEPTED", "REJECTED", "PUBLISH"],
+  paperStatusOptions: ["PENDING", "REVIEWING", "EVALUATING", "ACCEPTED", "REJECTED", "PUBLISH"],
 };
 const admin = {
   editJournalID: "",
@@ -101,8 +103,9 @@ const member = {
   search: {
     keyword: "",
     type: "Journal",
-    options: ["Journal", "Paper"],
+    options: ["Journal", "Publish"],
     fields: [],
+    resultType: "Journal",
     result: [],
     page: 1,
     numOfPage: 1,
@@ -111,6 +114,10 @@ const member = {
   journalDetailId: '',
   journalSlug: '',
   journal: {},
+  journalSubscribe: {
+    endDate: "",
+    subscribed: false,
+  },
   profile: {
     email: "",
     firstName: "",
@@ -130,6 +137,7 @@ const member = {
 };
 
 const manager = {
+  selectedPaper: [],
   searchPaper: {
     keyword: "",
     status: "ALL",
@@ -154,6 +162,7 @@ const manager = {
   sentPapers: [],
   sentInvitations: [],
   availableReviewers: [],
+  paperDetail: {},
   paper: {},
   journal: {},
   issues: {},
@@ -165,6 +174,7 @@ const base = {
   showAlert: false,
   alertText: "",
   alertType: "",
+  redirectUrl: "",
   user: user ? user : "",
   token: token,
   showSidebar: false,

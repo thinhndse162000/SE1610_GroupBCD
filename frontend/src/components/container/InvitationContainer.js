@@ -17,20 +17,32 @@ const InvitationContainer = () => {
               type: "button",
               className: "btn accept-btn",
               label: "Accept",
-              onClick: () => dispatch(updateInvitationStatus(invitation.invitationId, "ACCEPTED")),
+              onClick: () =>
+                dispatch(
+                  updateInvitationStatus(invitation.invitationId, "ACCEPTED")
+                ),
             });
             action.push({
               type: "button",
               className: "btn reject-btn",
               label: "Reject",
-              onClick: () => dispatch(updateInvitationStatus(invitation.invitationId, "REJECTED")),
+              onClick: () =>
+                dispatch(
+                  updateInvitationStatus(invitation.invitationId, "REJECTED")
+                ),
             });
           }
           action.push({
             type: "button",
             className: "btn edit-btn",
             label: "Download PDF",
-            onClick: () => dispatch(downloadFile(invitation.paper.paperId)),
+            onClick: () =>
+              dispatch(
+                downloadFile({
+                  paperId: invitation.paper.paperId,
+                  fileName: invitation.paper.linkPDF,
+                })
+              ),
           });
           return (
             <Invitation key={index} invitation={invitation} action={action} />

@@ -4,6 +4,7 @@ import {
   FormRowSelect,
   Loading,
   PaperContainer,
+  Publish,
 } from "../../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { default as ContainerWrapper } from "../../../assets/wrappers/Container";
@@ -11,13 +12,13 @@ import { default as SearchWrapper } from "../../../assets/wrappers/SearchContain
 import { search } from "../../../context/service/paperService";
 import { handleChange } from "../../../context/service/utilService";
 import { Journal, PageBtnContainer } from "../../../components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const MemberSearch = () => {
   const {
     isLoading,
     member: {
-      search: { keyword, result, type, fields, options, page, numOfPage },
+      search: { keyword, result, resultType, type, fields, options, page, numOfPage },
     },
     base: { fields: fieldOptions },
   } = useSelector((state) => state);
@@ -120,8 +121,9 @@ const MemberSearch = () => {
         <Loading center />
       ) : result.length > 0 ? (
         <>
-          {type === "Journal" ? (
+          {resultType === "Journal" ? (
             <ContainerWrapper>
+              <h3>Journal</h3>
               <div className="container">
                 {result.map((journal, index) => {
                   return (
@@ -135,7 +137,20 @@ const MemberSearch = () => {
               </div>
             </ContainerWrapper>
           ) : (
-            <PaperContainer />
+            <ContainerWrapper>
+              <h3>Publish</h3>
+              <div className="container">
+                {result.map((publish, index) => {
+                  return (
+                    <Publish
+                      key={index}
+                      publish={publish}
+                      link={`/publish/${publish.publishId}`}
+                    />
+                  );
+                })}
+              </div>
+            </ContainerWrapper>
           )}
           <PageBtnContainer
             page={page}

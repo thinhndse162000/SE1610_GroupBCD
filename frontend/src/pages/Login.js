@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { Logo, FormRow, Alert } from "../components";
+import { Logo, FormRow, Alert, Loading } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../context/service/authService";
-import { displayAlert } from "../context/service/utilService";
+import { clearAlertNow, displayAlert } from "../context/service/utilService";
 
 const initialState = {
   email: "",
@@ -35,10 +35,17 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      if (role === "MANAGER") navigate("/manager");
-      else navigate("/author");
+      setTimeout(() => {
+        dispatch(clearAlertNow());
+        if (role === "MANAGER") navigate("/manager");
+        else navigate("/author");
+      }, 500);
     }
-  }, [user, navigate, role]);
+  }, [dispatch, user, navigate, role]);
+
+  if (user) {
+    return <Loading center />
+  }
 
   return (
     <Wrapper className="full-page">
@@ -47,43 +54,53 @@ const Login = () => {
         <h3>Login</h3>
         {showAlert && <Alert />}
 
-        {/* email input */}
-        <FormRow
-          type="email"
-          name="email"
-          value={values.email}
-          handleChange={handleChange}
-        />
-        {/* password input */}
-        <FormRow
-          type="password"
-          name="password"
-          value={values.password}
-          handleChange={handleChange}
-        />
-        <button type="submit" className="btn btn-block" disabled={isLoading}>
-          submit
-        </button>
-        <p>
-          Not a member yet?
-          <button
-            type="button"
-            onClick={() => navigate("/signup")}
-            className="member-btn"
-          >
-            Signup
-          </button>
-        </p>
-        <p>
-          Forgot password?
-          <button
-            type="button"
-            onClick={() => navigate("/forgot-password")}
-            className="member-btn"
-          >
-            Forgot password
-          </button>
-        </p>
+        {isLoading ? (
+          <Loading center />
+        ) : (
+          <>
+            {/* email input */}
+            <FormRow
+              type="email"
+              name="email"
+              value={values.email}
+              handleChange={handleChange}
+            />
+            {/* password input */}
+            <FormRow
+              type="password"
+              name="password"
+              value={values.password}
+              handleChange={handleChange}
+            />
+            <button
+              type="submit"
+              className="btn btn-block"
+              disabled={isLoading}
+            >
+              submit
+            </button>
+            <p>
+              Not a member yet?
+              <button
+                type="button"
+                onClick={() => navigate("/signup")}
+                className="member-btn"
+              >
+                Signup
+              </button>
+            </p>
+            <p>
+              Forgot password?
+              <button
+                type="button"
+                onClick={() => navigate("/forgot-password")}
+                className="member-btn"
+              >
+                Forgot password
+              </button>
+            </p>
+          </>
+        )}
       </form>
     </Wrapper>
   );

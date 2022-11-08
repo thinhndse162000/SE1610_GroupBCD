@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Loading, PaperReviewDetail } from "../../../components";
+import { downloadFile } from "../../../context/service/paperService";
 import {
   getReviewReportDetail,
   setEditReview,
@@ -30,7 +31,7 @@ const ReviewReportDetail = () => {
         type: "link",
         to: "/reviewer/submit-review",
         className: "btn edit-btn",
-        label: "Submit",
+        label: "Submit review",
         onClick: () =>
           dispatch(setEditReview(reviewReport.review.reviewReportId)),
       });

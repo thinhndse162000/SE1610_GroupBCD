@@ -98,6 +98,27 @@ export const getPaperDetail = (paperId) => async (dispatch) => {
   dispatch(clearAlert());
 };
 
+export const getPaperDetailManager = (paperId) => async (dispatch) => {
+  dispatch({ type: LOADING });
+  try {
+    const { data } = await authFetch.get(`/author/paper/${paperId}`);
+    dispatch({ type: SUCCESS_NO_MESSAGE });
+    dispatch({
+      type: "MANAGER_PAPER_DETAIL",
+      payload: {
+        paperDetail: data,
+      },
+    });
+  } catch (error) {
+    if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
+  }
+  dispatch(clearAlert());
+};
+
 export const getEditPaper = (paperId) => async (dispatch) => {
   dispatch({ type: LOADING });
   try {
@@ -227,13 +248,13 @@ export const search =
       if (type === "Journal") {
         data = await authFetch.post("/journal/search", {
           name: keyword,
-          fieldIds: fields.map(field => field.fieldId),
+          fieldIds: fields.map((field) => field.fieldId),
           page,
         });
       } else {
-        data = await authFetch.post("/paper/search", {
+        data = await authFetch.post("/publish/search", {
           title: keyword,
-          fields,
+          fieldIds: fields.map((field) => field.fieldId),
           page,
         });
       }
@@ -243,7 +264,7 @@ export const search =
       dispatch(
         handleChange({
           name: "result",
-          value: data.data,
+          value: { ...data.data, resultType: type },
           type: "member_spread_search",
         })
       );
@@ -274,13 +295,60 @@ export const listInvitation = (paperId) => async (dispatch) => {
   dispatch(clearAlert());
 };
 
-export const downloadFile = (paperId) => async (dispatch) => {
+export const downloadFile =
+  ({ paperId, fileName }) =>
+  async (dispatch) => {
+    try {
+      const { data } = await authFetch.get(`/paper/${paperId}/download`, {
+        responseType: "blob",
+      });
+      fileDownload(data, fileName);
+    } catch (error) {
+      if (error.response.status === 401) return;
+    }
+  };
+
+export const updatePaperStatus = (paperId, status) => async (dispatch) => {
+  dispatch({ type: LOADING });
   try {
-    const { data } = await authFetch.get(`/paper/${paperId}/download`, {
-      responseType: "blob",
+    await authFetch.put(`/paper/${paperId}/status`, {
+      status,
     });
-    fileDownload(data, `${paperId}.pdf`);
+    let msg = status === "ACCEPTED" ? "Accept paper" : "Reject paper";
+    dispatch({ type: SUCCESS, payload: { msg } });
+    dispatch({
+      type: "HANDLE_MANAGER_PAPER_CHANGE",
+      payload: { id: paperId, status },
+    });
   } catch (error) {
     if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
   }
+  dispatch(clearAlert());
+};
+
+export const updatePaperStatusBulk = (paperIds, status) => async (dispatch) => {
+  dispatch({ type: LOADING });
+  try {
+    await authFetch.put("/paper/status", {
+      paperIds,
+      status,
+    });
+    let msg = status === "ACCEPTED" ? "Accept paper" : "Reject paper";
+    dispatch({ type: SUCCESS, payload: { msg } });
+    // dispatch({
+    //   type: "HANDLE_MANAGER_PAPER_CHANGE",
+    //   payload: { id: paperId, status },
+    // });
+  } catch (error) {
+    if (error.response.status === 401) return;
+    dispatch({
+      type: ERROR,
+      payload: { msg: error.response.data.message },
+    });
+  }
+  dispatch(clearAlert());
 };

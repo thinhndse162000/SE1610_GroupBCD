@@ -31,7 +31,7 @@ const AuthorAddPaper = () => {
       paperJournal,
       paperFields,
     },
-    searchJournal: { keyword, result, page, numOfPage },
+    searchJournal: { keyword, fields: journalFields, result, page, numOfPage },
   } = author;
 
   const { isLoading, showAlert, fields, alertType } = base;
@@ -49,6 +49,8 @@ const AuthorAddPaper = () => {
   const handleNextState = (e) => {
     e.preventDefault();
     if (step === 0) {
+      setStep(1);
+    } else if (step === 1) {
       const paper = {
         paperTitle,
         paperSummary,
@@ -59,11 +61,9 @@ const AuthorAddPaper = () => {
       setErrors(checkErrors);
 
       if (Object.getOwnPropertyNames(checkErrors).length === 0) {
-        setStep(1);
+        setStep(2);
         dispatch(searchJournal({ keyword, fields: paperFields, page }));
       }
-    } else if (step === 1) {
-      setStep(2);
     }
   };
 
@@ -84,14 +84,14 @@ const AuthorAddPaper = () => {
       paperFields,
       paperPdfFile,
       paperJournal,
-    }
+    };
     dispatch(createPaper(paper));
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (page === 1) {
-      dispatch(searchJournal({ keyword, fields: paperFields, page }));
+      dispatch(searchJournal({ keyword, fields: journalFields, page }));
     } else {
       handlePageChange(1);
     }
@@ -129,6 +129,10 @@ const AuthorAddPaper = () => {
   };
 
   useEffect(() => {
+      dispatch(searchJournal({ keyword, fields: journalFields, page }));
+  }, [dispatch, page])
+
+  useEffect(() => {
     if (alertType === "success") {
       navigate("/author");
     }
@@ -164,98 +168,106 @@ const AuthorAddPaper = () => {
     );
   };
 
-  if (step === 0) {
+  if (step === 1) {
+    const selectPaperFieldOptions = paperJournal.fields.map((field) => ({
+      label: field.fieldName,
+      value: field.fieldId,
+    }));
     return (
-      <Wrapper>
-        <form className="form">
-          <h3>{editPaperId ? "edit paper" : "add paper"}</h3>
-          {showAlert && <Alert />}
-          <div className="form-center">
-            <div>
-              {/* Paper Title */}
-              <FormRow
-                type="text"
-                name="paperTitle"
-                value={paperTitle}
-                labelText="title"
-                handleChange={handleInput}
-              />
-              {errors.paperTitle && <p>{errors.paperTitle}</p>}
-              {/* Paper Summary */}
-            </div>
-            <div>
-              <FormTextArea
-                type="text"
-                name="paperSummary"
-                value={paperSummary}
-                labelText="abstract"
-                handleChange={handleInput}
-              />
-              {errors.paperSummary && <p>{errors.paperSummary}</p>}
-            </div>
-            <FormDropdown
-              labelText="Field"
-              isDisabled={editPaperId}
-              value={paperFields.map((field) => ({
-                label: field.fieldName,
-                value: field.fieldId,
-              }))}
-              isMulti={true}
-              options={selectFieldOptions}
-              handleChange={(e) => {
-                const tmp = e.map((x) => ({
-                  fieldId: x.value,
-                  fieldName: x.label,
-                }));
-
-                dispatch(
-                  handleChange({
-                    name: "paperFields",
-                    value: tmp,
-                    type: "author",
-                  })
-                );
-              }}
-              type="select"
-            />
-            {errors.paperFields && <p>{errors.paperFields}</p>}
-            <div className="btn-container">
-              {/*Pdf file*/}
+      <>
+        <button className="btn edit-btn" onClick={handlePrevState}>
+          Back
+        </button>
+      <h3>Submit paper</h3>
+        <Wrapper>
+          <form className="form">
+            <h3>{editPaperId ? "edit paper" : "add paper"}</h3>
+            {showAlert && <Alert />}
+            <div className="form-center">
               <div>
-                <FormRowFile
-                  labelText="PDF file"
-                  value={paperPdfFile.fileName}
-                  name="paperPdfFile"
-                  handleChange={handleFileInput}
+                {/* Paper Title */}
+                <FormRow
+                  type="text"
+                  name="paperTitle"
+                  value={paperTitle}
+                  labelText="title"
+                  handleChange={handleInput}
                 />
-                {errors.paperPdfFile && <p>{errors.paperPdfFile}</p>}
+                {errors.paperTitle && <p>{errors.paperTitle}</p>}
+                {/* Paper Summary */}
+              </div>
+              <div>
+                <FormTextArea
+                  type="text"
+                  name="paperSummary"
+                  value={paperSummary}
+                  labelText="abstract"
+                  handleChange={handleInput}
+                />
+                {errors.paperSummary && <p>{errors.paperSummary}</p>}
+              </div>
+              <FormDropdown
+                labelText="Field"
+                isDisabled={editPaperId}
+                value={paperFields.map((field) => ({
+                  label: field.fieldName,
+                  value: field.fieldId,
+                }))}
+                isMulti={true}
+                options={selectPaperFieldOptions}
+                handleChange={(e) => {
+                  const tmp = e.map((x) => ({
+                    fieldId: x.value,
+                    fieldName: x.label,
+                  }));
+
+                  dispatch(
+                    handleChange({
+                      name: "paperFields",
+                      value: tmp,
+                      type: "author",
+                    })
+                  );
+                }}
+                type="select"
+              />
+              {errors.paperFields && <p>{errors.paperFields}</p>}
+              <div className="btn-container">
+                {/*Pdf file*/}
+                <div>
+                  <FormRowFile
+                    labelText="PDF file"
+                    value={paperPdfFile.fileName}
+                    name="paperPdfFile"
+                    handleChange={handleFileInput}
+                  />
+                  {errors.paperPdfFile && <p>{errors.paperPdfFile}</p>}
+                </div>
+              </div>
+              {/* btn container */}
+              <div className="btn-container">
+                <button
+                  type="submit"
+                  className="btn btn-block submit-btn"
+                  onClick={handleNextState}
+                  disabled={isLoading}
+                >
+                  Next
+                </button>
               </div>
             </div>
-            {/* btn container */}
-            <div className="btn-container">
-              <button
-                type="submit"
-                className="btn btn-block submit-btn"
-                onClick={handleNextState}
-                disabled={isLoading}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </form>
-      </Wrapper>
+          </form>
+        </Wrapper>
+      </>
     );
-  } else if (step === 1) {
+  } else if (step === 0) {
     return (
       <>
         <div>
-          <button className="btn edit-btn" onClick={handlePrevState}>
-            Back
-          </button>
+          <h3>Submit paper</h3>
           <SearchWrapper>
-            <h3>Journal search based on fields</h3>
             <form className="form">
+            <h5>Select journal</h5>
               <div className="journal-form">
                 <FormRow
                   labelText="Keyword"
@@ -263,6 +275,30 @@ const AuthorAddPaper = () => {
                   name="keyword"
                   value={keyword}
                   handleChange={handleInputChange}
+                />
+
+                <FormDropdown
+                  labelText="Field"
+                  value={journalFields.map((field) => ({
+                    label: field.fieldName,
+                    value: field.fieldId,
+                  }))}
+                  isMulti={true}
+                  options={selectFieldOptions}
+                  handleChange={(e) => {
+                    const tmp = e.map((x) => ({
+                      fieldId: x.value,
+                      fieldName: x.label,
+                    }));
+                    dispatch(
+                      handleChange({
+                        name: "fields",
+                        value: tmp,
+                        type: "author_journal",
+                      })
+                    );
+                  }}
+                  type="select"
                 />
 
                 <button
@@ -298,7 +334,7 @@ const AuthorAddPaper = () => {
                       onClick: (e) => handleSelect(e, journal),
                     });
                     return (
-                      <Journal key={index} journal={journal} action={action} />
+                      <Journal key={index} journal={journal} showPolicy={true} action={action} index={index}/>
                     );
                   })}
                 </div>
@@ -322,7 +358,7 @@ const AuthorAddPaper = () => {
           Back
         </button>
         <h3>Confirm</h3>
-        <Journal journal={paperJournal} />
+        <Journal journal={paperJournal} showPolicy={true}/>
         <h3>Paper</h3>
         <ItemWrapper>
           <header>
