@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PublishResponse {
     private Integer publishId;
+    private Integer ordinalNumber;
     private PaperResponse paper;
     private IssueResponse issue;
     private PublishAccessLevel accessLevel;

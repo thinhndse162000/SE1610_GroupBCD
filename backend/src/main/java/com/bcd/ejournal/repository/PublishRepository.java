@@ -32,4 +32,14 @@ public interface PublishRepository extends CrudRepository<Publish, Integer> {
             + "AND (:#{#req.authorId} is null OR pa.author = :#{#req.authorId})"
             + "AND (:#{#req.title} IS NULL OR pa.title LIKE %:#{#req.title}%)")
     Page<Publish> searchByRequest(@Param(value = "req") PublishSearchFilterRequest req, Pageable page);
+
+    @Query("SELECT pu FROM Publish pu "
+            + "JOIN pu.issue su "
+            + "JOIN pu.paper pa "
+            + "WHERE (:#{#req.issue} is null OR su.issue = :#{#req.issue}) "
+            + "AND (:fieldLength = (SELECT COUNT(*) FROM pa.fields f WHERE f.fieldId IN :#{#req.fieldIds}))"
+            + "AND (:#{#req.volume} is null OR su.volume = :#{#req.volume})"
+            + "AND (:#{#req.authorId} is null OR pa.author = :#{#req.authorId})"
+            + "AND (:#{#req.title} IS NULL OR pa.title LIKE %:#{#req.title}%)")
+    Page<Publish> searchByRequest(@Param(value = "req") PublishSearchFilterRequest req, Long fieldLength, Pageable page);
 }

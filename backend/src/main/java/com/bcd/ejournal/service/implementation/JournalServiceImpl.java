@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,19 +41,17 @@ public class JournalServiceImpl implements JournalService {
     private final IssueRepository issueRepository;
     private final AccountRepository accountRepository;
     private final PaperRepository paperRepository;
-    private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
     private final FieldRepository fieldRepository;
 
     @Autowired
     public JournalServiceImpl(JournalRepository journalRepository, IssueRepository issueRepository,
-            AccountRepository accountRepository, PaperRepository paperRepository, ModelMapper modelMapper,
+            AccountRepository accountRepository, PaperRepository paperRepository,
             DTOMapper dtoMapper, FieldRepository fieldRepository) {
         this.journalRepository = journalRepository;
         this.issueRepository = issueRepository;
         this.accountRepository = accountRepository;
         this.paperRepository = paperRepository;
-        this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
         this.fieldRepository = fieldRepository;
     }
@@ -84,7 +81,7 @@ public class JournalServiceImpl implements JournalService {
         journal.setIssn(request.getIssn());
         journal.setJournalId(0);
         journal.setStatus(JournalStatus.OPEN);
-        journal.setSlug(request.getName().toLowerCase());
+        journal.setSlug(request.getName().replace(' ', '-').toLowerCase());
         journal.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 
         journal.setManager(account);
@@ -99,7 +96,6 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public JournalResponse getJournal(Integer journalId) {
-        // TODO: return journal detail: latest issue, lastest publish
         Journal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new NullPointerException("Journal not found: " + journalId));
         return dtoMapper.toJournalResponse(journal);
@@ -178,7 +174,7 @@ public class JournalServiceImpl implements JournalService {
         journal.setNumberOfRound(request.getNumberOfRound());
         journal.setNumberOfReviewer(request.getNumberOfReviewer());
         journal.setIssn(request.getIssn());
-        journal.setSlug(request.getName().toLowerCase());
+        journal.setSlug(request.getName().replace(' ', '-').toLowerCase());
 
         journal.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -143,34 +144,36 @@ public class InvitationServiceImpl implements InvitationService {
         invitation.setStatus(status);
         invitationRepository.save(invitation);
 
-        Paper paper = invitation.getPaper();
-        Journal journal = paper.getJournal();
-        List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(),
-                InvitationStatus.ACCEPTED);
+        if (status == InvitationStatus.ACCEPTED) {
+            Paper paper = invitation.getPaper();
+            Journal journal = paper.getJournal();
+            List<Invitation> acceptedInvitations = invitationRepository.findByPaperIdAndStatus(paper.getPaperId(),
+                    InvitationStatus.ACCEPTED);
 
-        // Create new review report
-        ReviewReport reviewReport = new ReviewReport();
-        reviewReport.setReviewReportId(0);
-        reviewReport.setPaper(paper);
-        reviewReport.setRound(paper.getRound());
-        reviewReport.setReviewer(invitation.getReviewer());
-        reviewReport.setStatus(ReviewReportStatus.PENDING);
+            // Create new review report
+            ReviewReport reviewReport = new ReviewReport();
+            reviewReport.setReviewReportId(0);
+            reviewReport.setPaper(paper);
+            reviewReport.setRound(paper.getRound());
+            reviewReport.setReviewer(invitation.getReviewer());
+            reviewReport.setStatus(ReviewReportStatus.PENDING);
 
-        reviewReportRepository.save(reviewReport);
-        if (acceptedInvitations.size() == journal.getNumberOfReviewer()) {
-            // update paper status
-            paper.setStatus(PaperStatus.REVIEWING);
-            paperRepository.save(paper);
-            // change status of other invitation to cancel
-            invitationRepository.updateInvitationStatusByPaperIdAndRound(paper.getPaperId(), paper.getRound(),
-                    InvitationStatus.CANCEL);
+            reviewReportRepository.save(reviewReport);
+            if (acceptedInvitations.size() == journal.getNumberOfReviewer()) {
+                // update paper status
+                paper.setStatus(PaperStatus.REVIEWING);
+                paperRepository.save(paper);
+                // change status of other invitation to cancel
+                invitationRepository.updateInvitationStatusByPaperIdAndRound(paper.getPaperId(), paper.getRound(),
+                        InvitationStatus.CANCEL);
+            }
         }
     }
 
     @Override
     public PagingResponse searchFilterInvitation(InvitationSearchFilterRequest filterRequest) {
         int pageNum = filterRequest.getPage() != null ? filterRequest.getPage() - 1 : 0;
-        Pageable page = PageRequest.of(pageNum, 10);
+        Pageable page = PageRequest.of(pageNum, 10, Sort.by("inviteDate").descending());
         Page<Invitation> invitation = invitationRepository.searchFilter(filterRequest, page);
 
         PagingResponse response = new PagingResponse();

@@ -23,6 +23,7 @@ import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
 import com.bcd.ejournal.domain.entity.ReviewReport;
 import com.bcd.ejournal.domain.entity.Reviewer;
+import com.bcd.ejournal.domain.enums.JournalReviewPolicy;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportStatus;
 import com.bcd.ejournal.domain.enums.ReviewReportVerdict;
@@ -31,6 +32,7 @@ import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.PaperRepository;
 import com.bcd.ejournal.repository.ReviewReportRepository;
 import com.bcd.ejournal.repository.ReviewerRepository;
+import com.bcd.ejournal.service.EmailService;
 import com.bcd.ejournal.service.ReviewReportService;
 import com.bcd.ejournal.utils.DTOMapper;
 
@@ -42,17 +44,19 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     private final PaperRepository paperRepository;
     private final ModelMapper modelMapper;
     private final DTOMapper dtoMapper;
+    private final EmailService emailService;
     @Value("${paper.file.dir}")
     private String uploadDir;
 
     @Autowired
     public ReviewReportServiceImpl(ReviewReportRepository reviewreportRepository, ReviewerRepository reviewerRepository,
-            PaperRepository paperRepository, ModelMapper modelMapper, DTOMapper dtoMapper) {
+            PaperRepository paperRepository, ModelMapper modelMapper, DTOMapper dtoMapper, EmailService emailService) {
         this.reviewreportRepository = reviewreportRepository;
         this.reviewerRepository = reviewerRepository;
         this.paperRepository = paperRepository;
         this.modelMapper = modelMapper;
         this.dtoMapper = dtoMapper;
+        this.emailService = emailService;
     }
 
     @Override
@@ -83,30 +87,45 @@ public class ReviewReportServiceImpl implements ReviewReportService {
                 ReviewReportStatus.DONE);
 
         if (reviewReports.size() == journal.getNumberOfReviewer()) {
-            int accepted = 0;
-            int grade = 0;
-            for (ReviewReport report : reviewReports) {
-                grade += report.getGrade();
-                if (report.getVerdict() == ReviewReportVerdict.ACCEPTED) {
-                    accepted++;
+            if (journal.getReviewPolicy() == JournalReviewPolicy.AUTOMATIC) {
+                int accepted = 0;
+                int grade = 0;
+                for (ReviewReport report : reviewReports) {
+                    grade += report.getGrade();
+                    if (report.getVerdict() == ReviewReportVerdict.ACCEPTED) {
+                        accepted++;
+                    }
                 }
-            }
 
-            // accept if two or more reviewer accept
-            if (accepted >= (journal.getNumberOfReviewer() + 1) / 2) {
-                if (paper.getRound() == journal.getNumberOfRound()) {
-                    paper.setStatus(PaperStatus.ACCEPTED);
+                // accept if two or more reviewer accept
+                if (accepted >= (journal.getNumberOfReviewer() + 1) / 2) {
+                    if (paper.getRound() == journal.getNumberOfRound()) {
+                        paper.setStatus(PaperStatus.ACCEPTED);
+                    } else {
+                        paper.setRound(paper.getRound() + 1);
+                        paper.setStatus(PaperStatus.PENDING);
+                    }
                 } else {
-                    paper.setRound(paper.getRound() + 1);
-                    paper.setStatus(PaperStatus.PENDING);
+                    paper.setStatus(PaperStatus.REJECTED);
                 }
+                // grade is avarage of total grade
+                paper.setGrade(grade / journal.getNumberOfReviewer());
+                emailService.sendEmailReviewReport(paper.getAuthor().getAccount().getEmail());
+                emailService.sendEmailReviewReport(journal.getManager().getEmail());
+                paperRepository.save(paper);
             } else {
-                paper.setStatus(PaperStatus.REJECTED);
-            }
-            // grade is avarage of total grade
-            paper.setGrade(grade / journal.getNumberOfReviewer());
+                int grade = 0;
+                for (ReviewReport report : reviewReports) {
+                    grade += report.getGrade();
+                }
 
-            paperRepository.save(paper);
+                paper.setGrade(grade / journal.getNumberOfReviewer());
+                paper.setStatus(PaperStatus.EVALUATING);
+
+                emailService.sendEmailEvaluating(paper.getAuthor().getAccount().getEmail());
+                emailService.sendEmailEvaluating(journal.getManager().getEmail());
+                paperRepository.save(paper);
+            }
         }
     }
 

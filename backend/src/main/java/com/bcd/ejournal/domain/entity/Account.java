@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -66,7 +67,10 @@ public class Account implements UserDetails {
             joinColumns = @JoinColumn(name = "accountId", referencedColumnName = "accountId"),
             inverseJoinColumns = @JoinColumn(name = "journalId", referencedColumnName = "journalId"))
     private Journal journal;
-
+    
+    @OneToMany(mappedBy = "account", cascade = CascadeType.MERGE)
+    private List<Invoice> invoices;
+    
     public String getFullName() {
         return firstName + " " + lastName;
     }

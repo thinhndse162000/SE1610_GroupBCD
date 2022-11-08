@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.bcd.ejournal.domain.enums.JournalReviewPolicy;
 import com.bcd.ejournal.domain.enums.JournalStatus;
 
 import lombok.AllArgsConstructor;
@@ -43,6 +44,9 @@ public class Journal implements Serializable {
     private JournalStatus status;
     private String slug;
     private Integer price;
+    private String policy;
+    @Enumerated(EnumType.STRING)
+    private JournalReviewPolicy reviewPolicy;
 
     @ManyToMany
     @JoinTable(name = "JournalField", joinColumns = @JoinColumn(name = "JournalId", referencedColumnName = "JournalId"), inverseJoinColumns = @JoinColumn(name = "FieldId", referencedColumnName = "FieldId"))
@@ -56,4 +60,7 @@ public class Journal implements Serializable {
 
     @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
     private List<Paper> papers;
+    
+    @OneToMany(mappedBy = "journal", cascade = CascadeType.MERGE)
+    private List<Invoice> invoices;
 }

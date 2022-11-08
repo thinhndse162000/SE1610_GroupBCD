@@ -40,7 +40,7 @@ public class ReviewerServiceImpl implements ReviewerService {
 
         return reviewer.stream()
                 .map(dtoMapper::toReviewerResponse)
-                .filter(reviewerResponse -> reviewerResponse.getFullName().contains(name))
+                .filter(reviewerResponse -> reviewerResponse.getFullName().toLowerCase().contains(name.toLowerCase()))
                 .collect(Collectors.toList());
     }
 

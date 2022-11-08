@@ -1,5 +1,7 @@
 package com.bcd.ejournal.api;
 
+import java.io.File;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -21,13 +23,16 @@ import com.bcd.ejournal.configuration.jwt.payload.AccountJWTPayload;
 import com.bcd.ejournal.domain.dto.request.IssueCreateRequest;
 import com.bcd.ejournal.domain.dto.request.JournalCreateRequest;
 import com.bcd.ejournal.domain.dto.request.JournalSearchRequest;
+import com.bcd.ejournal.domain.dto.request.JournalSubscribeResponse;
 import com.bcd.ejournal.domain.dto.request.PaperSearchRequest;
 import com.bcd.ejournal.domain.dto.response.IssueResponse;
 import com.bcd.ejournal.domain.dto.response.JournalResponse;
 import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.PublishResponse;
+import com.bcd.ejournal.domain.entity.Invoice;
 import com.bcd.ejournal.domain.enums.PublishAccessLevel;
+import com.bcd.ejournal.service.InvoiceService;
 import com.bcd.ejournal.service.IssueService;
 import com.bcd.ejournal.service.JournalService;
 import com.bcd.ejournal.service.PublishService;
@@ -38,12 +43,14 @@ public class JournalApi {
     private final JournalService journalService;
     private final IssueService issueService;
     private final PublishService publishService;
+    private final InvoiceService invoiceService;
 
     @Autowired
-    public JournalApi(JournalService journalService, IssueService issueService, PublishService publishService) {
+    public JournalApi(JournalService journalService, IssueService issueService, PublishService publishService, InvoiceService invoiceService) {
         this.journalService = journalService;
         this.issueService = issueService;
         this.publishService = publishService;
+        this.invoiceService = invoiceService;
     }
 
     @PostMapping
@@ -53,13 +60,13 @@ public class JournalApi {
     }
 
     @GetMapping("/{journalId}")
-    public ResponseEntity<JournalResponse> getJournal(@Valid @PathVariable Integer journalId) {
+    public ResponseEntity<JournalResponse> getJournal(@AuthenticationPrincipal AccountJWTPayload payload, @Valid @PathVariable Integer journalId) {
         JournalResponse response = journalService.getJournal(journalId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/slug/{slug}")
-    public ResponseEntity<JournalResponse> getJournalFromSlug(@PathVariable String slug) {
+    public ResponseEntity<JournalResponse> getJournalFromSlug(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable String slug) {
         JournalResponse response = journalService.getJournal(slug);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -80,6 +87,28 @@ public class JournalApi {
     @PutMapping("/{journalId}")
     public ResponseEntity<JournalResponse> updateJournal(@PathVariable Integer journalId, @Valid @RequestBody JournalCreateRequest request) {
         JournalResponse response = journalService.updateJournal(journalId, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{journalId}/subscribe")
+    public ResponseEntity<JournalSubscribeResponse> getSubscribeInfo(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable Integer journalId) {
+        Invoice invoice = invoiceService.getLatestInvoice(payload.getAccountId(), journalId);
+        JournalSubscribeResponse response = new JournalSubscribeResponse();
+        if (invoice != null && invoice.getEndDate().after(new Timestamp(System.currentTimeMillis()))) {
+            response.setEndDate(invoice.getEndDate());
+            response.setSubscribed(true);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/slug/{slug}/subscribe")
+    public ResponseEntity<JournalSubscribeResponse> getSubscribeInfo(@AuthenticationPrincipal AccountJWTPayload payload, @PathVariable String slug) {
+        Invoice invoice = invoiceService.getLatestInvoice(payload.getAccountId(), slug);
+        JournalSubscribeResponse response = new JournalSubscribeResponse();
+        if (invoice != null && invoice.getEndDate().after(new Timestamp(System.currentTimeMillis()))) {
+            response.setEndDate(invoice.getEndDate());
+            response.setSubscribed(true);
+        }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -20,5 +20,6 @@ public class IssueResponse {
     private Integer year;
     private int numberOfPage;
     private int numberOfPaper;
+    private String linkPDF;
     private JournalResponse journal;
 }

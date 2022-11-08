@@ -3,6 +3,7 @@ package com.bcd.ejournal.domain.dto.response;
 import java.util.List;
 
 import com.bcd.ejournal.domain.entity.Field;
+import com.bcd.ejournal.domain.enums.JournalReviewPolicy;
 import com.bcd.ejournal.domain.enums.JournalStatus;
 
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JournalResponse {
-    private String journalId;
+    private Integer journalId;
     private String name;
     private String introduction;
     private String organization;
@@ -25,6 +26,8 @@ public class JournalResponse {
     private String slug;
     private Integer price;
     private JournalStatus status;
+    private JournalReviewPolicy reviewPolicy;
     private String managerEmail;
+    private String policy;
     private List<Field> fields;
 }

@@ -7,9 +7,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.el.MethodNotFoundException;
+
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +31,14 @@ import com.bcd.ejournal.domain.dto.response.PagingResponse;
 import com.bcd.ejournal.domain.dto.response.PaperDetailResponse;
 import com.bcd.ejournal.domain.dto.response.PaperResponse;
 import com.bcd.ejournal.domain.dto.response.ReviewReportResponse;
+import com.bcd.ejournal.domain.entity.Account;
 import com.bcd.ejournal.domain.entity.Author;
 import com.bcd.ejournal.domain.entity.Journal;
 import com.bcd.ejournal.domain.entity.Paper;
+import com.bcd.ejournal.domain.enums.JournalReviewPolicy;
 import com.bcd.ejournal.domain.enums.PaperStatus;
 import com.bcd.ejournal.domain.exception.ForbiddenException;
+import com.bcd.ejournal.domain.exception.MethodNotAllowedException;
 import com.bcd.ejournal.repository.AccountRepository;
 import com.bcd.ejournal.repository.FieldRepository;
 import com.bcd.ejournal.repository.JournalRepository;
@@ -65,29 +74,16 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public void submitPaper(Integer authorId, PaperSubmitRequest request) {
+    public void submitPaper(Integer authorId, PaperSubmitRequest request) throws InvalidPasswordException, IOException {
         request.setTitle(request.getTitle().trim());
         request.setSummary(request.getSummary().trim());
 
         Paper paper = new Paper(request);
-        // TODO: generate random file name
-        // TODO: delete file if error
-        String fileName = request.getFile().getOriginalFilename();
-        MultipartFile file = request.getFile();
-        paper.setLinkPDF(fileName);
-        try {
-            FileUtils.saveFile(uploadDir, fileName, file);
-        } catch (NullPointerException ex) {
-            System.out.println("Null");
-        } catch (IOException ex) {
-            System.out.println("IOexception");
-        }
 
         paper.setPaperId(0);
         paper.setRound(1);
         paper.setSubmitTime(new Timestamp(System.currentTimeMillis()));
-        // TODO: read number of page from pdf
-        paper.setNumberOfPage(10);
+
         paper.setStatus(PaperStatus.PENDING);
         paper.setFields(fieldRepository.findAllByFieldIdIn(request.getFieldId()));
 
@@ -101,6 +97,20 @@ public class PaperServiceImpl implements PaperService {
 
         paper.setJournal(journal);
         journal.getPapers().add(paper);
+
+        String fileName = request.getTitle() + " - " + author.getAccount().getFullName() + ".pdf";
+        MultipartFile file = request.getFile();
+        paper.setLinkPDF(fileName);
+        try {
+            FileUtils.saveFile(uploadDir, fileName, file);
+        } catch (NullPointerException ex) {
+            System.out.println("Null");
+        } catch (IOException ex) {
+            System.out.println("IOexception");
+        }
+
+        PDDocument doc = Loader.loadPDF(new File(uploadDir + paper.getLinkPDF()));
+        paper.setNumberOfPage(doc.getNumberOfPages());
 
         emailService.sendEmailSumbitPaper(author.getAccount());
 
@@ -122,6 +132,82 @@ public class PaperServiceImpl implements PaperService {
             } else {
                 System.out.println("File doesn't exist");
             }
+        }
+    }
+
+    @Override
+    public void managerUpdatePaperStatus(Integer accountId, Integer paperId, PaperStatus status) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
+
+        Journal journal = account.getJournal();
+        if (journal == null) {
+            throw new ForbiddenException("Account is not a manager. Account Id: " + accountId);
+        } else if (journal.getJournalId() != paper.getJournal().getJournalId()) {
+            throw new ForbiddenException(
+                    "Manager's journal is not in charge of this paper. Journal Id: " + journal.getJournalId());
+        } else if (journal.getReviewPolicy() != JournalReviewPolicy.MANAGER_DECIDE) {
+            throw new MethodNotAllowedException(
+                    "Manager cannot update paper status for this jouranl. Journal Id: " + journal.getJournalId());
+        } else if (paper.getStatus() != PaperStatus.EVALUATING) {
+            throw new MethodNotAllowedException("Paper not in evaluating status. Paper Id: " + paperId);
+        } else if (!(status == PaperStatus.ACCEPTED || status == PaperStatus.REJECTED)) {
+            throw new DataIntegrityViolationException("Status is conflict. Status: " + status);
+        }
+
+        if (status == PaperStatus.ACCEPTED) {
+            if (paper.getRound() == journal.getNumberOfRound()) {
+                paper.setStatus(status);
+            } else {
+                paper.setStatus(PaperStatus.PENDING);
+            }
+        } else {
+            paper.setStatus(PaperStatus.REJECTED);
+        }
+
+        paperRepository.save(paper);
+    }
+
+    @Override
+    @Transactional
+    public void managerBulkUpdatePaperStatus(Integer accountId, List<Integer> paperIds, PaperStatus status) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NullPointerException("Account not found. Id: " + accountId));
+
+        Journal journal = account.getJournal();
+        if (journal == null) {
+            throw new ForbiddenException("Account is not a manager. Account Id: " + accountId);
+        } else if (journal.getReviewPolicy() != JournalReviewPolicy.MANAGER_DECIDE) {
+            throw new MethodNotAllowedException(
+                    "Manager cannot update paper status for this jouranl. Journal Id: " + journal.getJournalId());
+        }
+
+        for (Integer paperId : paperIds) {
+            Paper paper = paperRepository.findById(paperId)
+                    .orElseThrow(() -> new NullPointerException("Paper not found. Id: " + paperId));
+
+            if (paper.getStatus() != PaperStatus.EVALUATING) {
+                throw new MethodNotAllowedException("Paper not in evaluating status. Paper Id: " + paperId);
+            } else if (!(status == PaperStatus.ACCEPTED || status == PaperStatus.REJECTED)) {
+                throw new DataIntegrityViolationException("Status is conflict. Status: " + status);
+            } else if (journal.getJournalId() != paper.getJournal().getJournalId()) {
+                throw new ForbiddenException(
+                        "Manager's journal is not in charge of this paper. Journal Id: " + journal.getJournalId());
+            }
+
+            if (status == PaperStatus.ACCEPTED) {
+                if (paper.getRound() == journal.getNumberOfRound()) {
+                    paper.setStatus(status);
+                } else {
+                    paper.setStatus(PaperStatus.PENDING);
+                }
+            } else {
+                paper.setStatus(PaperStatus.REJECTED);
+            }
+
+            paperRepository.save(paper);
         }
     }
 
@@ -219,10 +305,8 @@ public class PaperServiceImpl implements PaperService {
         return FileUtils.load(uploadDir, fileName.trim());
     }
 
+    @Override
     public void cleanDuePaper() {
-        // Update status to cancel for all paper that is in pending state for more than
-        // 6 months
-        // FIXME: fix for paper that is review for many round, should check accept date
         paperRepository.updatePendingPaperAfter6Months();
         // TODO: Thinh send email to author
     }

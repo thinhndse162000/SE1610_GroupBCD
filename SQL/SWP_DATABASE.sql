@@ -80,7 +80,8 @@ CREATE TABLE Issue(
   Year int not null,
 	startDate DATE not null,
 	endDate DATE not null,
-	NumberOfPage int not null
+	NumberOfPage int not null,
+	LinkPDF char(100),
 	CONSTRAINT UQ_Issue UNIQUE(JournalId,IssueId,Volume)
 )
 go 
@@ -95,6 +96,8 @@ CREATE TABLE Journal(
   NumberOfRound int not null,
   NumberOfReviewer int not null,
   slug nvarchar(255) not null UNIQUE,
+  policy text not null,
+  ReviewPolicy nvarchar(20) not null,
 )
 go 
 CREATE TABLE Invoice(
@@ -103,8 +106,8 @@ CREATE TABLE Invoice(
 	JournalId int not null ,
 	PaymentMethod VARCHAR(50) not null,
 	PaymentTime DATETIME not null,
-	endDate DATE not null
-	CONSTRAINT UQ_Invoice UNIQUE(AccountId,JournalId)
+	endDate DATE not null,
+	amount BIGINT
 )
 go
 -- Kết thúc bảng chính--

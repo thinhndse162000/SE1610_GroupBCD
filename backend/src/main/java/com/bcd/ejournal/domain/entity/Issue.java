@@ -32,6 +32,7 @@ public class Issue {
     private Date endDate;
     private Integer numberOfPage;
     private Integer year;
+    private String linkPDF;
 
     @ManyToOne
     @JoinColumn(name = "journalId", nullable = false)
