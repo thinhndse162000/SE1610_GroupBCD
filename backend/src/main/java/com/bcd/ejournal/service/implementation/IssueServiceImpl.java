@@ -174,7 +174,7 @@ public class IssueServiceImpl implements IssueService {
         issue.setIssueId(0);
 
         String journalName = account.getJournal().getName();
-        String fileName = journalName + " - Volume: " + nextVolume + " Issue: " + nextIssue + ".pdf";
+        String fileName = journalName + " - Volume " + nextVolume + " Issue " + nextIssue + ".pdf";
         issue.setLinkPDF(fileName);
         PDFMergerUtility ut = new PDFMergerUtility();
         ut.setDestinationFileName(uploadDir + fileName);

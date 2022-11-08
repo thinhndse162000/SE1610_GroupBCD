@@ -48,7 +48,9 @@ public class DTOMapper {
         PaperResponse paperResponse = modelMapper.map(paper, PaperResponse.class);
         paperResponse.setJournal(toJournalResponse(paper.getJournal()));
         paperResponse.setAuthors(toAuthorResponse(paper.getAuthor()));
-        paperResponse.setLinkPDF(paper.getLinkPDF().trim());
+	  if (paper.getLinkPDF() != null) {
+	      paperResponse.setLinkPDF(paper.getLinkPDF().trim());
+ 	  }
         return paperResponse;
     }
 
@@ -77,7 +79,9 @@ public class DTOMapper {
         IssueResponse issueResponse = modelMapper.map(issue, IssueResponse.class);
         issueResponse.setJournal(toJournalResponse(issue.getJournal()));
         issueResponse.setNumberOfPaper(issue.getPublishes().size());
-        issueResponse.setLinkPDF(issue.getLinkPDF().trim());
+	  if (issue.getLinkPDF() != null) {
+            issueResponse.setLinkPDF(issue.getLinkPDF().trim());
+	  }
         return issueResponse;
     }
 
